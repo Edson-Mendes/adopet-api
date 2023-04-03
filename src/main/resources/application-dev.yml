@@ -1,0 +1,28 @@
+server:
+  port: 8081
+
+spring:
+  # Datasource
+  datasource:
+    url: jdbc:postgresql://localhost:5432/adopet-db
+    username: user
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+
+  # JPA
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    properties:
+      hibernate:
+        format-sql: true
+    hibernate:
+      ddl-auto: validate
+
+# logging
+logging:
+  level:
+    org:
+      hibernate:
+        sql: DEBUG
+        type: trace

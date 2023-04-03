@@ -1,0 +1,23 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres
+    container_name: adopet-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: adopet-db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 1234
+    volumes:
+      - adopet-volume:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    container_name: adopet-adminer
+    ports:
+      - 8000:8080
+
+volumes:
+  adopet-volume:
