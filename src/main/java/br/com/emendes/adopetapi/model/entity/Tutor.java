@@ -27,6 +27,6 @@ public class Tutor {
   private LocalDateTime createdAt;
   @Column(nullable = false)
   private LocalDateTime deletedAt;
-  private Boolean enabled;
+  private boolean enabled;
 
 }

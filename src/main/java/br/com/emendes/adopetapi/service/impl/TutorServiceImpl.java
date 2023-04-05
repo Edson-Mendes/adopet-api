@@ -5,36 +5,39 @@ import br.com.emendes.adopetapi.dto.response.TutorResponse;
 import br.com.emendes.adopetapi.exception.PasswordsDoNotMatchException;
 import br.com.emendes.adopetapi.mapper.TutorMapper;
 import br.com.emendes.adopetapi.model.entity.Tutor;
+import br.com.emendes.adopetapi.repository.TutorRepository;
 import br.com.emendes.adopetapi.service.TutorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class TutorServiceImpl implements TutorService {
 
-  private TutorMapper tutorMapper;
+  private final TutorRepository tutorRepository;
+  private final TutorMapper tutorMapper;
 
   @Override
   public TutorResponse create(@Valid TutorRequest tutorRequest) {
-    // Verificar se password e confirmPassword são iguais.
     if (!tutorRequest.isPasswordsMatch()) {
       log.info("Passwords do not match at TutorServiceImpl#create");
       throw new PasswordsDoNotMatchException("Passwords do not match");
     }
-    // Converter TutorRequest para Tutor
+
     Tutor tutor = tutorMapper.tutorRequestToTutor(tutorRequest);
+    tutor.setCreatedAt(LocalDateTime.now());
 
-    //Salvar no DB através de TutorRepository
+    // TODO: Criptografar Tutor.password antes de salvar no DB.
+    // TODO: Fazer tratamento para caso o email já esteja em uso
 
-    //Tratar erro de Email em uso.
+    Tutor tutorSaved = tutorRepository.save(tutor);
 
-    //Converter Tutor para TutorResponse e retornar.
-
-    return null;
+    return tutorMapper.tutorToTutorResponse(tutorSaved);
   }
 
 }
