@@ -10,7 +10,9 @@ import br.com.emendes.adopetapi.service.TutorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import br.com.emendes.adopetapi.exception.EmailAlreadyInUseException;
 
 import java.time.LocalDateTime;
 
@@ -33,11 +35,16 @@ public class TutorServiceImpl implements TutorService {
     tutor.setCreatedAt(LocalDateTime.now());
 
     // TODO: Criptografar Tutor.password antes de salvar no DB.
-    // TODO: Fazer tratamento para caso o email já esteja em uso
 
-    Tutor tutorSaved = tutorRepository.save(tutor);
+    try {
+      Tutor tutorSaved = tutorRepository.save(tutor);
+      log.info("Tutor saved successfully with id : {}", tutorSaved.getId());
+      return tutorMapper.tutorToTutorResponse(tutorSaved);
+    } catch (DataIntegrityViolationException exception) {
+      log.info("Data Integrity Violation, message : {}", exception.getMessage());
+      throw new EmailAlreadyInUseException(String.format("E-mail {%s} is already in use", tutorRequest.getEmail()));
+    }
 
-    return tutorMapper.tutorToTutorResponse(tutorSaved);
   }
 
 }
