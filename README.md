@@ -15,12 +15,12 @@ Projeto proposto pela Alura no Challenge Backend 6ª Edição.
 - `IntelliJ`
 - `Java 17`
 - `Maven`
-- `Spring Boot, Spring MVC, Spring Data JPA`
+- `Spring Boot`
+- `Spring Data JPA`
 - `Docker`
 - `PostgreSQL`
 - `Flyway`
 - `Lombok`
-- `OpenAPI/Swagger`
 - `Mockito`
 - `JUnit5`
 - `Testes de unidade`
@@ -28,7 +28,7 @@ Projeto proposto pela Alura no Challenge Backend 6ª Edição.
 ## :gear: Atualizações semana 1
 - [x] Modelagem da entidade Tutor.
 - [x] Requisição POST para CRIAR Tutor.
-- [ ] Requisição PUT para ATUALIZAR Tutor.
+- [x] Requisição PUT para ATUALIZAR Tutor.
 - [ ] Requisição GET para BUSCAR todos os Tutores.
 - [ ] Requisição GET para BUSCAR Tutor por ID.
 - [ ] Requisição DELETE para DELETAR Tutor.
