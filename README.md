@@ -30,7 +30,7 @@ Projeto proposto pela Alura no Challenge Backend 6ª Edição.
 - [x] Requisição POST para CRIAR Tutor.
 - [x] Requisição PUT para ATUALIZAR Tutor.
 - [ ] Requisição GET para BUSCAR todos os Tutores.
-- [ ] Requisição GET para BUSCAR Tutor por ID.
+- [x] Requisição GET para BUSCAR Tutor por ID.
 - [ ] Requisição DELETE para DELETAR Tutor.
 - [x] Validações de todos os campos de Tutor.
 - [ ] Testes automatizados (Pelo menos os testes de unidade).

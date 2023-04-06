@@ -9,4 +9,6 @@ public interface TutorService {
   TutorResponse create(CreateTutorRequest createTutorRequest);
 
   TutorResponse update(Long id, UpdateTutorRequest updateTutorRequest);
+
+  TutorResponse findById(Long id);
 }

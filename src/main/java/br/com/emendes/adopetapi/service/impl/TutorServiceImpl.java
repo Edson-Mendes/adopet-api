@@ -65,6 +65,11 @@ public class TutorServiceImpl implements TutorService {
     }
   }
 
+  @Override
+  public TutorResponse findById(Long id) {
+    return tutorMapper.tutorToTutorResponse(findTutorById(id));
+  }
+
   private Tutor findTutorById(Long id) {
     return tutorRepository.findById(id).orElseThrow(() -> new TutorNotFoundException("Tutor not found"));
   }

@@ -35,4 +35,9 @@ public class TutorController {
     return ResponseEntity.ok(tutorService.update(id, updateTutorRequest));
   }
 
+  @GetMapping("/{id}")
+  public ResponseEntity<TutorResponse> findById(@PathVariable(name = "id") Long id) {
+    return ResponseEntity.ok(tutorService.findById(id));
+  }
+
 }
