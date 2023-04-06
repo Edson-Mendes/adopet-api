@@ -3,6 +3,7 @@ package br.com.emendes.adopetapi.controller;
 import br.com.emendes.adopetapi.dto.request.TutorRequest;
 import br.com.emendes.adopetapi.dto.response.TutorResponse;
 import br.com.emendes.adopetapi.service.TutorService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,7 @@ public class TutorController {
 
   @PostMapping
   public ResponseEntity<TutorResponse> create(
-      @RequestBody TutorRequest tutorRequest, UriComponentsBuilder uriComponentsBuilder) {
+      @RequestBody @Valid TutorRequest tutorRequest, UriComponentsBuilder uriComponentsBuilder) {
     TutorResponse tutorResponse = tutorService.create(tutorRequest);
 
     URI uri = uriComponentsBuilder.path("/api/tutor/{id}").build(tutorResponse.getId());
