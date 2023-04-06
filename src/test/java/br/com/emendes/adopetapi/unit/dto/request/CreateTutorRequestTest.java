@@ -15,7 +15,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.List;
 import java.util.Set;
 
-@DisplayName("Unit tests for TutorRequest")
+@DisplayName("Unit tests for CreateTutorRequest")
 class CreateTutorRequestTest {
 
   private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
