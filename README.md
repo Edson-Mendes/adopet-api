@@ -10,12 +10,27 @@ Adopet API é uma REST API de uma plataforma para conectar pessoas que desejam a
 
 Projeto proposto pela Alura no Challenge Backend 6ª Edição.
 
+## :toolbox: Tecnologias
+
+- `IntelliJ`
+- `Java 17`
+- `Maven`
+- `Spring Boot, Spring MVC, Spring Data JPA`
+- `Docker`
+- `PostgreSQL`
+- `Flyway`
+- `Lombok`
+- `OpenAPI/Swagger`
+- `Mockito`
+- `JUnit5`
+- `Testes de unidade`
+
 ## :gear: Atualizações semana 1
 - [x] Modelagem da entidade Tutor.
-- [ ] Requisição POST para CRIAR Tutor.
+- [x] Requisição POST para CRIAR Tutor.
 - [ ] Requisição PUT para ATUALIZAR Tutor.
 - [ ] Requisição GET para BUSCAR todos os Tutores.
 - [ ] Requisição GET para BUSCAR Tutor por ID.
 - [ ] Requisição DELETE para DELETAR Tutor.
-- [ ] Validações de todos os campos de Tutor.
+- [x] Validações de todos os campos de Tutor.
 - [ ] Testes automatizados (Pelo menos os testes de unidade).

@@ -1,7 +1,7 @@
 package br.com.emendes.adopetapi.unit.controller;
 
 import br.com.emendes.adopetapi.controller.TutorController;
-import br.com.emendes.adopetapi.dto.request.TutorRequest;
+import br.com.emendes.adopetapi.dto.request.CreateTutorRequest;
 import br.com.emendes.adopetapi.dto.response.TutorResponse;
 import br.com.emendes.adopetapi.exception.EmailAlreadyInUseException;
 import br.com.emendes.adopetapi.exception.PasswordsDoNotMatchException;
@@ -47,7 +47,7 @@ class TutorControllerTest {
     @Test
     @DisplayName("Create must return TutorResponse when create successfully")
     void create_MustReturnTutorResponse_WhenCreateSuccessfully() throws Exception {
-      BDDMockito.when(tutorServiceMock.create(any(TutorRequest.class)))
+      BDDMockito.when(tutorServiceMock.create(any(CreateTutorRequest.class)))
           .thenReturn(tutorResponse());
       String requestBody = """
             {
@@ -73,7 +73,7 @@ class TutorControllerTest {
     @Test
     @DisplayName("Create must return ProblemDetail when passwords do not match")
     void create_MustReturnProblemDetail_WhenPasswordsDoNotMatch() throws Exception {
-      BDDMockito.when(tutorServiceMock.create(any(TutorRequest.class)))
+      BDDMockito.when(tutorServiceMock.create(any(CreateTutorRequest.class)))
           .thenThrow(new PasswordsDoNotMatchException("Passwords do not match"));
       String requestBody = """
             {
@@ -99,7 +99,7 @@ class TutorControllerTest {
     @Test
     @DisplayName("Create must return ProblemDetail when email already exists")
     void create_MustReturnProblemDetail_WhenEmailAlreadyExists() throws Exception {
-      BDDMockito.when(tutorServiceMock.create(any(TutorRequest.class)))
+      BDDMockito.when(tutorServiceMock.create(any(CreateTutorRequest.class)))
           .thenThrow(new EmailAlreadyInUseException("E-mail {lorem@email.com} is already in use"));
       String requestBody = """
             {

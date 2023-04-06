@@ -1,7 +1,7 @@
 package br.com.emendes.adopetapi.unit.mapper;
 
 import br.com.emendes.adopetapi.config.ModelMapperConfig;
-import br.com.emendes.adopetapi.dto.request.TutorRequest;
+import br.com.emendes.adopetapi.dto.request.CreateTutorRequest;
 import br.com.emendes.adopetapi.dto.response.TutorResponse;
 import br.com.emendes.adopetapi.mapper.impl.TutorMapperImpl;
 import br.com.emendes.adopetapi.model.entity.Tutor;
@@ -9,7 +9,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 
 import java.time.LocalDateTime;
 
@@ -26,14 +25,14 @@ class TutorMapperImplTest {
   @Test
   @DisplayName("TutorRequestToTutor must return Tutor when map successfully")
   void tutorRequestToTutor_MustReturnTutor_WhenMapSuccessfully() {
-    TutorRequest tutorRequest = TutorRequest.builder()
+    CreateTutorRequest createTutorRequest = CreateTutorRequest.builder()
         .name("Lorem Ipsum")
         .email("lorem@email.com")
         .password("1234567890")
         .confirmPassword("1234567890")
         .build();
 
-    Tutor actualTutor = tutorMapper.tutorRequestToTutor(tutorRequest);
+    Tutor actualTutor = tutorMapper.tutorRequestToTutor(createTutorRequest);
 
     Assertions.assertThat(actualTutor).isNotNull();
     Assertions.assertThat(actualTutor.getId()).isNull();

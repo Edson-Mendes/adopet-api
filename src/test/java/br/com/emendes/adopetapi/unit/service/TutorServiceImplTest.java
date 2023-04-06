@@ -1,6 +1,6 @@
 package br.com.emendes.adopetapi.unit.service;
 
-import br.com.emendes.adopetapi.dto.request.TutorRequest;
+import br.com.emendes.adopetapi.dto.request.CreateTutorRequest;
 import br.com.emendes.adopetapi.dto.response.TutorResponse;
 import br.com.emendes.adopetapi.exception.EmailAlreadyInUseException;
 import br.com.emendes.adopetapi.exception.PasswordsDoNotMatchException;
@@ -41,23 +41,23 @@ class TutorServiceImplTest {
     @Test
     @DisplayName("Create must return TutorResponse when create successfully")
     void create_MustReturnTutorResponse_WhenCreateSuccessfully() {
-      BDDMockito.when(tutorMapperMock.tutorRequestToTutor(any(TutorRequest.class)))
+      BDDMockito.when(tutorMapperMock.tutorRequestToTutor(any(CreateTutorRequest.class)))
           .thenReturn(tutorWithoutId());
       BDDMockito.when(tutorRepositoryMock.save(any(Tutor.class)))
           .thenReturn(tutor());
       BDDMockito.when(tutorMapperMock.tutorToTutorResponse(any(Tutor.class)))
           .thenReturn(tutorResponse());
 
-      TutorRequest tutorRequest = TutorRequest.builder()
+      CreateTutorRequest createTutorRequest = CreateTutorRequest.builder()
           .name("Lorem Ipsum")
           .email("lorem@email.com")
           .password("1234567890")
           .confirmPassword("1234567890")
           .build();
 
-      TutorResponse actualTutorResponse = tutorService.create(tutorRequest);
+      TutorResponse actualTutorResponse = tutorService.create(createTutorRequest);
 
-      BDDMockito.verify(tutorMapperMock).tutorRequestToTutor(any(TutorRequest.class));
+      BDDMockito.verify(tutorMapperMock).tutorRequestToTutor(any(CreateTutorRequest.class));
       BDDMockito.verify(tutorMapperMock).tutorToTutorResponse(any(Tutor.class));
       BDDMockito.verify(tutorRepositoryMock).save(any(Tutor.class));
 
@@ -70,25 +70,25 @@ class TutorServiceImplTest {
     @Test
     @DisplayName("Create must throw PasswordsDoNotMatchException when passwords do not match")
     void create_MustThrowPasswordsDoNotMatchException_WhenPasswordsDoNotMatch() {
-      TutorRequest tutorRequest = TutorRequest.builder()
+      CreateTutorRequest createTutorRequest = CreateTutorRequest.builder()
           .password("123456789")
           .confirmPassword("12345678")
           .build();
 
       Assertions.assertThatExceptionOfType(PasswordsDoNotMatchException.class)
-          .isThrownBy(() -> tutorService.create(tutorRequest))
+          .isThrownBy(() -> tutorService.create(createTutorRequest))
           .withMessage("Passwords do not match");
     }
 
     @Test
     @DisplayName("Create must throw EmailAlreadyInUseException when already exists email in the database")
     void create_MustThrowEmailAlreadyInUseException_WhenAlreadyExistsEmailInTheDatabase() {
-      BDDMockito.when(tutorMapperMock.tutorRequestToTutor(any(TutorRequest.class)))
+      BDDMockito.when(tutorMapperMock.tutorRequestToTutor(any(CreateTutorRequest.class)))
           .thenReturn(tutorWithoutId());
       BDDMockito.when(tutorRepositoryMock.save(any(Tutor.class)))
           .thenThrow(new DataIntegrityViolationException("unique_email constraint"));
 
-      TutorRequest tutorRequest = TutorRequest.builder()
+      CreateTutorRequest createTutorRequest = CreateTutorRequest.builder()
           .name("Lorem Ipsum")
           .email("lorem@email.com")
           .password("1234567890")
@@ -96,7 +96,7 @@ class TutorServiceImplTest {
           .build();
 
       Assertions.assertThatExceptionOfType(EmailAlreadyInUseException.class)
-          .isThrownBy(() -> tutorService.create(tutorRequest))
+          .isThrownBy(() -> tutorService.create(createTutorRequest))
           .withMessage("E-mail {lorem@email.com} is already in use");
     }
 

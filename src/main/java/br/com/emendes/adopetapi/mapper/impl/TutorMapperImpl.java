@@ -1,6 +1,6 @@
 package br.com.emendes.adopetapi.mapper.impl;
 
-import br.com.emendes.adopetapi.dto.request.TutorRequest;
+import br.com.emendes.adopetapi.dto.request.CreateTutorRequest;
 import br.com.emendes.adopetapi.dto.response.TutorResponse;
 import br.com.emendes.adopetapi.mapper.TutorMapper;
 import br.com.emendes.adopetapi.model.entity.Tutor;
@@ -15,8 +15,8 @@ public class TutorMapperImpl implements TutorMapper {
   private final ModelMapper modelMapper;
 
   @Override
-  public Tutor tutorRequestToTutor(TutorRequest tutorRequest) {
-    return modelMapper.map(tutorRequest, Tutor.class);
+  public Tutor tutorRequestToTutor(CreateTutorRequest createTutorRequest) {
+    return modelMapper.map(createTutorRequest, Tutor.class);
   }
 
   @Override
