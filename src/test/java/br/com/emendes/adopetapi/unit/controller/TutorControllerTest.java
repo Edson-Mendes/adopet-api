@@ -24,8 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
@@ -49,8 +48,8 @@ class TutorControllerTest {
   class CreateEndpoint {
 
     @Test
-    @DisplayName("Create must return TutorResponse when create successfully")
-    void create_MustReturnTutorResponse_WhenCreateSuccessfully() throws Exception {
+    @DisplayName("Create must return status 201 and TutorResponse when create successfully")
+    void create_MustReturnStatus201AndTutorResponse_WhenCreateSuccessfully() throws Exception {
       BDDMockito.when(tutorServiceMock.create(any(CreateTutorRequest.class)))
           .thenReturn(tutorResponse());
       String requestBody = """
@@ -75,8 +74,8 @@ class TutorControllerTest {
     }
 
     @Test
-    @DisplayName("Create must return ProblemDetail when passwords do not match")
-    void create_MustReturnProblemDetail_WhenPasswordsDoNotMatch() throws Exception {
+    @DisplayName("Create must return status 400 and ProblemDetail when passwords do not match")
+    void create_MustReturnStatus400AndProblemDetail_WhenPasswordsDoNotMatch() throws Exception {
       BDDMockito.when(tutorServiceMock.create(any(CreateTutorRequest.class)))
           .thenThrow(new PasswordsDoNotMatchException("Passwords do not match"));
       String requestBody = """
@@ -101,8 +100,8 @@ class TutorControllerTest {
     }
 
     @Test
-    @DisplayName("Create must return ProblemDetail when email already exists")
-    void create_MustReturnProblemDetail_WhenEmailAlreadyExists() throws Exception {
+    @DisplayName("Create must return status 400 and ProblemDetail when email already exists")
+    void create_MustReturnStatus400AndProblemDetail_WhenEmailAlreadyExists() throws Exception {
       BDDMockito.when(tutorServiceMock.create(any(CreateTutorRequest.class)))
           .thenThrow(new EmailAlreadyInUseException("E-mail {lorem@email.com} is already in use"));
       String requestBody = """
@@ -128,8 +127,8 @@ class TutorControllerTest {
     }
 
     @Test
-    @DisplayName("Create must return ProblemDetail when request body has invalid fields")
-    void create_MustReturnProblemDetail_WhenRequestBodyHasInvalidFields() throws Exception {
+    @DisplayName("Create must return status 400 and ProblemDetail when request body has invalid fields")
+    void create_MustReturnStatus400AndProblemDetail_WhenRequestBodyHasInvalidFields() throws Exception {
       String requestBody = """
             {
               "name" : "",
@@ -167,8 +166,8 @@ class TutorControllerTest {
   class UpdateEndpoint {
 
     @Test
-    @DisplayName("Update must return TutorResponse when update successfully")
-    void update_MustReturnTutorResponse_WhenUpdateSuccessfully() throws Exception {
+    @DisplayName("Update must return status 200 and TutorResponse when update successfully")
+    void update_MustReturnStatus200AndTutorResponse_WhenUpdateSuccessfully() throws Exception {
       BDDMockito.when(tutorServiceMock.update(eq(100L), any(UpdateTutorRequest.class)))
           .thenReturn(updateTutorResponse());
       String requestBody = """
@@ -192,8 +191,8 @@ class TutorControllerTest {
     }
 
     @Test
-    @DisplayName("Update must return ProblemDetail when email already exists")
-    void update_MustReturnProblemDetail_WhenEmailAlreadyExists() throws Exception {
+    @DisplayName("Update must return status 400 and ProblemDetail when email already exists")
+    void update_MustReturnStatus400AndProblemDetail_WhenEmailAlreadyExists() throws Exception {
       BDDMockito.when(tutorServiceMock.update(eq(100L), any(UpdateTutorRequest.class)))
           .thenThrow(new EmailAlreadyInUseException("E-mail {loremdolor@email.com} is already in use"));
       String requestBody = """
@@ -218,8 +217,8 @@ class TutorControllerTest {
     }
 
     @Test
-    @DisplayName("Update must return ProblemDetail when request body has invalid fields")
-    void update_MustReturnProblemDetail_WhenRequestBodyHasInvalidFields() throws Exception {
+    @DisplayName("Update must return status 400 and ProblemDetail when request body has invalid fields")
+    void update_MustReturnStatus400AndProblemDetail_WhenRequestBodyHasInvalidFields() throws Exception {
       String requestBody = """
             {
               "name" : "",
@@ -250,8 +249,8 @@ class TutorControllerTest {
     }
 
     @Test
-    @DisplayName("Update must return ProblemDetail when tutor not found")
-    void update_MustReturnProblemDetail_WhenTutorNotFound() throws Exception {
+    @DisplayName("Update must return status 404 and ProblemDetail when tutor not found")
+    void update_MustReturnStatus404AndProblemDetail_WhenTutorNotFound() throws Exception {
       BDDMockito.when(tutorServiceMock.update(eq(100L), any(UpdateTutorRequest.class)))
           .thenThrow(new TutorNotFoundException("Tutor not found"));
       String requestBody = """
@@ -276,8 +275,8 @@ class TutorControllerTest {
     }
 
     @Test
-    @DisplayName("Update must return ProblemDetail when given id is invalid")
-    void update_MustReturnProblemDetail_WhenGivenIdIsInvalid() throws Exception {
+    @DisplayName("Update must return status 400 and ProblemDetail when given id is invalid")
+    void update_MustReturnStatus400AndProblemDetail_WhenGivenIdIsInvalid() throws Exception {
       String requestBody = """
             {
               "name" : "Lorem Ipsum Dolor",
@@ -297,6 +296,66 @@ class TutorControllerTest {
       Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
           .isEqualTo("An error occurred trying to cast String to Number");
       Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(400);
+    }
+
+  }
+
+  @Nested
+  @DisplayName("Tests for find by id endpoint")
+  class FindByIdEndpoint {
+
+    @Test
+    @DisplayName("FindById must return status 200 and TutorResponse when found successfully")
+    void findById_MustReturnStatus200AndTutorResponse_WhenFoundSuccessfully() throws Exception {
+      BDDMockito.when(tutorServiceMock.findById(100L))
+          .thenReturn(tutorResponse());
+
+      String actualContent = mockMvc.perform(get(TUTOR_URI + "/100"))
+          .andExpect(status().isOk())
+          .andReturn().getResponse().getContentAsString();
+
+      TutorResponse actualTutorResponse = mapper.readValue(actualContent, TutorResponse.class);
+
+      Assertions.assertThat(actualTutorResponse).isNotNull();
+      Assertions.assertThat(actualTutorResponse.getId()).isNotNull().isEqualTo(100L);
+      Assertions.assertThat(actualTutorResponse.getName()).isNotNull().isEqualTo("Lorem Ipsum");
+      Assertions.assertThat(actualTutorResponse.getEmail()).isNotNull().isEqualTo("lorem@email.com");
+    }
+
+    @Test
+    @DisplayName("FindById must return status 400 and ProblemDetail when id is invalid")
+    void findById_MustReturnStatus400AndProblemDetail_WhenIdIsInvalid() throws Exception {
+      String actualContent = mockMvc.perform(get(TUTOR_URI + "/1o0"))
+          .andExpect(status().isBadRequest())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Type mismatch");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("An error occurred trying to cast String to Number");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(400);
+    }
+
+    @Test
+    @DisplayName("FindById must return status 404 and ProblemDetail when tutor not found")
+    void findById_MustReturnStatus404AndProblemDetail_WhenTutorNotFound() throws Exception {
+      BDDMockito.when(tutorServiceMock.findById(100L))
+          .thenThrow(new TutorNotFoundException("Tutor not found"));
+
+      String actualContent = mockMvc
+          .perform(get(TUTOR_URI + "/100"))
+          .andExpect(status().isNotFound())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Tutor not found");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("Tutor not found");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(404);
     }
 
   }

@@ -11,4 +11,5 @@ public interface TutorService {
   TutorResponse update(Long id, UpdateTutorRequest updateTutorRequest);
 
   TutorResponse findById(Long id);
+
 }

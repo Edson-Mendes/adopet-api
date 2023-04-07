@@ -172,6 +172,42 @@ class TutorServiceImplTest {
 
   }
 
+  @Nested
+  @DisplayName("Tests for findById method")
+  class FindByIdMethod {
+
+    @Test
+    @DisplayName("FindById must return TutorResponse when found successfully")
+    void findById_MustReturnTutorResponse_WhenFoundSuccessfully() {
+      BDDMockito.when(tutorRepositoryMock.findById(100L))
+          .thenReturn(Optional.of(tutor()));
+      BDDMockito.when(tutorMapperMock.tutorToTutorResponse(any(Tutor.class)))
+          .thenReturn(tutorResponse());
+
+      TutorResponse actualTutorResponse = tutorService.findById(100L);
+
+      BDDMockito.verify(tutorRepositoryMock).findById(100L);
+      BDDMockito.verify(tutorMapperMock).tutorToTutorResponse(any(Tutor.class));
+
+      Assertions.assertThat(actualTutorResponse).isNotNull();
+      Assertions.assertThat(actualTutorResponse.getId()).isNotNull().isEqualTo(100L);
+      Assertions.assertThat(actualTutorResponse.getName()).isNotNull().isEqualTo("Lorem Ipsum");
+      Assertions.assertThat(actualTutorResponse.getEmail()).isNotNull().isEqualTo("lorem@email.com");
+    }
+
+    @Test
+    @DisplayName("FindById must throw TutorNotFoundException when tutor not found with given id")
+    void findById_MustThrowTutorNotFoundException_WhenTutorNotFoundWithGivenId() {
+      BDDMockito.when(tutorRepositoryMock.findById(100L))
+          .thenReturn(Optional.empty());
+
+      Assertions.assertThatExceptionOfType(TutorNotFoundException.class)
+          .isThrownBy(() -> tutorService.findById(100L))
+          .withMessage("Tutor not found");
+    }
+
+  }
+
   private TutorResponse tutorResponse() {
     return TutorResponse.builder()
         .id(100L)
