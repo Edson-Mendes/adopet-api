@@ -13,6 +13,8 @@ import br.com.emendes.adopetapi.service.TutorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -68,6 +70,13 @@ public class TutorServiceImpl implements TutorService {
   @Override
   public TutorResponse findById(Long id) {
     return tutorMapper.tutorToTutorResponse(findTutorById(id));
+  }
+
+  @Override
+  public Page<TutorResponse> fetchAll(Pageable pageable) {
+    Page<Tutor> tutorPage = tutorRepository.findAll(pageable);
+
+    return tutorPage.map(tutorMapper::tutorToTutorResponse);
   }
 
   private Tutor findTutorById(Long id) {

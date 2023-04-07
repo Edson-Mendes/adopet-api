@@ -6,6 +6,9 @@ import br.com.emendes.adopetapi.dto.response.TutorResponse;
 import br.com.emendes.adopetapi.service.TutorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -38,6 +41,11 @@ public class TutorController {
   @GetMapping("/{id}")
   public ResponseEntity<TutorResponse> findById(@PathVariable(name = "id") Long id) {
     return ResponseEntity.ok(tutorService.findById(id));
+  }
+
+  @GetMapping
+  public ResponseEntity<Page<TutorResponse>> fetchAll(@PageableDefault Pageable pageable) {
+    return ResponseEntity.ok(tutorService.fetchAll(pageable));
   }
 
 }
