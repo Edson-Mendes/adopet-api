@@ -372,8 +372,8 @@ class TutorControllerTest {
   class FetchAllEndpoint {
 
     @Test
-    @DisplayName("fetchAll must return Page<TutorResponse> when fetch successfully")
-    void fetchAll_MustReturnPageTutorResponse_WhenFetchSuccessfully() throws Exception {
+    @DisplayName("fetchAll must return status 200 and Page<TutorResponse> when fetch successfully")
+    void fetchAll_MustReturnStatus200AndPageTutorResponse_WhenFetchSuccessfully() throws Exception {
       BDDMockito.when(tutorServiceMock.fetchAll(PAGEABLE))
           .thenReturn(new PageImpl<>(List.of(tutorResponse()), PAGEABLE, 1));
 
@@ -385,6 +385,57 @@ class TutorControllerTest {
           .readValue(actualContent, new TypeReference<PageableResponse<TutorResponse>>() {});
 
       Assertions.assertThat(actualTutorResponsePage).isNotNull().isNotEmpty().hasSize(1);
+    }
+
+  }
+
+  @Nested
+  @DisplayName("Tests for delete endpoint")
+  class DeleteEndpoint {
+
+    @Test
+    @DisplayName("Delete must return status 204 when delete successfully")
+    void delete_MustReturnStatus204_WhenDeleteSuccessfully() throws Exception {
+      BDDMockito.doNothing().when(tutorServiceMock).deleteById(100L);
+
+      mockMvc.perform(delete(TUTOR_URI+"/100"))
+          .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("Delete must return status 400 and ProblemDetail when id is invalid")
+    void delete_MustReturnStatus400AndProblemDetail_WhenIdIsInvalid() throws Exception {
+      String actualContent = mockMvc.perform(delete(TUTOR_URI + "/1o0"))
+          .andExpect(status().isBadRequest())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Type mismatch");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("An error occurred trying to cast String to Number");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(400);
+    }
+
+    @Test
+    @DisplayName("Delete must return status 404 and ProblemDetail when tutor do not exists")
+    void delete_MustReturnStatus404AndProblemDetail_WhenTutorDoNotExists() throws Exception {
+      BDDMockito.when(tutorServiceMock.deleteById(100L))
+          .thenThrow(new TutorNotFoundException("Tutor not found"));
+
+      String actualContent = mockMvc
+          .perform(delete(TUTOR_URI + "/100"))
+          .andExpect(status().isNotFound())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Tutor not found");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("Tutor not found");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(404);
     }
 
   }

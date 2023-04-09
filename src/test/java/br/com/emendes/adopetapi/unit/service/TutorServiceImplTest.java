@@ -235,6 +235,34 @@ class TutorServiceImplTest {
 
   }
 
+  @Nested
+  @DisplayName("Tests for deleteById method")
+  class DeleteByIdMethod {
+
+    @Test
+    @DisplayName("DeleteById must call TutorRepository#delete when delete tutor")
+    void deleteById_MustCallTutorRepositoryDelete_WhenDeleteTutor() {
+      BDDMockito.doNothing().when(tutorRepositoryMock).delete(any(Tutor.class));
+
+      tutorService.deleteById(100L);
+
+      BDDMockito.verify(tutorRepositoryMock).findById(100L);
+      BDDMockito.verify(tutorRepositoryMock).delete(any(Tutor.class));
+    }
+
+    @Test
+    @DisplayName("DeleteById must throw TutorNotFoundException when tutor do not exists with given id")
+    void deleteById_MustThrowTutorNotFoundException_WhenTutorDoNotExistsWithGivenId() {
+      BDDMockito.when(tutorRepositoryMock.findById(100L))
+          .thenReturn(Optional.empty());
+
+      Assertions.assertThatExceptionOfType(TutorNotFoundException.class)
+          .isThrownBy(() -> tutorService.deleteById(100L))
+          .withMessage("Tutor not found");
+    }
+
+  }
+
   private TutorResponse tutorResponse() {
     return TutorResponse.builder()
         .id(100L)
