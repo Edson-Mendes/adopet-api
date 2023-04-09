@@ -288,8 +288,6 @@ class TutorServiceImplTest {
         .email("lorem@email.com")
         .password("1234567890")
         .createdAt(LocalDateTime.parse("2023-04-02T10:30:00"))
-        .deletedAt(null)
-        .enabled(true)
         .build();
   }
 
@@ -300,8 +298,6 @@ class TutorServiceImplTest {
         .email("loremdolor@email.com")
         .password("1234567890")
         .createdAt(LocalDateTime.parse("2023-04-02T10:30:00"))
-        .deletedAt(null)
-        .enabled(true)
         .build();
   }
 
@@ -312,8 +308,6 @@ class TutorServiceImplTest {
         .email("lorem@email.com")
         .password("1234567890")
         .createdAt(null)
-        .deletedAt(null)
-        .enabled(true)
         .build();
   }
 

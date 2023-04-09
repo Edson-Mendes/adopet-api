@@ -10,6 +10,22 @@ Adopet API é uma REST API de uma plataforma para conectar pessoas que desejam a
 
 Projeto proposto pela Alura no Challenge Backend 6ª Edição.
 
+## :bulb: Funcionalidades
+
+### :bust_in_silhouette: Tutor
+- `Cadastrar`: Salvar Tutor através de um **POST /api/tutors** com as informações de *name*, *email*, *password* e *confirmPassword*
+em um JSON no corpo da requisição.</br></br>
+
+- `Atualizar`: Atualizar Tutor através de um **PUT /api/tutors/{ID}**, onde *ID* é o identificador do Tutor, 
+os novos dados do tutor devem ser enviados no corpo da requisição.</br></br>
+
+- `Buscar por id`: Busca Tutor por ID através de um **GET /api/tutors/{ID}**, onde *{ID}* é o identificador do Tutor.</br></br>
+
+- `Buscar todos`: Busca paginada de tutores através de um **GET /api/tutors**.</br></br>
+
+- `Deletar`: Deletar Tutor através de um **DELETE /api/tutors/{ID}**, onde *{ID}* é o identificador do Tutor.</br>
+
+
 ## :toolbox: Tecnologias
 
 - `IntelliJ`
@@ -29,8 +45,8 @@ Projeto proposto pela Alura no Challenge Backend 6ª Edição.
 - [x] Modelagem da entidade Tutor.
 - [x] Requisição POST para CRIAR Tutor.
 - [x] Requisição PUT para ATUALIZAR Tutor.
-- [ ] Requisição GET para BUSCAR todos os Tutores.
+- [x] Requisição GET para BUSCAR todos os Tutores.
 - [x] Requisição GET para BUSCAR Tutor por ID.
-- [ ] Requisição DELETE para DELETAR Tutor.
+- [x] Requisição DELETE para DELETAR Tutor.
 - [x] Validações de todos os campos de Tutor.
-- [ ] Testes automatizados (Pelo menos os testes de unidade).
+- [x] Testes automatizados (Pelo menos os testes de unidade).

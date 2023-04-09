@@ -25,8 +25,5 @@ public class Tutor {
   private String email;
   @Column(nullable = false)
   private LocalDateTime createdAt;
-  @Column(nullable = false)
-  private LocalDateTime deletedAt;
-  private boolean enabled;
 
 }

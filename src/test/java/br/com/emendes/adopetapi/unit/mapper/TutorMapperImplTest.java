@@ -40,8 +40,6 @@ class TutorMapperImplTest {
     Assertions.assertThat(actualTutor.getEmail()).isNotNull().isEqualTo("lorem@email.com");
     Assertions.assertThat(actualTutor.getPassword()).isNotNull().isEqualTo("1234567890");
     Assertions.assertThat(actualTutor.getCreatedAt()).isNull();
-    Assertions.assertThat(actualTutor.getDeletedAt()).isNull();
-    Assertions.assertThat(actualTutor.isEnabled()).isTrue();
   }
 
   @Test
@@ -53,8 +51,6 @@ class TutorMapperImplTest {
         .email("lorem@email.com")
         .password("1234567890")
         .createdAt(LocalDateTime.parse("2023-04-02T10:30:00"))
-        .deletedAt(null)
-        .enabled(true)
         .build();
 
     TutorResponse actualTutorResponse = tutorMapper.tutorToTutorResponse(tutor);
