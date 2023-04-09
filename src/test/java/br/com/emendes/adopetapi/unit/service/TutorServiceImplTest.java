@@ -19,11 +19,16 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
+import static br.com.emendes.adopetapi.util.ConstantUtils.PAGEABLE;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(SpringExtension.class)
@@ -204,6 +209,28 @@ class TutorServiceImplTest {
       Assertions.assertThatExceptionOfType(TutorNotFoundException.class)
           .isThrownBy(() -> tutorService.findById(100L))
           .withMessage("Tutor not found");
+    }
+
+  }
+
+  @Nested
+  @DisplayName("Tests for fetchAll method")
+  class FetchAllMethod {
+
+    @Test
+    @DisplayName("fetchAll must return Page<TutorResponse> when fetch successfully")
+    void fetchAll_MustReturnPageTutorResponse_WhenFetchSuccessfully() {
+      BDDMockito.when(tutorRepositoryMock.findAll(PAGEABLE))
+          .thenReturn(new PageImpl<>(List.of(tutor()), PAGEABLE, 1));
+      BDDMockito.when(tutorMapperMock.tutorToTutorResponse(any(Tutor.class)))
+          .thenReturn(tutorResponse());
+
+      Page<TutorResponse> actualTutorResponsePage = tutorService.fetchAll(PAGEABLE);
+
+      BDDMockito.verify(tutorRepositoryMock).findAll(any(Pageable.class));
+      BDDMockito.verify(tutorMapperMock).tutorToTutorResponse(any(Tutor.class));
+
+      Assertions.assertThat(actualTutorResponsePage).isNotNull().isNotEmpty().hasSize(1);
     }
 
   }

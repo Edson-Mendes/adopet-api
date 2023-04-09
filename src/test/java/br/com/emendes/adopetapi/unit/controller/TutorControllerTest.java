@@ -8,6 +8,8 @@ import br.com.emendes.adopetapi.exception.EmailAlreadyInUseException;
 import br.com.emendes.adopetapi.exception.PasswordsDoNotMatchException;
 import br.com.emendes.adopetapi.exception.TutorNotFoundException;
 import br.com.emendes.adopetapi.service.TutorService;
+import br.com.emendes.adopetapi.util.PageableResponse;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -18,10 +20,15 @@ import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ProblemDetail;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
+import static br.com.emendes.adopetapi.util.ConstantUtils.PAGEABLE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -356,6 +363,28 @@ class TutorControllerTest {
       Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
           .isEqualTo("Tutor not found");
       Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(404);
+    }
+
+  }
+
+  @Nested
+  @DisplayName("Tests for fetch all endpoint")
+  class FetchAllEndpoint {
+
+    @Test
+    @DisplayName("fetchAll must return Page<TutorResponse> when fetch successfully")
+    void fetchAll_MustReturnPageTutorResponse_WhenFetchSuccessfully() throws Exception {
+      BDDMockito.when(tutorServiceMock.fetchAll(PAGEABLE))
+          .thenReturn(new PageImpl<>(List.of(tutorResponse()), PAGEABLE, 1));
+
+      String actualContent = mockMvc.perform(get(TUTOR_URI))
+          .andExpect(status().isOk())
+          .andReturn().getResponse().getContentAsString();
+
+      Page<TutorResponse> actualTutorResponsePage = mapper
+          .readValue(actualContent, new TypeReference<PageableResponse<TutorResponse>>() {});
+
+      Assertions.assertThat(actualTutorResponsePage).isNotNull().isNotEmpty().hasSize(1);
     }
 
   }
