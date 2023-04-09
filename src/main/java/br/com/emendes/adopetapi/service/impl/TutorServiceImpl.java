@@ -79,6 +79,13 @@ public class TutorServiceImpl implements TutorService {
     return tutorPage.map(tutorMapper::tutorToTutorResponse);
   }
 
+  @Override
+  public void deleteById(Long id) {
+    Tutor tutor = findTutorById(id);
+
+    tutorRepository.delete(tutor);
+  }
+
   private Tutor findTutorById(Long id) {
     return tutorRepository.findById(id).orElseThrow(() -> new TutorNotFoundException("Tutor not found"));
   }

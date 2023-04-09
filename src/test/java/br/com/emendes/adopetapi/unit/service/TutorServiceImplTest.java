@@ -242,6 +242,8 @@ class TutorServiceImplTest {
     @Test
     @DisplayName("DeleteById must call TutorRepository#delete when delete tutor")
     void deleteById_MustCallTutorRepositoryDelete_WhenDeleteTutor() {
+      BDDMockito.when(tutorRepositoryMock.findById(100L))
+              .thenReturn(Optional.of(tutor()));
       BDDMockito.doNothing().when(tutorRepositoryMock).delete(any(Tutor.class));
 
       tutorService.deleteById(100L);

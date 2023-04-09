@@ -421,8 +421,10 @@ class TutorControllerTest {
     @Test
     @DisplayName("Delete must return status 404 and ProblemDetail when tutor do not exists")
     void delete_MustReturnStatus404AndProblemDetail_WhenTutorDoNotExists() throws Exception {
-      BDDMockito.when(tutorServiceMock.deleteById(100L))
-          .thenThrow(new TutorNotFoundException("Tutor not found"));
+//      BDDMockito.when(tutorServiceMock.deleteById(100L))
+//          .thenThrow(new TutorNotFoundException("Tutor not found"));
+      BDDMockito.willThrow(new TutorNotFoundException("Tutor not found"))
+          .given(tutorServiceMock).deleteById(100L);
 
       String actualContent = mockMvc
           .perform(delete(TUTOR_URI + "/100"))

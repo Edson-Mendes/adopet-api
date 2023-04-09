@@ -48,4 +48,11 @@ public class TutorController {
     return ResponseEntity.ok(tutorService.fetchAll(pageable));
   }
 
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> delete(@PathVariable(name = "id") Long id) {
+    tutorService.deleteById(id);
+
+    return ResponseEntity.noContent().build();
+  }
+
 }

@@ -16,4 +16,6 @@ public interface TutorService {
 
   Page<TutorResponse> fetchAll(Pageable pageable);
 
+  void deleteById(Long id);
+
 }
