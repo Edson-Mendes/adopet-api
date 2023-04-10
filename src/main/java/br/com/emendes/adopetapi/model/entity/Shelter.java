@@ -12,8 +12,8 @@ import java.util.Collection;
 @Setter
 @Builder
 @Entity
-@Table(name = "t_animal_shelter")
-public class AnimalShelter {
+@Table(name = "t_shelter")
+public class Shelter {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class AnimalShelter {
   private String name;
   @Column(nullable = false)
   private LocalDateTime createdAt;
-  @OneToMany(mappedBy = "animalShelter", cascade = {CascadeType.REMOVE})
+  @OneToMany(mappedBy = "shelter", cascade = {CascadeType.REMOVE})
   private Collection<Pet> pets;
 
 }

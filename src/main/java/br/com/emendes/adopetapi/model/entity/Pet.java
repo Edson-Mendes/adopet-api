@@ -28,6 +28,6 @@ public class Pet {
   @Column(nullable = false)
   private LocalDateTime createdAt;
   @ManyToOne(optional = false)
-  private AnimalShelter animalShelter;
+  private Shelter shelter;
 
 }

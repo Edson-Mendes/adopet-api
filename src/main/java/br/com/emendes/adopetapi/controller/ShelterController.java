@@ -1,8 +1,8 @@
 package br.com.emendes.adopetapi.controller;
 
-import br.com.emendes.adopetapi.dto.request.AnimalShelterRequest;
-import br.com.emendes.adopetapi.dto.response.AnimalShelterResponse;
-import br.com.emendes.adopetapi.service.AnimalShelterService;
+import br.com.emendes.adopetapi.dto.request.ShelterRequest;
+import br.com.emendes.adopetapi.dto.response.ShelterResponse;
+import br.com.emendes.adopetapi.service.ShelterService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,16 +19,16 @@ import java.net.URI;
 @RequestMapping("/api/shelters")
 public class ShelterController {
 
-  private final AnimalShelterService animalShelterService;
+  private final ShelterService shelterService;
 
   @PostMapping
-  public ResponseEntity<AnimalShelterResponse> create(
-      @RequestBody @Valid AnimalShelterRequest animalShelterRequest, UriComponentsBuilder uriComponentsBuilder) {
-    AnimalShelterResponse animalShelterResponse = animalShelterService.create(animalShelterRequest);
+  public ResponseEntity<ShelterResponse> create(
+      @RequestBody @Valid ShelterRequest shelterRequest, UriComponentsBuilder uriComponentsBuilder) {
+    ShelterResponse shelterResponse = shelterService.create(shelterRequest);
 
-    URI uri = uriComponentsBuilder.path("/api/shelters/{id}").build(animalShelterResponse.getId());
+    URI uri = uriComponentsBuilder.path("/api/shelters/{id}").build(shelterResponse.getId());
 
-    return ResponseEntity.created(uri).body(animalShelterResponse);
+    return ResponseEntity.created(uri).body(shelterResponse);
   }
 
 }

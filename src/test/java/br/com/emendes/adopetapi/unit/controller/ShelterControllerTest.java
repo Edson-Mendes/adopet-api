@@ -1,9 +1,9 @@
 package br.com.emendes.adopetapi.unit.controller;
 
 import br.com.emendes.adopetapi.controller.ShelterController;
-import br.com.emendes.adopetapi.dto.request.AnimalShelterRequest;
-import br.com.emendes.adopetapi.dto.response.AnimalShelterResponse;
-import br.com.emendes.adopetapi.service.AnimalShelterService;
+import br.com.emendes.adopetapi.dto.request.ShelterRequest;
+import br.com.emendes.adopetapi.dto.response.ShelterResponse;
+import br.com.emendes.adopetapi.service.ShelterService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -19,7 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static br.com.emendes.adopetapi.util.ConstantUtils.CONTENT_TYPE;
-import static br.com.emendes.adopetapi.util.ShelterUtils.animalShelterResponse;
+import static br.com.emendes.adopetapi.util.ShelterUtils.shelterResponse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,7 +35,7 @@ class ShelterControllerTest {
   @Autowired
   private ObjectMapper mapper;
   @MockBean
-  private AnimalShelterService animalShelterServiceMock;
+  private ShelterService shelterServiceMock;
 
   private static final String SHELTER_URI = "/api/shelters";
 
@@ -46,8 +46,8 @@ class ShelterControllerTest {
     @Test
     @DisplayName("Create must return status 201 and ShelterResponse when create successfully")
     void create_MustReturnStatus201AndShelterResponse_WhenCreateSuccessfully() throws Exception {
-      BDDMockito.when(animalShelterServiceMock.create(any(AnimalShelterRequest.class)))
-          .thenReturn(animalShelterResponse());
+      BDDMockito.when(shelterServiceMock.create(any(ShelterRequest.class)))
+          .thenReturn(shelterResponse());
       String requestBody = """
             {
               "name" : "Animal Shelter"
@@ -58,11 +58,11 @@ class ShelterControllerTest {
           .andExpect(status().isCreated())
           .andReturn().getResponse().getContentAsString();
 
-      AnimalShelterResponse actualAnimalShelterResponse = mapper.readValue(actualContent, AnimalShelterResponse.class);
+      ShelterResponse actualShelterResponse = mapper.readValue(actualContent, ShelterResponse.class);
 
-      Assertions.assertThat(actualAnimalShelterResponse).isNotNull();
-      Assertions.assertThat(actualAnimalShelterResponse.getId()).isNotNull().isEqualTo(1000L);
-      Assertions.assertThat(actualAnimalShelterResponse.getName()).isNotNull().isEqualTo("Animal Shelter");
+      Assertions.assertThat(actualShelterResponse).isNotNull();
+      Assertions.assertThat(actualShelterResponse.getId()).isNotNull().isEqualTo(1000L);
+      Assertions.assertThat(actualShelterResponse.getName()).isNotNull().isEqualTo("Animal Shelter");
     }
 
     @Test
