@@ -27,7 +27,7 @@ public class TutorController {
       @RequestBody @Valid CreateTutorRequest createTutorRequest, UriComponentsBuilder uriComponentsBuilder) {
     TutorResponse tutorResponse = tutorService.create(createTutorRequest);
 
-    URI uri = uriComponentsBuilder.path("/api/tutor/{id}").build(tutorResponse.getId());
+    URI uri = uriComponentsBuilder.path("/api/tutors/{id}").build(tutorResponse.getId());
 
     return ResponseEntity.created(uri).body(tutorResponse);
   }

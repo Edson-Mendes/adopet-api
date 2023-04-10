@@ -7,10 +7,12 @@ import br.com.emendes.adopetapi.model.entity.AnimalShelter;
 import br.com.emendes.adopetapi.repository.AnimalShelterRepository;
 import br.com.emendes.adopetapi.service.AnimalShelterService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class AnimalShelterServiceImpl implements AnimalShelterService {
@@ -26,6 +28,7 @@ public class AnimalShelterServiceImpl implements AnimalShelterService {
 
     animalShelter = animalShelterRepository.save(animalShelter);
 
+    log.info("Shelter created successfully with id : {}", animalShelter.getId());
     return animalShelterMapper.animalShelterToAnimalShelterResponse(animalShelter);
   }
 
