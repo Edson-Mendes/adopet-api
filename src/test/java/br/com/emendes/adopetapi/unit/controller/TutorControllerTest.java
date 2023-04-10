@@ -29,6 +29,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static br.com.emendes.adopetapi.util.ConstantUtils.PAGEABLE;
+import static br.com.emendes.adopetapi.util.TutorUtils.tutorResponse;
+import static br.com.emendes.adopetapi.util.TutorUtils.updatedTutorResponse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -176,7 +178,7 @@ class TutorControllerTest {
     @DisplayName("Update must return status 200 and TutorResponse when update successfully")
     void update_MustReturnStatus200AndTutorResponse_WhenUpdateSuccessfully() throws Exception {
       BDDMockito.when(tutorServiceMock.update(eq(100L), any(UpdateTutorRequest.class)))
-          .thenReturn(updateTutorResponse());
+          .thenReturn(updatedTutorResponse());
       String requestBody = """
             {
               "name" : "Lorem Ipsum Dolor",
@@ -382,7 +384,8 @@ class TutorControllerTest {
           .andReturn().getResponse().getContentAsString();
 
       Page<TutorResponse> actualTutorResponsePage = mapper
-          .readValue(actualContent, new TypeReference<PageableResponse<TutorResponse>>() {});
+          .readValue(actualContent, new TypeReference<PageableResponse<TutorResponse>>() {
+          });
 
       Assertions.assertThat(actualTutorResponsePage).isNotNull().isNotEmpty().hasSize(1);
     }
@@ -398,7 +401,7 @@ class TutorControllerTest {
     void delete_MustReturnStatus204_WhenDeleteSuccessfully() throws Exception {
       BDDMockito.doNothing().when(tutorServiceMock).deleteById(100L);
 
-      mockMvc.perform(delete(TUTOR_URI+"/100"))
+      mockMvc.perform(delete(TUTOR_URI + "/100"))
           .andExpect(status().isNoContent());
     }
 
@@ -440,22 +443,6 @@ class TutorControllerTest {
       Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(404);
     }
 
-  }
-
-  private TutorResponse tutorResponse() {
-    return TutorResponse.builder()
-        .id(100L)
-        .name("Lorem Ipsum")
-        .email("lorem@email.com")
-        .build();
-  }
-
-  private TutorResponse updateTutorResponse() {
-    return TutorResponse.builder()
-        .id(100L)
-        .name("Lorem Ipsum Dolor")
-        .email("loremdolor@email.com")
-        .build();
   }
 
 }

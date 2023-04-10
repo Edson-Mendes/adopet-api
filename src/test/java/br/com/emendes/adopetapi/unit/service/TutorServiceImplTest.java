@@ -24,11 +24,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static br.com.emendes.adopetapi.util.ConstantUtils.PAGEABLE;
+import static br.com.emendes.adopetapi.util.TutorUtils.*;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(SpringExtension.class)
@@ -243,7 +243,7 @@ class TutorServiceImplTest {
     @DisplayName("DeleteById must call TutorRepository#delete when delete tutor")
     void deleteById_MustCallTutorRepositoryDelete_WhenDeleteTutor() {
       BDDMockito.when(tutorRepositoryMock.findById(100L))
-              .thenReturn(Optional.of(tutor()));
+          .thenReturn(Optional.of(tutor()));
       BDDMockito.doNothing().when(tutorRepositoryMock).delete(any(Tutor.class));
 
       tutorService.deleteById(100L);
@@ -263,52 +263,6 @@ class TutorServiceImplTest {
           .withMessage("Tutor not found");
     }
 
-  }
-
-  private TutorResponse tutorResponse() {
-    return TutorResponse.builder()
-        .id(100L)
-        .name("Lorem Ipsum")
-        .email("lorem@email.com")
-        .build();
-  }
-
-  private TutorResponse updatedTutorResponse() {
-    return TutorResponse.builder()
-        .id(100L)
-        .name("Lorem Ipsum Dolor")
-        .email("loremdolor@email.com")
-        .build();
-  }
-
-  private Tutor tutor() {
-    return Tutor.builder()
-        .id(100L)
-        .name("Lorem Ipsum")
-        .email("lorem@email.com")
-        .password("1234567890")
-        .createdAt(LocalDateTime.parse("2023-04-02T10:30:00"))
-        .build();
-  }
-
-  private Tutor updatedTutor() {
-    return Tutor.builder()
-        .id(100L)
-        .name("Lorem Ipsum Dolor")
-        .email("loremdolor@email.com")
-        .password("1234567890")
-        .createdAt(LocalDateTime.parse("2023-04-02T10:30:00"))
-        .build();
-  }
-
-  private Tutor tutorWithoutId() {
-    return Tutor.builder()
-        .id(null)
-        .name("Lorem Ipsum")
-        .email("lorem@email.com")
-        .password("1234567890")
-        .createdAt(null)
-        .build();
   }
 
 }
