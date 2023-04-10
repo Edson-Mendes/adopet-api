@@ -4,6 +4,8 @@ import br.com.emendes.adopetapi.controller.ShelterController;
 import br.com.emendes.adopetapi.dto.request.ShelterRequest;
 import br.com.emendes.adopetapi.dto.response.ShelterResponse;
 import br.com.emendes.adopetapi.service.ShelterService;
+import br.com.emendes.adopetapi.util.PageableResponse;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -14,13 +16,19 @@ import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ProblemDetail;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static br.com.emendes.adopetapi.util.ConstantUtils.CONTENT_TYPE;
+import static br.com.emendes.adopetapi.util.ConstantUtils.PAGEABLE;
 import static br.com.emendes.adopetapi.util.ShelterUtils.shelterResponse;
 import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -93,6 +101,29 @@ class ShelterControllerTest {
 
       Assertions.assertThat(actualFields).isNotNull().contains("name");
       Assertions.assertThat(actualMessages).isNotNull().contains("name must contain between 2 and 100 characters");
+    }
+
+  }
+
+  @Nested
+  @DisplayName("Tests for fetch all endpoint")
+  class FetchAllEndpoint {
+
+    @Test
+    @DisplayName("fetchAll must return status 200 and Page<ShelterResponse> when fetch successfully")
+    void fetchAll_MustReturnStatus200AndPageShelterResponseWhenFetchSuccessfully() throws Exception {
+      BDDMockito.when(shelterServiceMock.fetchAll(PAGEABLE))
+          .thenReturn(new PageImpl<>(List.of(shelterResponse()), PAGEABLE, 1));
+
+      String actualContent = mockMvc.perform(get(SHELTER_URI))
+          .andExpect(status().isOk())
+          .andReturn().getResponse().getContentAsString();
+
+      Page<ShelterResponse> actualTutorResponsePage = mapper
+          .readValue(actualContent, new TypeReference<PageableResponse<ShelterResponse>>() {
+          });
+
+      Assertions.assertThat(actualTutorResponsePage).isNotNull().isNotEmpty().hasSize(1);
     }
 
   }

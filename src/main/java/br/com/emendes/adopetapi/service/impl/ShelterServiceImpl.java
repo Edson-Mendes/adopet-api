@@ -8,6 +8,8 @@ import br.com.emendes.adopetapi.repository.ShelterRepository;
 import br.com.emendes.adopetapi.service.ShelterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,6 +32,13 @@ public class ShelterServiceImpl implements ShelterService {
 
     log.info("Shelter created successfully with id : {}", shelter.getId());
     return shelterMapper.shelterToShelterResponse(shelter);
+  }
+
+  @Override
+  public Page<ShelterResponse> fetchAll(Pageable pageable) {
+    Page<Shelter> shelterPage = shelterRepository.findAll(pageable);
+
+    return shelterPage.map(shelterMapper::shelterToShelterResponse);
   }
 
 }

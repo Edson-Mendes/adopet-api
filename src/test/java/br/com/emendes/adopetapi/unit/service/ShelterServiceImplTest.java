@@ -14,8 +14,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.List;
+
+import static br.com.emendes.adopetapi.util.ConstantUtils.PAGEABLE;
 import static br.com.emendes.adopetapi.util.ShelterUtils.*;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -57,6 +63,28 @@ class ShelterServiceImplTest {
       Assertions.assertThat(actualShelterResponse).isNotNull();
       Assertions.assertThat(actualShelterResponse.getId()).isNotNull().isEqualTo(1000L);
       Assertions.assertThat(actualShelterResponse.getName()).isNotNull().isEqualTo("Animal Shelter");
+    }
+
+  }
+
+  @Nested
+  @DisplayName("Tests for fetchAll method")
+  class FetchAllMethod {
+
+    @Test
+    @DisplayName("fetchAll must return Page<ShelterResponse> when fetch successfully")
+    void fetchAll_MustReturnPageShelterResponse_WhenFetchSuccessfully() {
+      BDDMockito.when(shelterRepositoryMock.findAll(PAGEABLE))
+          .thenReturn(new PageImpl<>(List.of(shelter()), PAGEABLE, 1));
+      BDDMockito.when(shelterMapperMock.shelterToShelterResponse(any(Shelter.class)))
+          .thenReturn(shelterResponse());
+
+      Page<ShelterResponse> actualTutorResponsePage = shelterService.fetchAll(PAGEABLE);
+
+      BDDMockito.verify(shelterRepositoryMock).findAll(any(Pageable.class));
+      BDDMockito.verify(shelterMapperMock).shelterToShelterResponse(any(Shelter.class));
+
+      Assertions.assertThat(actualTutorResponsePage).isNotNull().isNotEmpty().hasSize(1);
     }
 
   }

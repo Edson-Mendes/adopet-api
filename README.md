@@ -12,7 +12,7 @@ Projeto proposto pela Alura no Challenge Backend 6ª Edição.
 
 ## :bulb: Funcionalidades
 
-### :bust_in_silhouette: Tutor
+#### :bust_in_silhouette: Tutor
 - `Cadastrar`: Salvar Tutor através de um **POST /api/tutors** com as informações de *name*, *email*, *password* e *confirmPassword*
 em um JSON no corpo da requisição.</br>
 
@@ -25,6 +25,11 @@ os novos dados do tutor devem ser enviados no corpo da requisição.</br>
 
 - `Deletar`: Deletar Tutor através de um **DELETE /api/tutors/{ID}**, onde *{ID}* é o identificador do Tutor.</br>
 
+#### :european_castle: Shelter
+- `Cadastrar`: Salvar Shelter através de um **POST /api/shelters** com as informações de *name*
+  em um JSON no corpo da requisição.</br>
+
+- `Buscar todos`: Busca paginada de shelters através de um **GET /api/shelters**.</br>
 
 ## :toolbox: Tecnologias
 
@@ -44,9 +49,9 @@ os novos dados do tutor devem ser enviados no corpo da requisição.</br>
 ## :gear: Atualizações semana 2
 - [x] Modelagem da entidade Shelter.
 - [x] Modelagem da entidade Pet.
-- [ ] Requisição POST para CRIAR Shelter.
+- [x] Requisição POST para CRIAR Shelter.
 - [ ] Requisição PUT para ATUALIZAR Shelter.
-- [ ] Requisição GET para BUSCAR todos os Shelters.
+- [x] Requisição GET para BUSCAR todos os Shelters.
 - [ ] Requisição GET para BUSCAR Shelter por ID.
 - [ ] Requisição DELETE para DELETAR Shelter.
 - [ ] Requisição POST para CRIAR Pet.
