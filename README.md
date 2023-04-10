@@ -14,14 +14,14 @@ Projeto proposto pela Alura no Challenge Backend 6ª Edição.
 
 ### :bust_in_silhouette: Tutor
 - `Cadastrar`: Salvar Tutor através de um **POST /api/tutors** com as informações de *name*, *email*, *password* e *confirmPassword*
-em um JSON no corpo da requisição.</br></br>
+em um JSON no corpo da requisição.</br>
 
 - `Atualizar`: Atualizar Tutor através de um **PUT /api/tutors/{ID}**, onde *ID* é o identificador do Tutor, 
-os novos dados do tutor devem ser enviados no corpo da requisição.</br></br>
+os novos dados do tutor devem ser enviados no corpo da requisição.</br>
 
-- `Buscar por id`: Busca Tutor por ID através de um **GET /api/tutors/{ID}**, onde *{ID}* é o identificador do Tutor.</br></br>
+- `Buscar por id`: Busca Tutor por ID através de um **GET /api/tutors/{ID}**, onde *{ID}* é o identificador do Tutor.</br>
 
-- `Buscar todos`: Busca paginada de tutores através de um **GET /api/tutors**.</br></br>
+- `Buscar todos`: Busca paginada de tutores através de um **GET /api/tutors**.</br>
 
 - `Deletar`: Deletar Tutor através de um **DELETE /api/tutors/{ID}**, onde *{ID}* é o identificador do Tutor.</br>
 
@@ -41,12 +41,19 @@ os novos dados do tutor devem ser enviados no corpo da requisição.</br></br>
 - `JUnit5`
 - `Testes de unidade`
 
-## :gear: Atualizações semana 1
-- [x] Modelagem da entidade Tutor.
-- [x] Requisição POST para CRIAR Tutor.
-- [x] Requisição PUT para ATUALIZAR Tutor.
-- [x] Requisição GET para BUSCAR todos os Tutores.
-- [x] Requisição GET para BUSCAR Tutor por ID.
-- [x] Requisição DELETE para DELETAR Tutor.
-- [x] Validações de todos os campos de Tutor.
-- [x] Testes automatizados (Pelo menos os testes de unidade).
+## :gear: Atualizações semana 2
+- [x] Modelagem da entidade Shelter.
+- [x] Modelagem da entidade Pet.
+- [ ] Requisição POST para CRIAR Shelter.
+- [ ] Requisição PUT para ATUALIZAR Shelter.
+- [ ] Requisição GET para BUSCAR todos os Shelters.
+- [ ] Requisição GET para BUSCAR Shelter por ID.
+- [ ] Requisição DELETE para DELETAR Shelter.
+- [ ] Requisição POST para CRIAR Pet.
+- [ ] Requisição PUT para ATUALIZAR Pet.
+- [ ] Requisição GET para BUSCAR todos os Pets.
+- [ ] Requisição GET para BUSCAR Pet por ID.
+- [ ] Requisição DELETE para DELETAR Pet.
+- [ ] Validações de todos os campos de Shelter e Pet.
+- [ ] Regra de negócio para adoção.
+- [ ] Testes automatizados (Pelo menos os testes de unidade).
