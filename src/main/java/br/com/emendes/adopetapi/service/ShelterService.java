@@ -13,4 +13,6 @@ public interface ShelterService {
 
   ShelterResponse findById(Long id);
 
+  ShelterResponse update(Long id, ShelterRequest shelterRequest);
+
 }

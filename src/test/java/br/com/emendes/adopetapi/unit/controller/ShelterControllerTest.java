@@ -28,9 +28,10 @@ import java.util.List;
 import static br.com.emendes.adopetapi.util.ConstantUtils.CONTENT_TYPE;
 import static br.com.emendes.adopetapi.util.ConstantUtils.PAGEABLE;
 import static br.com.emendes.adopetapi.util.ShelterUtils.shelterResponse;
+import static br.com.emendes.adopetapi.util.ShelterUtils.updatedShelterResponse;
 import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
@@ -184,6 +185,114 @@ class ShelterControllerTest {
       Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
           .isEqualTo("Shelter not found");
       Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(404);
+    }
+
+  }
+
+  @Nested
+  @DisplayName("Tests for update endpoint")
+  class UpdateEndpoint {
+
+    @Test
+    @DisplayName("Update must return status 200 and ShelterResponse when update successfully")
+    void update_MustReturnStatus200AndShelterResponse_WhenUpdateSuccessfully() throws Exception {
+      BDDMockito.when(shelterServiceMock.update(eq(1000L), any(ShelterRequest.class)))
+          .thenReturn(updatedShelterResponse());
+      String requestBody = """
+            {
+              "name" : "Animal Shelter ABC"
+            }
+          """;
+
+      String actualContent = mockMvc
+          .perform(put(SHELTER_URI + "/1000").contentType(CONTENT_TYPE).content(requestBody))
+          .andExpect(status().isOk())
+          .andReturn().getResponse().getContentAsString();
+
+      ShelterResponse actualShelterResponse = mapper.readValue(actualContent, ShelterResponse.class);
+
+      Assertions.assertThat(actualShelterResponse).isNotNull();
+      Assertions.assertThat(actualShelterResponse.getId()).isNotNull().isEqualTo(1000L);
+      Assertions.assertThat(actualShelterResponse.getName()).isNotNull().isEqualTo("Animal Shelter ABC");
+    }
+
+    @Test
+    @DisplayName("Update must return status 400 and ProblemDetail when request body has invalid fields")
+    void update_MustReturnStatus400AndProblemDetail_WhenRequestBodyHasInvalidFields() throws Exception {
+      String requestBody = """
+            {
+              "name" : ""
+            }
+          """;
+
+      String actualContent = mockMvc
+          .perform(put(SHELTER_URI + "/1000").contentType(CONTENT_TYPE).content(requestBody))
+          .andExpect(status().isBadRequest())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Invalid arguments");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("Some fields are invalid");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(400);
+
+      Assertions.assertThat(actualProblemDetail.getProperties()).isNotNull();
+
+      String actualFields = (String) actualProblemDetail.getProperties().get("fields");
+      String actualMessages = (String) actualProblemDetail.getProperties().get("messages");
+
+      Assertions.assertThat(actualFields).isNotNull().contains("name");
+      Assertions.assertThat(actualMessages).isNotNull().contains("name must not be blank");
+    }
+
+    @Test
+    @DisplayName("Update must return status 404 and ProblemDetail when shelter not found")
+    void update_MustReturnStatus404AndProblemDetail_WhenShelterNotFound() throws Exception {
+      BDDMockito.when(shelterServiceMock.update(eq(1000L), any(ShelterRequest.class)))
+          .thenThrow(new ShelterNotFoundException("Shelter not found"));
+      String requestBody = """
+            {
+              "name" : "Animal Shelter ABC"
+            }
+          """;
+
+      String actualContent = mockMvc
+          .perform(put(SHELTER_URI + "/1000").contentType(CONTENT_TYPE).content(requestBody))
+          .andExpect(status().isNotFound())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Shelter not found");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("Shelter not found");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(404);
+    }
+
+    @Test
+    @DisplayName("Update must return status 400 and ProblemDetail when given id is invalid")
+    void update_MustReturnStatus400AndProblemDetail_WhenGivenIdIsInvalid() throws Exception {
+      String requestBody = """
+            {
+              "name" : "Animal Shelter ABC"
+            }
+          """;
+
+      String actualContent = mockMvc
+          .perform(put(SHELTER_URI + "/1o00").contentType(CONTENT_TYPE).content(requestBody))
+          .andExpect(status().isBadRequest())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Type mismatch");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("An error occurred trying to cast String to Number");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(400);
     }
 
   }

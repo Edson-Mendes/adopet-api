@@ -126,4 +126,50 @@ class ShelterServiceImplTest {
 
   }
 
+  @Nested
+  @DisplayName("Tests for update method")
+  class UpdateMethod {
+
+    @Test
+    @DisplayName("Update must return ShelterResponse when update successfully")
+    void update_MustReturnShelterResponse_WhenUpdateSuccessfully() {
+      BDDMockito.when(shelterRepositoryMock.findById(1000L))
+          .thenReturn(Optional.of(shelter()));
+      BDDMockito.when(shelterRepositoryMock.save(any(Shelter.class)))
+          .thenReturn(updatedShelter());
+      BDDMockito.when(shelterMapperMock.shelterToShelterResponse(any(Shelter.class)))
+          .thenReturn(updatedShelterResponse());
+
+      ShelterRequest shelterRequest = ShelterRequest.builder()
+          .name("Animal Shelter ABC")
+          .build();
+
+      ShelterResponse actualShelterResponse = shelterService.update(1000L, shelterRequest);
+
+      BDDMockito.verify(shelterMapperMock).shelterToShelterResponse(any(Shelter.class));
+      BDDMockito.verify(shelterRepositoryMock).save(any(Shelter.class));
+      BDDMockito.verify(shelterRepositoryMock).findById(1000L);
+
+      Assertions.assertThat(actualShelterResponse).isNotNull();
+      Assertions.assertThat(actualShelterResponse.getId()).isNotNull().isEqualTo(1000L);
+      Assertions.assertThat(actualShelterResponse.getName()).isNotNull().isEqualTo("Animal Shelter ABC");
+    }
+
+    @Test
+    @DisplayName("Update must throw ShelterNotFoundException when shelter not found with given id")
+    void update_MustThrowShelterNotFoundException_WhenShelterNotFoundWithGivenId() {
+      BDDMockito.when(shelterRepositoryMock.findById(1000L))
+          .thenReturn(Optional.empty());
+
+      ShelterRequest shelterRequest = ShelterRequest.builder()
+          .name("Animal Shelter ABC")
+          .build();
+
+      Assertions.assertThatExceptionOfType(ShelterNotFoundException.class)
+          .isThrownBy(() -> shelterService.update(1000L, shelterRequest))
+          .withMessage("Shelter not found");
+    }
+
+  }
+
 }

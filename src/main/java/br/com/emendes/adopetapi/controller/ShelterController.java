@@ -41,4 +41,10 @@ public class ShelterController {
     return ResponseEntity.ok(shelterService.findById(id));
   }
 
+  @PutMapping("/{id}")
+  public ResponseEntity<ShelterResponse> update(
+      @PathVariable(name = "id") Long id, @RequestBody @Valid ShelterRequest shelterRequest) {
+    return ResponseEntity.ok(shelterService.update(id, shelterRequest));
+  }
+
 }

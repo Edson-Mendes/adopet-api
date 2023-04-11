@@ -29,4 +29,20 @@ public abstract class ShelterUtils {
         .build();
   }
 
+  public static Shelter updatedShelter() {
+    return Shelter.builder()
+        .id(1000L)
+        .name("Animal Shelter ABC")
+        .createdAt(LocalDateTime.parse("2023-04-10T13:00:00"))
+        .pets(null)
+        .build();
+  }
+
+  public static ShelterResponse updatedShelterResponse() {
+    return ShelterResponse.builder()
+        .id(1000L)
+        .name("Animal Shelter ABC")
+        .build();
+  }
+
 }

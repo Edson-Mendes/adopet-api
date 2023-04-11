@@ -2,11 +2,11 @@ package br.com.emendes.adopetapi.service.impl;
 
 import br.com.emendes.adopetapi.dto.request.ShelterRequest;
 import br.com.emendes.adopetapi.dto.response.ShelterResponse;
+import br.com.emendes.adopetapi.exception.ShelterNotFoundException;
 import br.com.emendes.adopetapi.mapper.ShelterMapper;
 import br.com.emendes.adopetapi.model.entity.Shelter;
 import br.com.emendes.adopetapi.repository.ShelterRepository;
 import br.com.emendes.adopetapi.service.ShelterService;
-import br.com.emendes.adopetapi.exception.ShelterNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -39,6 +39,7 @@ public class ShelterServiceImpl implements ShelterService {
   public Page<ShelterResponse> fetchAll(Pageable pageable) {
     Page<Shelter> shelterPage = shelterRepository.findAll(pageable);
 
+    log.info("Fetching page: {}, size: {} of Shelters", pageable.getPageNumber(), pageable.getPageSize());
     return shelterPage.map(shelterMapper::shelterToShelterResponse);
   }
 
@@ -47,7 +48,19 @@ public class ShelterServiceImpl implements ShelterService {
     return shelterMapper.shelterToShelterResponse(findShelterById(id));
   }
 
+  @Override
+  public ShelterResponse update(Long id, ShelterRequest shelterRequest) {
+    Shelter shelter = findShelterById(id);
+
+    shelter.setName(shelterRequest.getName());
+    Shelter updatedShelter = shelterRepository.save(shelter);
+
+    log.info("Shelter updated successfully with id : {}", updatedShelter.getId());
+    return shelterMapper.shelterToShelterResponse(updatedShelter);
+  }
+
   private Shelter findShelterById(Long id) {
+    log.info("Searching for Shelter with id: {}", id);
     return shelterRepository.findById(id).orElseThrow(() -> new ShelterNotFoundException("Shelter not found"));
   }
 
