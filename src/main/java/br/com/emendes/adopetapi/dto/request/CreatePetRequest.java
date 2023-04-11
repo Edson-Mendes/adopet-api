@@ -18,9 +18,9 @@ public class CreatePetRequest {
   @NotBlank(message = "description must not be blank")
   @Size(max = 255, message = "description must contain max {max} characters")
   private String description;
-  @NotNull(message = "age must not be null")
-  @PositiveOrZero(message = "age must be equal to or greater than zero")
-  private Short age;
+  @NotBlank(message = "age must not be blank")
+  @Size(min = 1, max = 50, message = "age must contain between {min} and {max} characters")
+  private String age;
   @NotNull(message = "shelterId must not be null")
   @Positive(message = "shelterId must be greater than zero")
   private Long shelterId;

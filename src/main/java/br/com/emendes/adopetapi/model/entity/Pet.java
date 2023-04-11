@@ -21,10 +21,10 @@ public class Pet {
   private String name;
   @Column(nullable = false)
   private String description;
+  @Column(nullable = false, length = 50)
+  private String age;
   @Column(nullable = false)
-  private Short age;
-  @Column(nullable = false)
-  private Boolean adopted;
+  private boolean adopted;
   @Column(nullable = false)
   private LocalDateTime createdAt;
   @ManyToOne(optional = false)

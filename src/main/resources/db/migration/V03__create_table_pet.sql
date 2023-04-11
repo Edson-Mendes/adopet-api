@@ -1,7 +1,7 @@
 CREATE TABLE t_pet (
     id bigserial NOT NULL,
     name varchar(100) NOT NULL,
-    age smallint NOT NULL,
+    age varchar(50) NOT NULL,
     description varchar(255) NOT NULL,
     adopted bool NOT NULL,
     created_at timestamp NOT NULL,

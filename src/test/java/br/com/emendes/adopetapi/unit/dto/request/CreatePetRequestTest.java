@@ -168,9 +168,8 @@ class CreatePetRequestTest {
     @Test
     @DisplayName("Validate age must not return violations when age is valid")
     void validateAge_MustNotReturnViolations_WhenAgeIsValid() {
-      short age = 1;
       CreatePetRequest createPetRequest = CreatePetRequest.builder()
-          .age(age)
+          .age("3 anos")
           .build();
 
       Set<ConstraintViolation<CreatePetRequest>> actualViolations = validator
@@ -179,11 +178,13 @@ class CreatePetRequestTest {
       Assertions.assertThat(actualViolations).isEmpty();
     }
 
-    @Test
-    @DisplayName("Validate age must return violations when age is null")
-    void validateAge_MustReturnViolations_WhenAgeIsNull() {
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"   ", "\t", "\n"})
+    @DisplayName("Validate age must return violations when age is blank")
+    void validateAge_MustReturnViolations_WhenAgeIsBlank(String blankAge) {
       CreatePetRequest createPetRequest = CreatePetRequest.builder()
-          .age(null)
+          .age(blankAge)
           .build();
 
       Set<ConstraintViolation<CreatePetRequest>> actualViolations = validator
@@ -192,15 +193,18 @@ class CreatePetRequestTest {
       List<String> actualMessages = actualViolations.stream().map(ConstraintViolation::getMessage).toList();
 
       Assertions.assertThat(actualViolations).isNotEmpty();
-      Assertions.assertThat(actualMessages).contains("age must not be null");
+      Assertions.assertThat(actualMessages).contains("age must not be blank");
     }
 
     @Test
-    @DisplayName("Validate age must return violations when age is negative")
-    void validateAge_MustReturnViolations_WhenAgeIsNegative() {
-      short age = -1;
+    @DisplayName("Validate age must return violations when age contains more than 100 characters")
+    void validateAge_MustReturnViolations_WhenAgeContainsMoreThan50Characters() {
+      String ageWithMoreThan50Characters = "Um filhote com 3 meses!!!Um filhote com 3 meses!!!!";
+
+      Assertions.assertThat(ageWithMoreThan50Characters).hasSizeGreaterThan(50);
+
       CreatePetRequest createPetRequest = CreatePetRequest.builder()
-          .age(age)
+          .age(ageWithMoreThan50Characters)
           .build();
 
       Set<ConstraintViolation<CreatePetRequest>> actualViolations = validator
@@ -209,7 +213,7 @@ class CreatePetRequestTest {
       List<String> actualMessages = actualViolations.stream().map(ConstraintViolation::getMessage).toList();
 
       Assertions.assertThat(actualViolations).isNotEmpty();
-      Assertions.assertThat(actualMessages).contains("age must be equal to or greater than zero");
+      Assertions.assertThat(actualMessages).contains("age must contain between 1 and 50 characters");
     }
 
   }
