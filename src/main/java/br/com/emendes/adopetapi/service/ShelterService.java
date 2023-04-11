@@ -15,4 +15,6 @@ public interface ShelterService {
 
   ShelterResponse update(Long id, ShelterRequest shelterRequest);
 
+  void deleteById(Long id);
+
 }

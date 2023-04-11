@@ -76,6 +76,7 @@ public class TutorServiceImpl implements TutorService {
   public Page<TutorResponse> fetchAll(Pageable pageable) {
     Page<Tutor> tutorPage = tutorRepository.findAll(pageable);
 
+    log.info("Fetching page: {}, size: {} of Tutors", pageable.getPageNumber(), pageable.getPageSize());
     return tutorPage.map(tutorMapper::tutorToTutorResponse);
   }
 
@@ -83,10 +84,12 @@ public class TutorServiceImpl implements TutorService {
   public void deleteById(Long id) {
     Tutor tutor = findTutorById(id);
 
+    log.info("Deleting Shelter with id: {}", id);
     tutorRepository.delete(tutor);
   }
 
   private Tutor findTutorById(Long id) {
+    log.info("Searching for Tutor with id: {}", id);
     return tutorRepository.findById(id).orElseThrow(() -> new TutorNotFoundException("Tutor not found"));
   }
 

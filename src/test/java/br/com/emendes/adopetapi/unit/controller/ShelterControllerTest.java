@@ -297,4 +297,55 @@ class ShelterControllerTest {
 
   }
 
+  @Nested
+  @DisplayName("Tests for delete endpoint")
+  class DeleteEndpoint {
+
+    @Test
+    @DisplayName("Delete must return status 204 when delete successfully")
+    void delete_MustReturnStatus204_WhenDeleteSuccessfully() throws Exception {
+      BDDMockito.doNothing().when(shelterServiceMock).deleteById(1000L);
+
+      mockMvc.perform(delete(SHELTER_URI + "/1000"))
+          .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("Delete must return status 400 and ProblemDetail when id is invalid")
+    void delete_MustReturnStatus400AndProblemDetail_WhenIdIsInvalid() throws Exception {
+      String actualContent = mockMvc.perform(delete(SHELTER_URI + "/1o00"))
+          .andExpect(status().isBadRequest())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Type mismatch");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("An error occurred trying to cast String to Number");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(400);
+    }
+
+    @Test
+    @DisplayName("Delete must return status 404 and ProblemDetail when shelter do not exists")
+    void delete_MustReturnStatus404AndProblemDetail_WhenShelterDoNotExists() throws Exception {
+      BDDMockito.willThrow(new ShelterNotFoundException("Shelter not found"))
+          .given(shelterServiceMock).deleteById(1000L);
+
+      String actualContent = mockMvc
+          .perform(delete(SHELTER_URI + "/1000"))
+          .andExpect(status().isNotFound())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Shelter not found");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("Shelter not found");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(404);
+    }
+
+  }
+
 }

@@ -59,6 +59,14 @@ public class ShelterServiceImpl implements ShelterService {
     return shelterMapper.shelterToShelterResponse(updatedShelter);
   }
 
+  @Override
+  public void deleteById(Long id) {
+    Shelter shelter = findShelterById(id);
+
+    log.info("Deleting Shelter with id: {}", id);
+    shelterRepository.delete(shelter);
+  }
+
   private Shelter findShelterById(Long id) {
     log.info("Searching for Shelter with id: {}", id);
     return shelterRepository.findById(id).orElseThrow(() -> new ShelterNotFoundException("Shelter not found"));

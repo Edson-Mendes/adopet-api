@@ -172,4 +172,34 @@ class ShelterServiceImplTest {
 
   }
 
+  @Nested
+  @DisplayName("Tests for deleteById method")
+  class DeleteByIdMethod {
+
+    @Test
+    @DisplayName("DeleteById must call ShelterRepository#delete when delete shelter")
+    void deleteById_MustCallShelterRepositoryDelete_WhenDeleteShelter() {
+      BDDMockito.when(shelterRepositoryMock.findById(100L))
+          .thenReturn(Optional.of(shelter()));
+      BDDMockito.doNothing().when(shelterRepositoryMock).delete(any(Shelter.class));
+
+      shelterService.deleteById(100L);
+
+      BDDMockito.verify(shelterRepositoryMock).findById(100L);
+      BDDMockito.verify(shelterRepositoryMock).delete(any(Shelter.class));
+    }
+
+    @Test
+    @DisplayName("DeleteById must throw ShelterNotFoundException when shelter do not exists with given id")
+    void deleteById_MustThrowShelterNotFoundException_WhenShelterDoNotExistsWithGivenId() {
+      BDDMockito.when(shelterRepositoryMock.findById(100L))
+          .thenReturn(Optional.empty());
+
+      Assertions.assertThatExceptionOfType(ShelterNotFoundException.class)
+          .isThrownBy(() -> shelterService.deleteById(100L))
+          .withMessage("Shelter not found");
+    }
+
+  }
+
 }
