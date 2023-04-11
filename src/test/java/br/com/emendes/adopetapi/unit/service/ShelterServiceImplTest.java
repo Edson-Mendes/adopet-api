@@ -2,6 +2,7 @@ package br.com.emendes.adopetapi.unit.service;
 
 import br.com.emendes.adopetapi.dto.request.ShelterRequest;
 import br.com.emendes.adopetapi.dto.response.ShelterResponse;
+import br.com.emendes.adopetapi.exception.ShelterNotFoundException;
 import br.com.emendes.adopetapi.mapper.ShelterMapper;
 import br.com.emendes.adopetapi.model.entity.Shelter;
 import br.com.emendes.adopetapi.repository.ShelterRepository;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static br.com.emendes.adopetapi.util.ConstantUtils.PAGEABLE;
 import static br.com.emendes.adopetapi.util.ShelterUtils.*;
@@ -79,12 +81,47 @@ class ShelterServiceImplTest {
       BDDMockito.when(shelterMapperMock.shelterToShelterResponse(any(Shelter.class)))
           .thenReturn(shelterResponse());
 
-      Page<ShelterResponse> actualTutorResponsePage = shelterService.fetchAll(PAGEABLE);
+      Page<ShelterResponse> actualShelterResponsePage = shelterService.fetchAll(PAGEABLE);
 
       BDDMockito.verify(shelterRepositoryMock).findAll(any(Pageable.class));
       BDDMockito.verify(shelterMapperMock).shelterToShelterResponse(any(Shelter.class));
 
-      Assertions.assertThat(actualTutorResponsePage).isNotNull().isNotEmpty().hasSize(1);
+      Assertions.assertThat(actualShelterResponsePage).isNotNull().isNotEmpty().hasSize(1);
+    }
+
+  }
+
+  @Nested
+  @DisplayName("Tests for findById method")
+  class FindByIdMethod {
+
+    @Test
+    @DisplayName("FindById must return ShelterResponse when found successfully")
+    void findById_MustReturnShelterResponse_WhenFoundSuccessfully() {
+      BDDMockito.when(shelterRepositoryMock.findById(1000L))
+          .thenReturn(Optional.of(shelter()));
+      BDDMockito.when(shelterMapperMock.shelterToShelterResponse(any(Shelter.class)))
+          .thenReturn(shelterResponse());
+
+      ShelterResponse actualShelterResponse = shelterService.findById(1000L);
+
+      BDDMockito.verify(shelterRepositoryMock).findById(1000L);
+      BDDMockito.verify(shelterMapperMock).shelterToShelterResponse(any(Shelter.class));
+
+      Assertions.assertThat(actualShelterResponse).isNotNull();
+      Assertions.assertThat(actualShelterResponse.getId()).isNotNull().isEqualTo(1000L);
+      Assertions.assertThat(actualShelterResponse.getName()).isNotNull().isEqualTo("Animal Shelter");
+    }
+
+    @Test
+    @DisplayName("FindById must throw ShelterNotFoundException when shelter not found with given id")
+    void findById_MustThrowShelterNotFoundException_WhenShelterNotFoundWithGivenId() {
+      BDDMockito.when(shelterRepositoryMock.findById(1000L))
+          .thenReturn(Optional.empty());
+
+      Assertions.assertThatExceptionOfType(ShelterNotFoundException.class)
+          .isThrownBy(() -> shelterService.findById(1000L))
+          .withMessage("Shelter not found");
     }
 
   }

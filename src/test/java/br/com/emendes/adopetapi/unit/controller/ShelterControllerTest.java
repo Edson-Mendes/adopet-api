@@ -3,6 +3,7 @@ package br.com.emendes.adopetapi.unit.controller;
 import br.com.emendes.adopetapi.controller.ShelterController;
 import br.com.emendes.adopetapi.dto.request.ShelterRequest;
 import br.com.emendes.adopetapi.dto.response.ShelterResponse;
+import br.com.emendes.adopetapi.exception.ShelterNotFoundException;
 import br.com.emendes.adopetapi.service.ShelterService;
 import br.com.emendes.adopetapi.util.PageableResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -119,11 +120,70 @@ class ShelterControllerTest {
           .andExpect(status().isOk())
           .andReturn().getResponse().getContentAsString();
 
-      Page<ShelterResponse> actualTutorResponsePage = mapper
+      Page<ShelterResponse> actualShelterResponsePage = mapper
           .readValue(actualContent, new TypeReference<PageableResponse<ShelterResponse>>() {
           });
 
-      Assertions.assertThat(actualTutorResponsePage).isNotNull().isNotEmpty().hasSize(1);
+      Assertions.assertThat(actualShelterResponsePage).isNotNull().isNotEmpty().hasSize(1);
+    }
+
+  }
+
+  @Nested
+  @DisplayName("Tests for find by id endpoint")
+  class FindByIdEndpoint {
+
+    @Test
+    @DisplayName("FindById must return status 200 and ShelterResponse when found successfully")
+    void findById_MustReturnStatus200AndShelterResponse_WhenFoundSuccessfully() throws Exception {
+      BDDMockito.when(shelterServiceMock.findById(1000L))
+          .thenReturn(shelterResponse());
+
+      String actualContent = mockMvc.perform(get(SHELTER_URI + "/1000"))
+          .andExpect(status().isOk())
+          .andReturn().getResponse().getContentAsString();
+
+      ShelterResponse actualShelterResponse = mapper.readValue(actualContent, ShelterResponse.class);
+
+      Assertions.assertThat(actualShelterResponse).isNotNull();
+      Assertions.assertThat(actualShelterResponse.getId()).isNotNull().isEqualTo(1000L);
+      Assertions.assertThat(actualShelterResponse.getName()).isNotNull().isEqualTo("Animal Shelter");
+    }
+
+    @Test
+    @DisplayName("FindById must return status 400 and ProblemDetail when id is invalid")
+    void findById_MustReturnStatus400AndProblemDetail_WhenIdIsInvalid() throws Exception {
+      String actualContent = mockMvc.perform(get(SHELTER_URI + "/1o0"))
+          .andExpect(status().isBadRequest())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Type mismatch");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("An error occurred trying to cast String to Number");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(400);
+    }
+
+    @Test
+    @DisplayName("FindById must return status 404 and ProblemDetail when shelter not found")
+    void findById_MustReturnStatus404AndProblemDetail_WhenShelterNotFound() throws Exception {
+      BDDMockito.when(shelterServiceMock.findById(1000L))
+          .thenThrow(new ShelterNotFoundException("Shelter not found"));
+
+      String actualContent = mockMvc
+          .perform(get(SHELTER_URI + "/1000"))
+          .andExpect(status().isNotFound())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Shelter not found");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("Shelter not found");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(404);
     }
 
   }

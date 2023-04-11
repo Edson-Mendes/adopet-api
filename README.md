@@ -30,6 +30,8 @@ os novos dados do tutor devem ser enviados no corpo da requisição.</br>
   em um JSON no corpo da requisição.</br>
 
 - `Buscar todos`: Busca paginada de shelters através de um **GET /api/shelters**.</br>
+- 
+- `Buscar por id`: Busca Shelter por ID através de um **GET /api/shelters/{ID}**, onde *{ID}* é o identificador do Shelter.</br>
 
 ## :toolbox: Tecnologias
 
@@ -52,7 +54,7 @@ os novos dados do tutor devem ser enviados no corpo da requisição.</br>
 - [x] Requisição POST para CRIAR Shelter.
 - [ ] Requisição PUT para ATUALIZAR Shelter.
 - [x] Requisição GET para BUSCAR todos os Shelters.
-- [ ] Requisição GET para BUSCAR Shelter por ID.
+- [x] Requisição GET para BUSCAR Shelter por ID.
 - [ ] Requisição DELETE para DELETAR Shelter.
 - [ ] Requisição POST para CRIAR Pet.
 - [ ] Requisição PUT para ATUALIZAR Pet.

@@ -11,4 +11,6 @@ public interface ShelterService {
 
   Page<ShelterResponse> fetchAll(Pageable pageable);
 
+  ShelterResponse findById(Long id);
+
 }

@@ -6,6 +6,7 @@ import br.com.emendes.adopetapi.mapper.ShelterMapper;
 import br.com.emendes.adopetapi.model.entity.Shelter;
 import br.com.emendes.adopetapi.repository.ShelterRepository;
 import br.com.emendes.adopetapi.service.ShelterService;
+import br.com.emendes.adopetapi.exception.ShelterNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -39,6 +40,15 @@ public class ShelterServiceImpl implements ShelterService {
     Page<Shelter> shelterPage = shelterRepository.findAll(pageable);
 
     return shelterPage.map(shelterMapper::shelterToShelterResponse);
+  }
+
+  @Override
+  public ShelterResponse findById(Long id) {
+    return shelterMapper.shelterToShelterResponse(findShelterById(id));
+  }
+
+  private Shelter findShelterById(Long id) {
+    return shelterRepository.findById(id).orElseThrow(() -> new ShelterNotFoundException("Shelter not found"));
   }
 
 }

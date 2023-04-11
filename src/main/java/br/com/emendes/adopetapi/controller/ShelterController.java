@@ -36,4 +36,9 @@ public class ShelterController {
     return ResponseEntity.ok(shelterService.fetchAll(pageable));
   }
 
+  @GetMapping("/{id}")
+  public ResponseEntity<ShelterResponse> findById(@PathVariable(name = "id") Long id) {
+    return ResponseEntity.ok(shelterService.findById(id));
+  }
+
 }
