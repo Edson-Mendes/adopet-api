@@ -1,30 +1,30 @@
 package br.com.emendes.adopetapi.util;
 
-import br.com.emendes.adopetapi.dto.response.TutorResponse;
-import br.com.emendes.adopetapi.model.entity.Tutor;
+import br.com.emendes.adopetapi.dto.response.GuardianResponse;
+import br.com.emendes.adopetapi.model.entity.Guardian;
 
 import java.time.LocalDateTime;
 
-public abstract class TutorUtils {
+public abstract class GuardianUtils {
 
-  public static TutorResponse tutorResponse() {
-    return TutorResponse.builder()
+  public static GuardianResponse guardianResponse() {
+    return GuardianResponse.builder()
         .id(100L)
         .name("Lorem Ipsum")
         .email("lorem@email.com")
         .build();
   }
 
-  public static TutorResponse updatedTutorResponse() {
-    return TutorResponse.builder()
+  public static GuardianResponse updatedGuardianResponse() {
+    return GuardianResponse.builder()
         .id(100L)
         .name("Lorem Ipsum Dolor")
         .email("loremdolor@email.com")
         .build();
   }
 
-  public static Tutor tutor() {
-    return Tutor.builder()
+  public static Guardian guardian() {
+    return Guardian.builder()
         .id(100L)
         .name("Lorem Ipsum")
         .email("lorem@email.com")
@@ -33,8 +33,8 @@ public abstract class TutorUtils {
         .build();
   }
 
-  public static Tutor updatedTutor() {
-    return Tutor.builder()
+  public static Guardian updatedGuardian() {
+    return Guardian.builder()
         .id(100L)
         .name("Lorem Ipsum Dolor")
         .email("loremdolor@email.com")
@@ -43,8 +43,8 @@ public abstract class TutorUtils {
         .build();
   }
 
-  public static Tutor tutorWithoutId() {
-    return Tutor.builder()
+  public static Guardian guardianWithoutId() {
+    return Guardian.builder()
         .id(null)
         .name("Lorem Ipsum")
         .email("lorem@email.com")

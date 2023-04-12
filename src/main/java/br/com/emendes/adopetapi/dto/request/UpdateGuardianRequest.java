@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class UpdateTutorRequest {
+public class UpdateGuardianRequest {
 
   @NotBlank(message = "name must not be blank")
   @Size(min = 2, max = 100, message = "name must contain between {min} and {max} characters")

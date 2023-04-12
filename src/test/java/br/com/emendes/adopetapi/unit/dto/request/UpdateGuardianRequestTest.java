@@ -1,6 +1,6 @@
 package br.com.emendes.adopetapi.unit.dto.request;
 
-import br.com.emendes.adopetapi.dto.request.UpdateTutorRequest;
+import br.com.emendes.adopetapi.dto.request.UpdateGuardianRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -15,8 +15,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.List;
 import java.util.Set;
 
-@DisplayName("Unit tests for UpdateTutorRequest")
-class UpdateTutorRequestTest {
+@DisplayName("Unit tests for UpdateGuardianRequest")
+class UpdateGuardianRequestTest {
 
   private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
@@ -31,12 +31,12 @@ class UpdateTutorRequestTest {
     })
     @DisplayName("Validate name must not return violations when name is valid")
     void validateName_MustNotReturnViolations_WhenNameIsValid(String validName) {
-      UpdateTutorRequest updateTutorRequest = UpdateTutorRequest.builder()
+      UpdateGuardianRequest updateGuardianRequest = UpdateGuardianRequest.builder()
           .name(validName)
           .build();
 
-      Set<ConstraintViolation<UpdateTutorRequest>> actualViolations = validator
-          .validateProperty(updateTutorRequest, "name");
+      Set<ConstraintViolation<UpdateGuardianRequest>> actualViolations = validator
+          .validateProperty(updateGuardianRequest, "name");
 
       Assertions.assertThat(actualViolations).isEmpty();
     }
@@ -46,12 +46,12 @@ class UpdateTutorRequestTest {
     @ValueSource(strings = {"   ", "\t", "\n"})
     @DisplayName("Validate name must return violations when name is blank")
     void validateName_MustReturnViolations_WhenNameIsBlank(String blankName) {
-      UpdateTutorRequest updateTutorRequest = UpdateTutorRequest.builder()
+      UpdateGuardianRequest updateGuardianRequest = UpdateGuardianRequest.builder()
           .name(blankName)
           .build();
 
-      Set<ConstraintViolation<UpdateTutorRequest>> actualViolations = validator
-          .validateProperty(updateTutorRequest, "name");
+      Set<ConstraintViolation<UpdateGuardianRequest>> actualViolations = validator
+          .validateProperty(updateGuardianRequest, "name");
 
       List<String> actualMessages = actualViolations.stream().map(ConstraintViolation::getMessage).toList();
 
@@ -66,12 +66,12 @@ class UpdateTutorRequestTest {
 
       Assertions.assertThat(nameWithLessThan2Characters).hasSizeLessThan(2);
 
-      UpdateTutorRequest updateTutorRequest = UpdateTutorRequest.builder()
+      UpdateGuardianRequest updateGuardianRequest = UpdateGuardianRequest.builder()
           .name(nameWithLessThan2Characters)
           .build();
 
-      Set<ConstraintViolation<UpdateTutorRequest>> actualViolations = validator
-          .validateProperty(updateTutorRequest, "name");
+      Set<ConstraintViolation<UpdateGuardianRequest>> actualViolations = validator
+          .validateProperty(updateGuardianRequest, "name");
 
       List<String> actualMessages = actualViolations.stream().map(ConstraintViolation::getMessage).toList();
 
@@ -87,12 +87,12 @@ class UpdateTutorRequestTest {
 
       Assertions.assertThat(nameWithMoreThan100Characters).hasSizeGreaterThan(100);
 
-      UpdateTutorRequest updateTutorRequest = UpdateTutorRequest.builder()
+      UpdateGuardianRequest updateGuardianRequest = UpdateGuardianRequest.builder()
           .name(nameWithMoreThan100Characters)
           .build();
 
-      Set<ConstraintViolation<UpdateTutorRequest>> actualViolations = validator
-          .validateProperty(updateTutorRequest, "name");
+      Set<ConstraintViolation<UpdateGuardianRequest>> actualViolations = validator
+          .validateProperty(updateGuardianRequest, "name");
 
       List<String> actualMessages = actualViolations.stream().map(ConstraintViolation::getMessage).toList();
 
@@ -109,12 +109,12 @@ class UpdateTutorRequestTest {
     @Test
     @DisplayName("Validate email must not return violations when email is valid")
     void validateEmail_MustNotReturnViolations_WhenEmailIsValid() {
-      UpdateTutorRequest updateTutorRequest = UpdateTutorRequest.builder()
+      UpdateGuardianRequest updateGuardianRequest = UpdateGuardianRequest.builder()
           .email("lorem@email.com")
           .build();
 
-      Set<ConstraintViolation<UpdateTutorRequest>> actualViolations = validator
-          .validateProperty(updateTutorRequest, "email");
+      Set<ConstraintViolation<UpdateGuardianRequest>> actualViolations = validator
+          .validateProperty(updateGuardianRequest, "email");
 
       Assertions.assertThat(actualViolations).isEmpty();
     }
@@ -124,12 +124,12 @@ class UpdateTutorRequestTest {
     @ValueSource(strings = {"   ", "\t", "\n"})
     @DisplayName("Validate email must return violations when email is blank")
     void validateEmail_MustReturnViolations_WhenEmailIsBlank(String blankEmail) {
-      UpdateTutorRequest updateTutorRequest = UpdateTutorRequest.builder()
+      UpdateGuardianRequest updateGuardianRequest = UpdateGuardianRequest.builder()
           .email(blankEmail)
           .build();
 
-      Set<ConstraintViolation<UpdateTutorRequest>> actualViolations = validator
-          .validateProperty(updateTutorRequest, "email");
+      Set<ConstraintViolation<UpdateGuardianRequest>> actualViolations = validator
+          .validateProperty(updateGuardianRequest, "email");
 
       List<String> actualMessages = actualViolations.stream().map(ConstraintViolation::getMessage).toList();
 
@@ -149,12 +149,12 @@ class UpdateTutorRequestTest {
 
       Assertions.assertThat(emailWithMoreThan255Characters).hasSizeGreaterThan(255);
 
-      UpdateTutorRequest updateTutorRequest = UpdateTutorRequest.builder()
+      UpdateGuardianRequest updateGuardianRequest = UpdateGuardianRequest.builder()
           .email(emailWithMoreThan255Characters)
           .build();
 
-      Set<ConstraintViolation<UpdateTutorRequest>> actualViolations = validator
-          .validateProperty(updateTutorRequest, "email");
+      Set<ConstraintViolation<UpdateGuardianRequest>> actualViolations = validator
+          .validateProperty(updateGuardianRequest, "email");
 
       List<String> actualMessages = actualViolations.stream().map(ConstraintViolation::getMessage).toList();
 
@@ -166,12 +166,12 @@ class UpdateTutorRequestTest {
     @ValueSource(strings = {"lorememailcom", "lorem.com", "@email.com"})
     @DisplayName("Validate email must return violations when email is not well formed")
     void validateEmail_MustReturnViolations_WhenEmailIsNotWellFormed(String notWellFormedEmail) {
-      UpdateTutorRequest updateTutorRequest = UpdateTutorRequest.builder()
+      UpdateGuardianRequest updateGuardianRequest = UpdateGuardianRequest.builder()
           .email(notWellFormedEmail)
           .build();
 
-      Set<ConstraintViolation<UpdateTutorRequest>> actualViolations = validator
-          .validateProperty(updateTutorRequest, "email");
+      Set<ConstraintViolation<UpdateGuardianRequest>> actualViolations = validator
+          .validateProperty(updateGuardianRequest, "email");
 
       List<String> actualMessages = actualViolations.stream().map(ConstraintViolation::getMessage).toList();
 

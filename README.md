@@ -17,7 +17,7 @@ Projeto proposto pela Alura no Challenge Backend 6ª Edição.
 em um JSON no corpo da requisição.</br>
 
 - `Atualizar`: Atualizar Tutor através de um **PUT /api/tutors/{ID}**, onde *ID* é o identificador do Tutor, 
-os novos dados do tutor devem ser enviados no corpo da requisição.</br>
+os novos dados do guardian devem ser enviados no corpo da requisição.</br>
 
 - `Buscar por id`: Busca Tutor por ID através de um **GET /api/tutors/{ID}**, onde *{ID}* é o identificador do Tutor.</br>
 
@@ -34,7 +34,7 @@ os novos dados do tutor devem ser enviados no corpo da requisição.</br>
 - `Buscar por id`: Busca Shelter por ID através de um **GET /api/shelters/{ID}**, onde *{ID}* é o identificador do Shelter.</br>
 
 - `Atualizar`: Atualizar Shelter através de um **PUT /api/shelters/{ID}**, onde *ID* é o identificador do Shelter,
-  os novos dados do tutor devem ser enviados no corpo da requisição.</br>
+  os novos dados do guardian devem ser enviados no corpo da requisição.</br>
 
 - `Deletar`: Deletar Shelter através de um **DELETE /api/shelters/{ID}**, onde *{ID}* é o identificador do Shelter.</br>
 

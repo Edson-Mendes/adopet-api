@@ -1,13 +1,13 @@
 package br.com.emendes.adopetapi.unit.controller;
 
-import br.com.emendes.adopetapi.controller.TutorController;
-import br.com.emendes.adopetapi.dto.request.CreateTutorRequest;
-import br.com.emendes.adopetapi.dto.request.UpdateTutorRequest;
-import br.com.emendes.adopetapi.dto.response.TutorResponse;
+import br.com.emendes.adopetapi.controller.GuardianController;
+import br.com.emendes.adopetapi.dto.request.CreateGuardianRequest;
+import br.com.emendes.adopetapi.dto.request.UpdateGuardianRequest;
+import br.com.emendes.adopetapi.dto.response.GuardianResponse;
 import br.com.emendes.adopetapi.exception.EmailAlreadyInUseException;
 import br.com.emendes.adopetapi.exception.PasswordsDoNotMatchException;
-import br.com.emendes.adopetapi.exception.TutorNotFoundException;
-import br.com.emendes.adopetapi.service.TutorService;
+import br.com.emendes.adopetapi.exception.GuardianNotFoundException;
+import br.com.emendes.adopetapi.service.GuardianService;
 import br.com.emendes.adopetapi.util.PageableResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,27 +29,27 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static br.com.emendes.adopetapi.util.ConstantUtils.PAGEABLE;
-import static br.com.emendes.adopetapi.util.TutorUtils.tutorResponse;
-import static br.com.emendes.adopetapi.util.TutorUtils.updatedTutorResponse;
+import static br.com.emendes.adopetapi.util.GuardianUtils.guardianResponse;
+import static br.com.emendes.adopetapi.util.GuardianUtils.updatedGuardianResponse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
-@WebMvcTest(controllers = {TutorController.class})
+@WebMvcTest(controllers = {GuardianController.class})
 @ActiveProfiles("test")
-@DisplayName("Unit tests for TutorController")
-class TutorControllerTest {
+@DisplayName("Unit tests for GuardianController")
+class GuardianControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
   @Autowired
   private ObjectMapper mapper;
   @MockBean
-  private TutorService tutorServiceMock;
+  private GuardianService guardianServiceMock;
 
-  private static final String TUTOR_URI = "/api/tutors";
+  private static final String GUARDIAN_URI = "/api/guardians";
   private final String CONTENT_TYPE = "application/json;charset=UTF-8";
 
   @Nested
@@ -57,10 +57,10 @@ class TutorControllerTest {
   class CreateEndpoint {
 
     @Test
-    @DisplayName("Create must return status 201 and TutorResponse when create successfully")
-    void create_MustReturnStatus201AndTutorResponse_WhenCreateSuccessfully() throws Exception {
-      BDDMockito.when(tutorServiceMock.create(any(CreateTutorRequest.class)))
-          .thenReturn(tutorResponse());
+    @DisplayName("Create must return status 201 and GuardianResponse when create successfully")
+    void create_MustReturnStatus201AndGuardianResponse_WhenCreateSuccessfully() throws Exception {
+      BDDMockito.when(guardianServiceMock.create(any(CreateGuardianRequest.class)))
+          .thenReturn(guardianResponse());
       String requestBody = """
             {
               "name" : "Lorem Ipsum",
@@ -70,22 +70,22 @@ class TutorControllerTest {
             }
           """;
 
-      String actualContent = mockMvc.perform(post(TUTOR_URI).contentType(CONTENT_TYPE).content(requestBody))
+      String actualContent = mockMvc.perform(post(GUARDIAN_URI).contentType(CONTENT_TYPE).content(requestBody))
           .andExpect(status().isCreated())
           .andReturn().getResponse().getContentAsString();
 
-      TutorResponse actualTutorResponse = mapper.readValue(actualContent, TutorResponse.class);
+      GuardianResponse actualGuardianResponse = mapper.readValue(actualContent, GuardianResponse.class);
 
-      Assertions.assertThat(actualTutorResponse).isNotNull();
-      Assertions.assertThat(actualTutorResponse.getId()).isNotNull().isEqualTo(100L);
-      Assertions.assertThat(actualTutorResponse.getName()).isNotNull().isEqualTo("Lorem Ipsum");
-      Assertions.assertThat(actualTutorResponse.getEmail()).isNotNull().isEqualTo("lorem@email.com");
+      Assertions.assertThat(actualGuardianResponse).isNotNull();
+      Assertions.assertThat(actualGuardianResponse.getId()).isNotNull().isEqualTo(100L);
+      Assertions.assertThat(actualGuardianResponse.getName()).isNotNull().isEqualTo("Lorem Ipsum");
+      Assertions.assertThat(actualGuardianResponse.getEmail()).isNotNull().isEqualTo("lorem@email.com");
     }
 
     @Test
     @DisplayName("Create must return status 400 and ProblemDetail when passwords do not match")
     void create_MustReturnStatus400AndProblemDetail_WhenPasswordsDoNotMatch() throws Exception {
-      BDDMockito.when(tutorServiceMock.create(any(CreateTutorRequest.class)))
+      BDDMockito.when(guardianServiceMock.create(any(CreateGuardianRequest.class)))
           .thenThrow(new PasswordsDoNotMatchException("Passwords do not match"));
       String requestBody = """
             {
@@ -96,7 +96,7 @@ class TutorControllerTest {
             }
           """;
 
-      String actualContent = mockMvc.perform(post(TUTOR_URI).contentType(CONTENT_TYPE).content(requestBody))
+      String actualContent = mockMvc.perform(post(GUARDIAN_URI).contentType(CONTENT_TYPE).content(requestBody))
           .andExpect(status().isBadRequest())
           .andReturn().getResponse().getContentAsString();
 
@@ -111,7 +111,7 @@ class TutorControllerTest {
     @Test
     @DisplayName("Create must return status 400 and ProblemDetail when email already exists")
     void create_MustReturnStatus400AndProblemDetail_WhenEmailAlreadyExists() throws Exception {
-      BDDMockito.when(tutorServiceMock.create(any(CreateTutorRequest.class)))
+      BDDMockito.when(guardianServiceMock.create(any(CreateGuardianRequest.class)))
           .thenThrow(new EmailAlreadyInUseException("E-mail {lorem@email.com} is already in use"));
       String requestBody = """
             {
@@ -122,7 +122,7 @@ class TutorControllerTest {
             }
           """;
 
-      String actualContent = mockMvc.perform(post(TUTOR_URI).contentType(CONTENT_TYPE).content(requestBody))
+      String actualContent = mockMvc.perform(post(GUARDIAN_URI).contentType(CONTENT_TYPE).content(requestBody))
           .andExpect(status().isBadRequest())
           .andReturn().getResponse().getContentAsString();
 
@@ -147,7 +147,7 @@ class TutorControllerTest {
             }
           """;
 
-      String actualContent = mockMvc.perform(post(TUTOR_URI).contentType(CONTENT_TYPE).content(requestBody))
+      String actualContent = mockMvc.perform(post(GUARDIAN_URI).contentType(CONTENT_TYPE).content(requestBody))
           .andExpect(status().isBadRequest())
           .andReturn().getResponse().getContentAsString();
 
@@ -175,10 +175,10 @@ class TutorControllerTest {
   class UpdateEndpoint {
 
     @Test
-    @DisplayName("Update must return status 200 and TutorResponse when update successfully")
-    void update_MustReturnStatus200AndTutorResponse_WhenUpdateSuccessfully() throws Exception {
-      BDDMockito.when(tutorServiceMock.update(eq(100L), any(UpdateTutorRequest.class)))
-          .thenReturn(updatedTutorResponse());
+    @DisplayName("Update must return status 200 and GuardianResponse when update successfully")
+    void update_MustReturnStatus200AndGuardianResponse_WhenUpdateSuccessfully() throws Exception {
+      BDDMockito.when(guardianServiceMock.update(eq(100L), any(UpdateGuardianRequest.class)))
+          .thenReturn(updatedGuardianResponse());
       String requestBody = """
             {
               "name" : "Lorem Ipsum Dolor",
@@ -187,22 +187,22 @@ class TutorControllerTest {
           """;
 
       String actualContent = mockMvc
-          .perform(put(TUTOR_URI + "/100").contentType(CONTENT_TYPE).content(requestBody))
+          .perform(put(GUARDIAN_URI + "/100").contentType(CONTENT_TYPE).content(requestBody))
           .andExpect(status().isOk())
           .andReturn().getResponse().getContentAsString();
 
-      TutorResponse actualTutorResponse = mapper.readValue(actualContent, TutorResponse.class);
+      GuardianResponse actualGuardianResponse = mapper.readValue(actualContent, GuardianResponse.class);
 
-      Assertions.assertThat(actualTutorResponse).isNotNull();
-      Assertions.assertThat(actualTutorResponse.getId()).isNotNull().isEqualTo(100L);
-      Assertions.assertThat(actualTutorResponse.getName()).isNotNull().isEqualTo("Lorem Ipsum Dolor");
-      Assertions.assertThat(actualTutorResponse.getEmail()).isNotNull().isEqualTo("loremdolor@email.com");
+      Assertions.assertThat(actualGuardianResponse).isNotNull();
+      Assertions.assertThat(actualGuardianResponse.getId()).isNotNull().isEqualTo(100L);
+      Assertions.assertThat(actualGuardianResponse.getName()).isNotNull().isEqualTo("Lorem Ipsum Dolor");
+      Assertions.assertThat(actualGuardianResponse.getEmail()).isNotNull().isEqualTo("loremdolor@email.com");
     }
 
     @Test
     @DisplayName("Update must return status 400 and ProblemDetail when email already exists")
     void update_MustReturnStatus400AndProblemDetail_WhenEmailAlreadyExists() throws Exception {
-      BDDMockito.when(tutorServiceMock.update(eq(100L), any(UpdateTutorRequest.class)))
+      BDDMockito.when(guardianServiceMock.update(eq(100L), any(UpdateGuardianRequest.class)))
           .thenThrow(new EmailAlreadyInUseException("E-mail {loremdolor@email.com} is already in use"));
       String requestBody = """
             {
@@ -212,7 +212,7 @@ class TutorControllerTest {
           """;
 
       String actualContent = mockMvc
-          .perform(put(TUTOR_URI + "/100").contentType(CONTENT_TYPE).content(requestBody))
+          .perform(put(GUARDIAN_URI + "/100").contentType(CONTENT_TYPE).content(requestBody))
           .andExpect(status().isBadRequest())
           .andReturn().getResponse().getContentAsString();
 
@@ -236,7 +236,7 @@ class TutorControllerTest {
           """;
 
       String actualContent = mockMvc
-          .perform(put(TUTOR_URI + "/100").contentType(CONTENT_TYPE).content(requestBody))
+          .perform(put(GUARDIAN_URI + "/100").contentType(CONTENT_TYPE).content(requestBody))
           .andExpect(status().isBadRequest())
           .andReturn().getResponse().getContentAsString();
 
@@ -258,10 +258,10 @@ class TutorControllerTest {
     }
 
     @Test
-    @DisplayName("Update must return status 404 and ProblemDetail when tutor not found")
-    void update_MustReturnStatus404AndProblemDetail_WhenTutorNotFound() throws Exception {
-      BDDMockito.when(tutorServiceMock.update(eq(100L), any(UpdateTutorRequest.class)))
-          .thenThrow(new TutorNotFoundException("Tutor not found"));
+    @DisplayName("Update must return status 404 and ProblemDetail when guardian not found")
+    void update_MustReturnStatus404AndProblemDetail_WhenGuardianNotFound() throws Exception {
+      BDDMockito.when(guardianServiceMock.update(eq(100L), any(UpdateGuardianRequest.class)))
+          .thenThrow(new GuardianNotFoundException("Guardian not found"));
       String requestBody = """
             {
               "name" : "Lorem Ipsum Dolor",
@@ -270,16 +270,16 @@ class TutorControllerTest {
           """;
 
       String actualContent = mockMvc
-          .perform(put(TUTOR_URI + "/100").contentType(CONTENT_TYPE).content(requestBody))
+          .perform(put(GUARDIAN_URI + "/100").contentType(CONTENT_TYPE).content(requestBody))
           .andExpect(status().isNotFound())
           .andReturn().getResponse().getContentAsString();
 
       ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
 
       Assertions.assertThat(actualProblemDetail).isNotNull();
-      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Tutor not found");
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Guardian not found");
       Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
-          .isEqualTo("Tutor not found");
+          .isEqualTo("Guardian not found");
       Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(404);
     }
 
@@ -294,7 +294,7 @@ class TutorControllerTest {
           """;
 
       String actualContent = mockMvc
-          .perform(put(TUTOR_URI + "/1o0").contentType(CONTENT_TYPE).content(requestBody))
+          .perform(put(GUARDIAN_URI + "/1o0").contentType(CONTENT_TYPE).content(requestBody))
           .andExpect(status().isBadRequest())
           .andReturn().getResponse().getContentAsString();
 
@@ -314,27 +314,27 @@ class TutorControllerTest {
   class FindByIdEndpoint {
 
     @Test
-    @DisplayName("FindById must return status 200 and TutorResponse when found successfully")
-    void findById_MustReturnStatus200AndTutorResponse_WhenFoundSuccessfully() throws Exception {
-      BDDMockito.when(tutorServiceMock.findById(100L))
-          .thenReturn(tutorResponse());
+    @DisplayName("FindById must return status 200 and GuardianResponse when found successfully")
+    void findById_MustReturnStatus200AndGuardianResponse_WhenFoundSuccessfully() throws Exception {
+      BDDMockito.when(guardianServiceMock.findById(100L))
+          .thenReturn(guardianResponse());
 
-      String actualContent = mockMvc.perform(get(TUTOR_URI + "/100"))
+      String actualContent = mockMvc.perform(get(GUARDIAN_URI + "/100"))
           .andExpect(status().isOk())
           .andReturn().getResponse().getContentAsString();
 
-      TutorResponse actualTutorResponse = mapper.readValue(actualContent, TutorResponse.class);
+      GuardianResponse actualGuardianResponse = mapper.readValue(actualContent, GuardianResponse.class);
 
-      Assertions.assertThat(actualTutorResponse).isNotNull();
-      Assertions.assertThat(actualTutorResponse.getId()).isNotNull().isEqualTo(100L);
-      Assertions.assertThat(actualTutorResponse.getName()).isNotNull().isEqualTo("Lorem Ipsum");
-      Assertions.assertThat(actualTutorResponse.getEmail()).isNotNull().isEqualTo("lorem@email.com");
+      Assertions.assertThat(actualGuardianResponse).isNotNull();
+      Assertions.assertThat(actualGuardianResponse.getId()).isNotNull().isEqualTo(100L);
+      Assertions.assertThat(actualGuardianResponse.getName()).isNotNull().isEqualTo("Lorem Ipsum");
+      Assertions.assertThat(actualGuardianResponse.getEmail()).isNotNull().isEqualTo("lorem@email.com");
     }
 
     @Test
     @DisplayName("FindById must return status 400 and ProblemDetail when id is invalid")
     void findById_MustReturnStatus400AndProblemDetail_WhenIdIsInvalid() throws Exception {
-      String actualContent = mockMvc.perform(get(TUTOR_URI + "/1o0"))
+      String actualContent = mockMvc.perform(get(GUARDIAN_URI + "/1o0"))
           .andExpect(status().isBadRequest())
           .andReturn().getResponse().getContentAsString();
 
@@ -348,22 +348,22 @@ class TutorControllerTest {
     }
 
     @Test
-    @DisplayName("FindById must return status 404 and ProblemDetail when tutor not found")
-    void findById_MustReturnStatus404AndProblemDetail_WhenTutorNotFound() throws Exception {
-      BDDMockito.when(tutorServiceMock.findById(100L))
-          .thenThrow(new TutorNotFoundException("Tutor not found"));
+    @DisplayName("FindById must return status 404 and ProblemDetail when guardian not found")
+    void findById_MustReturnStatus404AndProblemDetail_WhenGuardianNotFound() throws Exception {
+      BDDMockito.when(guardianServiceMock.findById(100L))
+          .thenThrow(new GuardianNotFoundException("Guardian not found"));
 
       String actualContent = mockMvc
-          .perform(get(TUTOR_URI + "/100"))
+          .perform(get(GUARDIAN_URI + "/100"))
           .andExpect(status().isNotFound())
           .andReturn().getResponse().getContentAsString();
 
       ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
 
       Assertions.assertThat(actualProblemDetail).isNotNull();
-      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Tutor not found");
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Guardian not found");
       Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
-          .isEqualTo("Tutor not found");
+          .isEqualTo("Guardian not found");
       Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(404);
     }
 
@@ -374,20 +374,20 @@ class TutorControllerTest {
   class FetchAllEndpoint {
 
     @Test
-    @DisplayName("fetchAll must return status 200 and Page<TutorResponse> when fetch successfully")
-    void fetchAll_MustReturnStatus200AndPageTutorResponse_WhenFetchSuccessfully() throws Exception {
-      BDDMockito.when(tutorServiceMock.fetchAll(PAGEABLE))
-          .thenReturn(new PageImpl<>(List.of(tutorResponse()), PAGEABLE, 1));
+    @DisplayName("fetchAll must return status 200 and Page<GuardianResponse> when fetch successfully")
+    void fetchAll_MustReturnStatus200AndPageGuardianResponse_WhenFetchSuccessfully() throws Exception {
+      BDDMockito.when(guardianServiceMock.fetchAll(PAGEABLE))
+          .thenReturn(new PageImpl<>(List.of(guardianResponse()), PAGEABLE, 1));
 
-      String actualContent = mockMvc.perform(get(TUTOR_URI))
+      String actualContent = mockMvc.perform(get(GUARDIAN_URI))
           .andExpect(status().isOk())
           .andReturn().getResponse().getContentAsString();
 
-      Page<TutorResponse> actualTutorResponsePage = mapper
-          .readValue(actualContent, new TypeReference<PageableResponse<TutorResponse>>() {
+      Page<GuardianResponse> actualGuardianResponsePage = mapper
+          .readValue(actualContent, new TypeReference<PageableResponse<GuardianResponse>>() {
           });
 
-      Assertions.assertThat(actualTutorResponsePage).isNotNull().isNotEmpty().hasSize(1);
+      Assertions.assertThat(actualGuardianResponsePage).isNotNull().isNotEmpty().hasSize(1);
     }
 
   }
@@ -399,16 +399,16 @@ class TutorControllerTest {
     @Test
     @DisplayName("Delete must return status 204 when delete successfully")
     void delete_MustReturnStatus204_WhenDeleteSuccessfully() throws Exception {
-      BDDMockito.doNothing().when(tutorServiceMock).deleteById(100L);
+      BDDMockito.doNothing().when(guardianServiceMock).deleteById(100L);
 
-      mockMvc.perform(delete(TUTOR_URI + "/100"))
+      mockMvc.perform(delete(GUARDIAN_URI + "/100"))
           .andExpect(status().isNoContent());
     }
 
     @Test
     @DisplayName("Delete must return status 400 and ProblemDetail when id is invalid")
     void delete_MustReturnStatus400AndProblemDetail_WhenIdIsInvalid() throws Exception {
-      String actualContent = mockMvc.perform(delete(TUTOR_URI + "/1o0"))
+      String actualContent = mockMvc.perform(delete(GUARDIAN_URI + "/1o0"))
           .andExpect(status().isBadRequest())
           .andReturn().getResponse().getContentAsString();
 
@@ -422,24 +422,22 @@ class TutorControllerTest {
     }
 
     @Test
-    @DisplayName("Delete must return status 404 and ProblemDetail when tutor do not exists")
-    void delete_MustReturnStatus404AndProblemDetail_WhenTutorDoNotExists() throws Exception {
-//      BDDMockito.when(tutorServiceMock.deleteById(100L))
-//          .thenThrow(new TutorNotFoundException("Tutor not found"));
-      BDDMockito.willThrow(new TutorNotFoundException("Tutor not found"))
-          .given(tutorServiceMock).deleteById(100L);
+    @DisplayName("Delete must return status 404 and ProblemDetail when guardian do not exists")
+    void delete_MustReturnStatus404AndProblemDetail_WhenGuardianDoNotExists() throws Exception {
+      BDDMockito.willThrow(new GuardianNotFoundException("Guardian not found"))
+          .given(guardianServiceMock).deleteById(100L);
 
       String actualContent = mockMvc
-          .perform(delete(TUTOR_URI + "/100"))
+          .perform(delete(GUARDIAN_URI + "/100"))
           .andExpect(status().isNotFound())
           .andReturn().getResponse().getContentAsString();
 
       ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
 
       Assertions.assertThat(actualProblemDetail).isNotNull();
-      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Tutor not found");
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Guardian not found");
       Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
-          .isEqualTo("Tutor not found");
+          .isEqualTo("Guardian not found");
       Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(404);
     }
 
