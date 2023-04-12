@@ -2,6 +2,7 @@ package br.com.emendes.adopetapi.service.impl;
 
 import br.com.emendes.adopetapi.dto.request.CreatePetRequest;
 import br.com.emendes.adopetapi.dto.response.PetResponse;
+import br.com.emendes.adopetapi.exception.PetNotFoundException;
 import br.com.emendes.adopetapi.mapper.PetMapper;
 import br.com.emendes.adopetapi.model.entity.Pet;
 import br.com.emendes.adopetapi.repository.PetRepository;
@@ -40,6 +41,16 @@ public class PetServiceImpl implements PetService {
 
     log.info("Fetching page: {}, size: {} of Pets", pageable.getPageNumber(), pageable.getPageSize());
     return petPage.map(petMapper::petToPetResponse);
+  }
+
+  @Override
+  public PetResponse findById(Long id) {
+    return petMapper.petToPetResponse(findPetById(id));
+  }
+
+  private Pet findPetById(Long id) {
+    log.info("Searching for Pet with id: {}", id);
+    return petRepository.findById(id).orElseThrow(() -> new PetNotFoundException("Pet not found"));
   }
 
 }

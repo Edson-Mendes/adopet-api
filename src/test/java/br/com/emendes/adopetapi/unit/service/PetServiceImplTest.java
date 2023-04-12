@@ -2,6 +2,7 @@ package br.com.emendes.adopetapi.unit.service;
 
 import br.com.emendes.adopetapi.dto.request.CreatePetRequest;
 import br.com.emendes.adopetapi.dto.response.PetResponse;
+import br.com.emendes.adopetapi.exception.PetNotFoundException;
 import br.com.emendes.adopetapi.mapper.PetMapper;
 import br.com.emendes.adopetapi.model.entity.Pet;
 import br.com.emendes.adopetapi.repository.PetRepository;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static br.com.emendes.adopetapi.util.ConstantUtils.PAGEABLE;
 import static br.com.emendes.adopetapi.util.PetUtils.*;
@@ -92,6 +94,43 @@ class PetServiceImplTest {
       BDDMockito.verify(petMapperMock).petToPetResponse(any(Pet.class));
 
       Assertions.assertThat(actualPetResponsePage).isNotNull().isNotEmpty().hasSize(1);
+    }
+
+  }
+
+  @Nested
+  @DisplayName("Tests for findById method")
+  class FindByIdMethod {
+
+    @Test
+    @DisplayName("FindById must return PetResponse when found successfully")
+    void findById_MustReturnPetResponse_WhenFoundSuccessfully() {
+      BDDMockito.when(petRepositoryMock.findById(10_000L))
+          .thenReturn(Optional.of(pet()));
+      BDDMockito.when(petMapperMock.petToPetResponse(any(Pet.class)))
+          .thenReturn(petResponse());
+
+      PetResponse actualPetResponse = petService.findById(10_000L);
+
+      BDDMockito.verify(petRepositoryMock).findById(10_000L);
+      BDDMockito.verify(petMapperMock).petToPetResponse(any(Pet.class));
+
+      Assertions.assertThat(actualPetResponse).isNotNull();
+      Assertions.assertThat(actualPetResponse.getId()).isNotNull().isEqualTo(10_000L);
+      Assertions.assertThat(actualPetResponse.getName()).isNotNull().isEqualTo("Dark");
+      Assertions.assertThat(actualPetResponse.getDescription()).isNotNull().isEqualTo("A very calm and cute cat");
+      Assertions.assertThat(actualPetResponse.getAge()).isNotNull().isEqualTo("2 years old");
+    }
+
+    @Test
+    @DisplayName("FindById must throw PetNotFoundException when pet not found with given id")
+    void findById_MustThrowPetNotFoundException_WhenPetNotFoundWithGivenId() {
+      BDDMockito.when(petRepositoryMock.findById(10_000L))
+          .thenReturn(Optional.empty());
+
+      Assertions.assertThatExceptionOfType(PetNotFoundException.class)
+          .isThrownBy(() -> petService.findById(10_000L))
+          .withMessage("Pet not found");
     }
 
   }

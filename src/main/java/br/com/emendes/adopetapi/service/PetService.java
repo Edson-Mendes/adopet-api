@@ -11,4 +11,6 @@ public interface PetService {
 
   Page<PetResponse> fetchAll(Pageable pageable);
 
+  PetResponse findById(Long id);
+
 }

@@ -30,8 +30,19 @@ os novos dados do tutor devem ser enviados no corpo da requisição.</br>
   em um JSON no corpo da requisição.</br>
 
 - `Buscar todos`: Busca paginada de shelters através de um **GET /api/shelters**.</br>
-- 
+ 
 - `Buscar por id`: Busca Shelter por ID através de um **GET /api/shelters/{ID}**, onde *{ID}* é o identificador do Shelter.</br>
+
+- `Atualizar`: Atualizar Shelter através de um **PUT /api/shelters/{ID}**, onde *ID* é o identificador do Shelter,
+  os novos dados do tutor devem ser enviados no corpo da requisição.</br>
+
+- `Deletar`: Deletar Shelter através de um **DELETE /api/shelters/{ID}**, onde *{ID}* é o identificador do Shelter.</br>
+
+#### :cat: Pet
+- `Cadastrar`: Salvar Pet através de um **POST /api/pets** com as informações de *name*, *description*, *age* e *shelterId*
+  em um JSON no corpo da requisição.</br>
+
+- `Buscar todos`: Busca paginada de pets através de um **GET /api/pets**.</br>
 
 ## :toolbox: Tecnologias
 
@@ -52,13 +63,13 @@ os novos dados do tutor devem ser enviados no corpo da requisição.</br>
 - [x] Modelagem da entidade Shelter.
 - [x] Modelagem da entidade Pet.
 - [x] Requisição POST para CRIAR Shelter.
-- [ ] Requisição PUT para ATUALIZAR Shelter.
+- [x] Requisição PUT para ATUALIZAR Shelter.
 - [x] Requisição GET para BUSCAR todos os Shelters.
 - [x] Requisição GET para BUSCAR Shelter por ID.
-- [ ] Requisição DELETE para DELETAR Shelter.
-- [ ] Requisição POST para CRIAR Pet.
+- [x] Requisição DELETE para DELETAR Shelter.
+- [x] Requisição POST para CRIAR Pet.
 - [ ] Requisição PUT para ATUALIZAR Pet.
-- [ ] Requisição GET para BUSCAR todos os Pets.
+- [x] Requisição GET para BUSCAR todos os Pets.
 - [ ] Requisição GET para BUSCAR Pet por ID.
 - [ ] Requisição DELETE para DELETAR Pet.
 - [ ] Validações de todos os campos de Shelter e Pet.
