@@ -1,9 +1,11 @@
 package br.com.emendes.adopetapi.unit.controller;
 
 import br.com.emendes.adopetapi.controller.PetController;
-import br.com.emendes.adopetapi.dto.response.PetResponse;
 import br.com.emendes.adopetapi.dto.request.CreatePetRequest;
+import br.com.emendes.adopetapi.dto.response.PetResponse;
 import br.com.emendes.adopetapi.service.PetService;
+import br.com.emendes.adopetapi.util.PageableResponse;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -14,14 +16,20 @@ import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ProblemDetail;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static br.com.emendes.adopetapi.util.ConstantUtils.CONTENT_TYPE;
+import static br.com.emendes.adopetapi.util.ConstantUtils.PAGEABLE;
 import static br.com.emendes.adopetapi.util.PetUtils.petResponse;
 import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
@@ -102,6 +110,29 @@ class PetControllerTest {
 
       Assertions.assertThat(actualFields).isNotNull().contains("name");
       Assertions.assertThat(actualMessages).isNotNull().contains("name must not be blank");
+    }
+
+  }
+
+  @Nested
+  @DisplayName("Tests for fetch all endpoint")
+  class FetchAllEndpoint {
+
+    @Test
+    @DisplayName("fetchAll must return status 200 and Page<PetResponse> when fetch successfully")
+    void fetchAll_MustReturnStatus200AndPagePetResponseWhenFetchSuccessfully() throws Exception {
+      BDDMockito.when(petServiceMock.fetchAll(PAGEABLE))
+          .thenReturn(new PageImpl<>(List.of(petResponse()), PAGEABLE, 1));
+
+      String actualContent = mockMvc.perform(get(PET_URI))
+          .andExpect(status().isOk())
+          .andReturn().getResponse().getContentAsString();
+
+      Page<PetResponse> actualPetResponsePage = mapper
+          .readValue(actualContent, new TypeReference<PageableResponse<PetResponse>>() {
+          });
+
+      Assertions.assertThat(actualPetResponsePage).isNotNull().isNotEmpty().hasSize(1);
     }
 
   }

@@ -5,11 +5,11 @@ import br.com.emendes.adopetapi.dto.response.PetResponse;
 import br.com.emendes.adopetapi.service.PetService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -29,6 +29,11 @@ public class PetController {
     URI uri = uriComponentsBuilder.path("/api/pets/{id}").build(petResponse.getId());
 
     return ResponseEntity.created(uri).body(petResponse);
+  }
+
+  @GetMapping
+  public ResponseEntity<Page<PetResponse>> fetchAll(@PageableDefault Pageable pageable) {
+    return ResponseEntity.ok(petService.fetchAll(pageable));
   }
 
 }
