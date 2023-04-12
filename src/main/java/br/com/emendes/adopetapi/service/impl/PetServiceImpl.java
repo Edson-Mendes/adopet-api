@@ -8,6 +8,8 @@ import br.com.emendes.adopetapi.repository.PetRepository;
 import br.com.emendes.adopetapi.service.PetService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,6 +32,14 @@ public class PetServiceImpl implements PetService {
 
     log.info("Pet created successfully with id : {}", pet.getId());
     return petMapper.petToPetResponse(pet);
+  }
+
+  @Override
+  public Page<PetResponse> fetchAll(Pageable pageable) {
+    Page<Pet> petPage = petRepository.findAll(pageable);
+
+    log.info("Fetching page: {}, size: {} of Pets", pageable.getPageNumber(), pageable.getPageSize());
+    return petPage.map(petMapper::petToPetResponse);
   }
 
 }

@@ -14,8 +14,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.List;
+
+import static br.com.emendes.adopetapi.util.ConstantUtils.PAGEABLE;
 import static br.com.emendes.adopetapi.util.PetUtils.*;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -64,6 +70,28 @@ class PetServiceImplTest {
       Assertions.assertThat(actualPetResponse.getAge()).isNotNull().isEqualTo("2 years old");
       Assertions.assertThat(actualPetResponse.getShelterId()).isNotNull().isEqualTo(1_000L);
       Assertions.assertThat(actualPetResponse.isAdopted()).isFalse();
+    }
+
+  }
+
+  @Nested
+  @DisplayName("Tests for fetchAll method")
+  class FetchAllMethod {
+
+    @Test
+    @DisplayName("fetchAll must return Page<PetResponse> when fetch successfully")
+    void fetchAll_MustReturnPagePetResponse_WhenFetchSuccessfully() {
+      BDDMockito.when(petRepositoryMock.findAll(PAGEABLE))
+          .thenReturn(new PageImpl<>(List.of(pet()), PAGEABLE, 1));
+      BDDMockito.when(petMapperMock.petToPetResponse(any(Pet.class)))
+          .thenReturn(petResponse());
+
+      Page<PetResponse> actualPetResponsePage = petService.fetchAll(PAGEABLE);
+
+      BDDMockito.verify(petRepositoryMock).findAll(any(Pageable.class));
+      BDDMockito.verify(petMapperMock).petToPetResponse(any(Pet.class));
+
+      Assertions.assertThat(actualPetResponsePage).isNotNull().isNotEmpty().hasSize(1);
     }
 
   }
