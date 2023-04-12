@@ -36,4 +36,9 @@ public class PetController {
     return ResponseEntity.ok(petService.fetchAll(pageable));
   }
 
+  @GetMapping("/{id}")
+  public  ResponseEntity<PetResponse> findById(@PathVariable(name = "id") Long id) {
+    return ResponseEntity.ok(petService.findById(id));
+  }
+
 }

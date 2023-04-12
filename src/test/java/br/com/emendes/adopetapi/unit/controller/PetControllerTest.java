@@ -3,6 +3,7 @@ package br.com.emendes.adopetapi.unit.controller;
 import br.com.emendes.adopetapi.controller.PetController;
 import br.com.emendes.adopetapi.dto.request.CreatePetRequest;
 import br.com.emendes.adopetapi.dto.response.PetResponse;
+import br.com.emendes.adopetapi.exception.PetNotFoundException;
 import br.com.emendes.adopetapi.service.PetService;
 import br.com.emendes.adopetapi.util.PageableResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -133,6 +134,66 @@ class PetControllerTest {
           });
 
       Assertions.assertThat(actualPetResponsePage).isNotNull().isNotEmpty().hasSize(1);
+    }
+
+  }
+
+  @Nested
+  @DisplayName("Tests for find by id endpoint")
+  class FindByIdEndpoint {
+
+    @Test
+    @DisplayName("FindById must return status 200 and PetResponse when found successfully")
+    void findById_MustReturnStatus200AndPetResponse_WhenFoundSuccessfully() throws Exception {
+      BDDMockito.when(petServiceMock.findById(10_000L))
+          .thenReturn(petResponse());
+
+      String actualContent = mockMvc.perform(get(PET_URI + "/10000"))
+          .andExpect(status().isOk())
+          .andReturn().getResponse().getContentAsString();
+
+      PetResponse actualPetResponse = mapper.readValue(actualContent, PetResponse.class);
+
+      Assertions.assertThat(actualPetResponse).isNotNull();
+      Assertions.assertThat(actualPetResponse.getId()).isNotNull().isEqualTo(10_000L);
+      Assertions.assertThat(actualPetResponse.getName()).isNotNull().isEqualTo("Dark");
+      Assertions.assertThat(actualPetResponse.getDescription()).isNotNull().isEqualTo("A very calm and cute cat");
+    }
+
+    @Test
+    @DisplayName("FindById must return status 400 and ProblemDetail when id is invalid")
+    void findById_MustReturnStatus400AndProblemDetail_WhenIdIsInvalid() throws Exception {
+      String actualContent = mockMvc.perform(get(PET_URI + "/1o0"))
+          .andExpect(status().isBadRequest())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Type mismatch");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("An error occurred trying to cast String to Number");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(400);
+    }
+
+    @Test
+    @DisplayName("FindById must return status 404 and ProblemDetail when pet not found")
+    void findById_MustReturnStatus404AndProblemDetail_WhenPetNotFound() throws Exception {
+      BDDMockito.when(petServiceMock.findById(10_000L))
+          .thenThrow(new PetNotFoundException("Pet not found"));
+
+      String actualContent = mockMvc
+          .perform(get(PET_URI + "/10000"))
+          .andExpect(status().isNotFound())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Pet not found");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("Pet not found");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(404);
     }
 
   }
