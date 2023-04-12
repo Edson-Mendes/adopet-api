@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -22,7 +24,8 @@ public class PetServiceImpl implements PetService {
   public PetResponse create(CreatePetRequest createPetRequest) {
     Pet pet = petMapper.createPetRequestToPet(createPetRequest);
 
-    log.info("pet id : {}", pet.getId());
+    pet.setCreatedAt(LocalDateTime.now());
+    // FIXME: Caso shelter não corresponda a nenhuma linha em t_shelter uma exception é lançada!
     pet = petRepository.save(pet);
 
     log.info("Pet created successfully with id : {}", pet.getId());
