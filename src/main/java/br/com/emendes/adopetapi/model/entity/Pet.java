@@ -27,7 +27,7 @@ public class Pet {
   private boolean adopted;
   @Column(nullable = false)
   private LocalDateTime createdAt;
-  @ManyToOne(optional = false)
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private Shelter shelter;
 
 }

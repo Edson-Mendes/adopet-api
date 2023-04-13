@@ -188,4 +188,34 @@ class PetServiceImplTest {
 
   }
 
+  @Nested
+  @DisplayName("Tests for deleteById method")
+  class DeleteByIdMethod {
+
+    @Test
+    @DisplayName("DeleteById must call PetRepository#delete when delete pet")
+    void deleteById_MustCallPetRepositoryDelete_WhenDeletePet() {
+      BDDMockito.when(petRepositoryMock.findById(10_000L))
+          .thenReturn(Optional.of(pet()));
+      BDDMockito.doNothing().when(petRepositoryMock).delete(any(Pet.class));
+
+      petService.deleteById(10_000L);
+
+      BDDMockito.verify(petRepositoryMock).findById(10_000L);
+      BDDMockito.verify(petRepositoryMock).delete(any(Pet.class));
+    }
+
+    @Test
+    @DisplayName("DeleteById must throw PetNotFoundException when pet do not exists with given id")
+    void deleteById_MustThrowPetNotFoundException_WhenPetDoNotExistsWithGivenId() {
+      BDDMockito.when(petRepositoryMock.findById(10_000L))
+          .thenReturn(Optional.empty());
+
+      Assertions.assertThatExceptionOfType(PetNotFoundException.class)
+          .isThrownBy(() -> petService.deleteById(10_000L))
+          .withMessage("Pet not found");
+    }
+
+  }
+
 }

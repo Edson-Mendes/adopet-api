@@ -60,6 +60,14 @@ public class PetServiceImpl implements PetService {
     return petMapper.petToPetResponse(updatedPet);
   }
 
+  @Override
+  public void deleteById(Long id) {
+    Pet pet = findPetById(id);
+
+    log.info("Deleting Pet with id: {}", id);
+    petRepository.delete(pet);
+  }
+
   private Pet findPetById(Long id) {
     log.info("Searching for Pet with id: {}", id);
     return petRepository.findById(id).orElseThrow(() -> new PetNotFoundException("Pet not found"));

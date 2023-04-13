@@ -10,41 +10,8 @@ Adopet API é uma REST API de uma plataforma para conectar pessoas que desejam a
 
 Projeto proposto pela Alura no Challenge Backend 6ª Edição.
 
-## :bulb: Funcionalidades
 
-#### :bust_in_silhouette: Tutor
-- `Cadastrar`: Salvar Tutor através de um **POST /api/tutors** com as informações de *name*, *email*, *password* e *confirmPassword*
-em um JSON no corpo da requisição.</br>
-
-- `Atualizar`: Atualizar Tutor através de um **PUT /api/tutors/{ID}**, onde *ID* é o identificador do Tutor, 
-os novos dados do guardian devem ser enviados no corpo da requisição.</br>
-
-- `Buscar por id`: Busca Tutor por ID através de um **GET /api/tutors/{ID}**, onde *{ID}* é o identificador do Tutor.</br>
-
-- `Buscar todos`: Busca paginada de tutores através de um **GET /api/tutors**.</br>
-
-- `Deletar`: Deletar Tutor através de um **DELETE /api/tutors/{ID}**, onde *{ID}* é o identificador do Tutor.</br>
-
-#### :european_castle: Shelter
-- `Cadastrar`: Salvar Shelter através de um **POST /api/shelters** com as informações de *name*
-  em um JSON no corpo da requisição.</br>
-
-- `Buscar todos`: Busca paginada de shelters através de um **GET /api/shelters**.</br>
- 
-- `Buscar por id`: Busca Shelter por ID através de um **GET /api/shelters/{ID}**, onde *{ID}* é o identificador do Shelter.</br>
-
-- `Atualizar`: Atualizar Shelter através de um **PUT /api/shelters/{ID}**, onde *ID* é o identificador do Shelter,
-  os novos dados do guardian devem ser enviados no corpo da requisição.</br>
-
-- `Deletar`: Deletar Shelter através de um **DELETE /api/shelters/{ID}**, onde *{ID}* é o identificador do Shelter.</br>
-
-#### :cat: Pet
-- `Cadastrar`: Salvar Pet através de um **POST /api/pets** com as informações de *name*, *description*, *age* e *shelterId*
-  em um JSON no corpo da requisição.</br>
-
-- `Buscar todos`: Busca paginada de pets através de um **GET /api/pets**.</br>
-
-## :toolbox: Tecnologias
+## :toolbox: Tecnologias e ferramentas
 
 - `IntelliJ`
 - `Java 17`
@@ -57,7 +24,50 @@ os novos dados do guardian devem ser enviados no corpo da requisição.</br>
 - `Lombok`
 - `Mockito`
 - `JUnit5`
-- `Testes de unidade`
+- `Unit tests`
+
+
+## :bulb: Funcionalidades
+
+#### :bust_in_silhouette: Guardian
+- `Cadastrar`: Salvar Guardian através de um **POST /api/guardians** com as informações de *name*, *email*, *password* e *confirmPassword*
+em um JSON no corpo da requisição.</br>
+
+- `Atualizar`: Atualizar Guardian através de um **PUT /api/guardians/{ID}**, onde *ID* é o identificador do Guardian, 
+os novos dados do guardian devem ser enviados no corpo da requisição.</br>
+
+- `Buscar por id`: Busca Guardian por ID através de um **GET /api/guardians/{ID}**, onde *{ID}* é o identificador do Guardian.</br>
+
+- `Buscar todos`: Busca paginada de guardians através de um **GET /api/guardians**.</br>
+
+- `Deletar`: Deletar Guardian através de um **DELETE /api/guardians/{ID}**, onde *{ID}* é o identificador do Guardian.</br>
+
+#### :european_castle: Shelter
+- `Cadastrar`: Salvar Shelter através de um **POST /api/shelters** com as informações de *name*
+  em um JSON no corpo da requisição.</br>
+
+- `Buscar todos`: Busca paginada de shelters através de um **GET /api/shelters**.</br>
+ 
+- `Buscar por id`: Busca Shelter por ID através de um **GET /api/shelters/{ID}**, onde *{ID}* é o identificador do Shelter.</br>
+
+- `Atualizar`: Atualizar Shelter através de um **PUT /api/shelters/{ID}**, onde *ID* é o identificador do Shelter,
+  os novos dados do abrigo devem ser enviados no corpo da requisição.</br>
+
+- `Deletar`: Deletar Shelter através de um **DELETE /api/shelters/{ID}**, onde *{ID}* é o identificador do Shelter.</br>
+
+#### :cat: Pet
+- `Cadastrar`: Salvar Pet através de um **POST /api/pets** com as informações de *name*, *description*, *age* e *shelterId*
+  em um JSON no corpo da requisição.</br>
+
+- `Buscar todos`: Busca paginada de pets através de um **GET /api/pets**.</br>
+
+- `Buscar por id`: Busca Pet por ID através de um **GET /api/pets/{ID}**, onde *{ID}* é o identificador do Pet.</br>
+
+- `Atualizar`: Atualizar Pet através de um **PUT /api/pets/{ID}**, onde *ID* é o identificador do Pet,
+  os novos dados do pet devem ser enviados no corpo da requisição.</br>
+
+- `Deletar`: Deletar Pet através de um **DELETE /api/pets/{ID}**, onde *{ID}* é o identificador do Pet.</br>
+
 
 ## :gear: Atualizações semana 2
 - [x] Modelagem da entidade Shelter.
@@ -71,7 +81,7 @@ os novos dados do guardian devem ser enviados no corpo da requisição.</br>
 - [x] Requisição PUT para ATUALIZAR Pet.
 - [x] Requisição GET para BUSCAR todos os Pets.
 - [x] Requisição GET para BUSCAR Pet por ID.
-- [ ] Requisição DELETE para DELETAR Pet.
-- [ ] Validações de todos os campos de Shelter e Pet.
+- [x] Requisição DELETE para DELETAR Pet.
+- [x] Validações de todos os campos de Shelter e Pet.
 - [ ] Regra de negócio para adoção.
 - [ ] Testes automatizados (Pelo menos os testes de unidade).

@@ -15,14 +15,6 @@ spring:
     show-sql: true
     properties:
       hibernate:
-        format-sql: true
+        format_sql: true
     hibernate:
       ddl-auto: validate
-
-# logging
-logging:
-  level:
-    org:
-      hibernate:
-        sql: DEBUG
-        type: trace
