@@ -2,6 +2,7 @@ package br.com.emendes.adopetapi.unit.mapper;
 
 import br.com.emendes.adopetapi.config.ModelMapperConfig;
 import br.com.emendes.adopetapi.dto.request.CreatePetRequest;
+import br.com.emendes.adopetapi.dto.request.UpdatePetRequest;
 import br.com.emendes.adopetapi.dto.response.PetResponse;
 import br.com.emendes.adopetapi.mapper.impl.PetMapperImpl;
 import br.com.emendes.adopetapi.model.entity.Pet;
@@ -70,6 +71,41 @@ class PetMapperImplTest {
     Assertions.assertThat(actualPetResponse.getAge()).isNotNull().isEqualTo("2 years old");
     Assertions.assertThat(actualPetResponse.isAdopted()).isFalse();
     Assertions.assertThat(actualPetResponse.getShelterId()).isNotNull().isEqualTo(1_000L);
+  }
+
+  @Test
+  @DisplayName("Merge must return Pet merged with data from UpdatePetRequest when merge successfully")
+  void merge_MustReturnPetMergedWithDataFromUpdatePetRequest_WhenMergeSuccessfully() {
+    Shelter shelter = Shelter.builder()
+        .id(1_000L)
+        .build();
+    Pet pet = Pet.builder()
+        .id(10_000L)
+        .name("Dark")
+        .description("A very calm and cute cat")
+        .age("2 years old")
+        .createdAt(LocalDateTime.parse("2023-04-10T12:00:00"))
+        .adopted(false)
+        .shelter(shelter)
+        .build();
+
+    UpdatePetRequest updatePetRequest = UpdatePetRequest.builder()
+        .name("Fluffy")
+        .description("A cute cat")
+        .age("3 years old")
+        .build();
+
+    petMapper.merge(updatePetRequest, pet);
+
+    Assertions.assertThat(pet).isNotNull();
+    Assertions.assertThat(pet.getId()).isNotNull().isEqualTo(10_000L);
+    Assertions.assertThat(pet.getCreatedAt()).isNotNull().isEqualTo("2023-04-10T12:00:00");
+    Assertions.assertThat(pet.isAdopted()).isFalse();
+    Assertions.assertThat(pet.getShelter()).isNotNull();
+    Assertions.assertThat(pet.getShelter().getId()).isNotNull().isEqualTo(1_000L);
+    Assertions.assertThat(pet.getName()).isNotNull().isEqualTo("Fluffy");
+    Assertions.assertThat(pet.getDescription()).isNotNull().isEqualTo("A cute cat");
+    Assertions.assertThat(pet.getAge()).isNotNull().isEqualTo("3 years old");
   }
 
 }

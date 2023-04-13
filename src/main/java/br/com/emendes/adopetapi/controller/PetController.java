@@ -1,6 +1,7 @@
 package br.com.emendes.adopetapi.controller;
 
 import br.com.emendes.adopetapi.dto.request.CreatePetRequest;
+import br.com.emendes.adopetapi.dto.request.UpdatePetRequest;
 import br.com.emendes.adopetapi.dto.response.PetResponse;
 import br.com.emendes.adopetapi.service.PetService;
 import jakarta.validation.Valid;
@@ -39,6 +40,12 @@ public class PetController {
   @GetMapping("/{id}")
   public  ResponseEntity<PetResponse> findById(@PathVariable(name = "id") Long id) {
     return ResponseEntity.ok(petService.findById(id));
+  }
+
+  @PutMapping("/{id}")
+  public  ResponseEntity<PetResponse> update(
+      @PathVariable(name = "id") Long id, @RequestBody @Valid UpdatePetRequest updatePetRequest) {
+    return ResponseEntity.ok(petService.update(id, updatePetRequest));
   }
 
 }

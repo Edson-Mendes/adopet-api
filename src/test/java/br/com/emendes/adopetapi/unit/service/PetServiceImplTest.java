@@ -1,6 +1,7 @@
 package br.com.emendes.adopetapi.unit.service;
 
 import br.com.emendes.adopetapi.dto.request.CreatePetRequest;
+import br.com.emendes.adopetapi.dto.request.UpdatePetRequest;
 import br.com.emendes.adopetapi.dto.response.PetResponse;
 import br.com.emendes.adopetapi.exception.PetNotFoundException;
 import br.com.emendes.adopetapi.mapper.PetMapper;
@@ -130,6 +131,58 @@ class PetServiceImplTest {
 
       Assertions.assertThatExceptionOfType(PetNotFoundException.class)
           .isThrownBy(() -> petService.findById(10_000L))
+          .withMessage("Pet not found");
+    }
+
+  }
+
+  @Nested
+  @DisplayName("Tests for update method")
+  class UpdateMethod {
+
+    @Test
+    @DisplayName("Update must return PetResponse when update successfully")
+    void update_MustReturnPetResponse_WhenUpdateSuccessfully() {
+      BDDMockito.when(petRepositoryMock.findById(10_000L))
+          .thenReturn(Optional.of(pet()));
+      BDDMockito.when(petRepositoryMock.save(any(Pet.class)))
+          .thenReturn(updatedPet());
+      BDDMockito.when(petMapperMock.petToPetResponse(any(Pet.class)))
+          .thenReturn(updatedPetResponse());
+
+      UpdatePetRequest petRequest = UpdatePetRequest.builder()
+          .name("Darkness")
+          .description("A very cute cat")
+          .age("3 years old")
+          .build();
+
+      PetResponse actualPetResponse = petService.update(10_000L, petRequest);
+
+      BDDMockito.verify(petMapperMock).petToPetResponse(any(Pet.class));
+      BDDMockito.verify(petRepositoryMock).save(any(Pet.class));
+      BDDMockito.verify(petRepositoryMock).findById(10_000L);
+
+      Assertions.assertThat(actualPetResponse).isNotNull();
+      Assertions.assertThat(actualPetResponse.getId()).isNotNull().isEqualTo(10_000L);
+      Assertions.assertThat(actualPetResponse.getName()).isNotNull().isEqualTo("Darkness");
+      Assertions.assertThat(actualPetResponse.getDescription()).isNotNull().isEqualTo("A very cute cat");
+      Assertions.assertThat(actualPetResponse.getAge()).isNotNull().isEqualTo("3 years old");
+    }
+
+    @Test
+    @DisplayName("Update must throw PetNotFoundException when pet not found with given id")
+    void update_MustThrowPetNotFoundException_WhenPetNotFoundWithGivenId() {
+      BDDMockito.when(petRepositoryMock.findById(10_000L))
+          .thenReturn(Optional.empty());
+
+      UpdatePetRequest petRequest = UpdatePetRequest.builder()
+          .name("Darkness")
+          .description("A very cute cat")
+          .age("3 years old")
+          .build();
+
+      Assertions.assertThatExceptionOfType(PetNotFoundException.class)
+          .isThrownBy(() -> petService.update(1000L, petRequest))
           .withMessage("Pet not found");
     }
 

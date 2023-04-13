@@ -2,6 +2,7 @@ package br.com.emendes.adopetapi.unit.controller;
 
 import br.com.emendes.adopetapi.controller.PetController;
 import br.com.emendes.adopetapi.dto.request.CreatePetRequest;
+import br.com.emendes.adopetapi.dto.request.UpdatePetRequest;
 import br.com.emendes.adopetapi.dto.response.PetResponse;
 import br.com.emendes.adopetapi.exception.PetNotFoundException;
 import br.com.emendes.adopetapi.service.PetService;
@@ -28,9 +29,10 @@ import java.util.List;
 import static br.com.emendes.adopetapi.util.ConstantUtils.CONTENT_TYPE;
 import static br.com.emendes.adopetapi.util.ConstantUtils.PAGEABLE;
 import static br.com.emendes.adopetapi.util.PetUtils.petResponse;
+import static br.com.emendes.adopetapi.util.PetUtils.updatedPetResponse;
 import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
@@ -194,6 +196,124 @@ class PetControllerTest {
       Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
           .isEqualTo("Pet not found");
       Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(404);
+    }
+
+  }
+
+  @Nested
+  @DisplayName("Tests for update endpoint")
+  class UpdateEndpoint {
+
+    @Test
+    @DisplayName("Update must return status 200 and PetResponse when update successfully")
+    void update_MustReturnStatus200AndPetResponse_WhenUpdateSuccessfully() throws Exception {
+      BDDMockito.when(petServiceMock.update(eq(10_000L), any(UpdatePetRequest.class)))
+          .thenReturn(updatedPetResponse());
+      String requestBody = """
+            {
+              "name" : "Darkness",
+              "description" : "A very cute cat",
+              "age" : "3 years old"
+            }
+          """;
+
+      String actualContent = mockMvc
+          .perform(put(PET_URI + "/10000").contentType(CONTENT_TYPE).content(requestBody))
+          .andExpect(status().isOk())
+          .andReturn().getResponse().getContentAsString();
+
+      PetResponse actualPetResponse = mapper.readValue(actualContent, PetResponse.class);
+
+      Assertions.assertThat(actualPetResponse).isNotNull();
+      Assertions.assertThat(actualPetResponse.getId()).isNotNull().isEqualTo(10_000L);
+      Assertions.assertThat(actualPetResponse.getName()).isNotNull().isEqualTo("Darkness");
+      Assertions.assertThat(actualPetResponse.getDescription()).isNotNull().isEqualTo("A very cute cat");
+      Assertions.assertThat(actualPetResponse.getAge()).isNotNull().isEqualTo("3 years old");
+    }
+
+    @Test
+    @DisplayName("Update must return status 400 and ProblemDetail when request body has invalid fields")
+    void update_MustReturnStatus400AndProblemDetail_WhenRequestBodyHasInvalidFields() throws Exception {
+      String requestBody = """
+            {
+              "name" : "",
+              "description" : "A very cute cat",
+              "age" : "3 years old"
+            }
+          """;
+
+      String actualContent = mockMvc
+          .perform(put(PET_URI + "/1000").contentType(CONTENT_TYPE).content(requestBody))
+          .andExpect(status().isBadRequest())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Invalid arguments");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("Some fields are invalid");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(400);
+
+      Assertions.assertThat(actualProblemDetail.getProperties()).isNotNull();
+
+      String actualFields = (String) actualProblemDetail.getProperties().get("fields");
+      String actualMessages = (String) actualProblemDetail.getProperties().get("messages");
+
+      Assertions.assertThat(actualFields).isNotNull().contains("name");
+      Assertions.assertThat(actualMessages).isNotNull().contains("name must not be blank");
+    }
+
+    @Test
+    @DisplayName("Update must return status 404 and ProblemDetail when pet not found")
+    void update_MustReturnStatus404AndProblemDetail_WhenPetNotFound() throws Exception {
+      BDDMockito.when(petServiceMock.update(eq(10_000L), any(UpdatePetRequest.class)))
+          .thenThrow(new PetNotFoundException("Pet not found"));
+      String requestBody = """
+            {
+              "name" : "Darkness",
+              "description" : "A very cute cat",
+              "age" : "3 years old"
+            }
+          """;
+
+      String actualContent = mockMvc
+          .perform(put(PET_URI + "/10000").contentType(CONTENT_TYPE).content(requestBody))
+          .andExpect(status().isNotFound())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Pet not found");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("Pet not found");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(404);
+    }
+
+    @Test
+    @DisplayName("Update must return status 400 and ProblemDetail when given id is invalid")
+    void update_MustReturnStatus400AndProblemDetail_WhenGivenIdIsInvalid() throws Exception {
+      String requestBody = """
+            {
+              "name" : "Darkness",
+              "description" : "A very cute cat",
+              "age" : "3 years old"
+            }
+          """;
+
+      String actualContent = mockMvc
+          .perform(put(PET_URI + "/1o000").contentType(CONTENT_TYPE).content(requestBody))
+          .andExpect(status().isBadRequest())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Type mismatch");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("An error occurred trying to cast String to Number");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(400);
     }
 
   }

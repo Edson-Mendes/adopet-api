@@ -1,6 +1,7 @@
 package br.com.emendes.adopetapi.service.impl;
 
 import br.com.emendes.adopetapi.dto.request.CreatePetRequest;
+import br.com.emendes.adopetapi.dto.request.UpdatePetRequest;
 import br.com.emendes.adopetapi.dto.response.PetResponse;
 import br.com.emendes.adopetapi.exception.PetNotFoundException;
 import br.com.emendes.adopetapi.mapper.PetMapper;
@@ -46,6 +47,17 @@ public class PetServiceImpl implements PetService {
   @Override
   public PetResponse findById(Long id) {
     return petMapper.petToPetResponse(findPetById(id));
+  }
+
+  @Override
+  public PetResponse update(Long id, UpdatePetRequest updatePetRequest) {
+    Pet pet = findPetById(id);
+
+    petMapper.merge(updatePetRequest, pet);
+    Pet updatedPet = petRepository.save(pet);
+
+    log.info("Pet updated successfully with id : {}", updatedPet.getId());
+    return petMapper.petToPetResponse(updatedPet);
   }
 
   private Pet findPetById(Long id) {

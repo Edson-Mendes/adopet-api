@@ -68,9 +68,9 @@ os novos dados do guardian devem ser enviados no corpo da requisição.</br>
 - [x] Requisição GET para BUSCAR Shelter por ID.
 - [x] Requisição DELETE para DELETAR Shelter.
 - [x] Requisição POST para CRIAR Pet.
-- [ ] Requisição PUT para ATUALIZAR Pet.
+- [x] Requisição PUT para ATUALIZAR Pet.
 - [x] Requisição GET para BUSCAR todos os Pets.
-- [ ] Requisição GET para BUSCAR Pet por ID.
+- [x] Requisição GET para BUSCAR Pet por ID.
 - [ ] Requisição DELETE para DELETAR Pet.
 - [ ] Validações de todos os campos de Shelter e Pet.
 - [ ] Regra de negócio para adoção.
