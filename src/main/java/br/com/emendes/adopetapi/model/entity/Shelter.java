@@ -24,5 +24,7 @@ public class Shelter {
   private LocalDateTime createdAt;
   @OneToMany(mappedBy = "shelter", cascade = {CascadeType.REMOVE})
   private Collection<Pet> pets;
+  @OneToOne(cascade = CascadeType.REMOVE, optional = false)
+  private User user;
 
 }

@@ -55,7 +55,7 @@ public class GuardianServiceImpl implements GuardianService {
     Guardian guardian = findGuardianById(id);
 
     guardian.setName(updateGuardianRequest.getName());
-    guardian.setEmail(updateGuardianRequest.getEmail());
+//    guardian.setEmail(updateGuardianRequest.getEmail());
 
     try {
       Guardian updatedGuardian = guardianRepository.save(guardian);
