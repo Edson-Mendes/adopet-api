@@ -4,10 +4,11 @@ import br.com.emendes.adopetapi.dto.request.CreateGuardianRequest;
 import br.com.emendes.adopetapi.dto.request.UpdateGuardianRequest;
 import br.com.emendes.adopetapi.dto.response.GuardianResponse;
 import br.com.emendes.adopetapi.exception.EmailAlreadyInUseException;
-import br.com.emendes.adopetapi.exception.PasswordsDoNotMatchException;
 import br.com.emendes.adopetapi.exception.GuardianNotFoundException;
+import br.com.emendes.adopetapi.exception.PasswordsDoNotMatchException;
 import br.com.emendes.adopetapi.mapper.GuardianMapper;
 import br.com.emendes.adopetapi.model.entity.Guardian;
+import br.com.emendes.adopetapi.model.entity.User;
 import br.com.emendes.adopetapi.repository.GuardianRepository;
 import br.com.emendes.adopetapi.service.GuardianService;
 import lombok.RequiredArgsConstructor;
@@ -42,12 +43,13 @@ public class GuardianServiceImpl implements GuardianService {
     try {
       Guardian savedGuardian = guardianRepository.save(guardian);
       log.info("Guardian saved successfully with id : {}", savedGuardian.getId());
+
       return guardianMapper.guardianToGuardianResponse(savedGuardian);
     } catch (DataIntegrityViolationException exception) {
       log.info("Data Integrity Violation, message : {}", exception.getMessage());
-      throw new EmailAlreadyInUseException(String.format("E-mail {%s} is already in use", createGuardianRequest.getEmail()));
+      throw new EmailAlreadyInUseException(String
+          .format("E-mail {%s} is already in use", createGuardianRequest.getEmail()));
     }
-
   }
 
   @Override

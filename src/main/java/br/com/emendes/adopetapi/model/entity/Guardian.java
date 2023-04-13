@@ -21,7 +21,7 @@ public class Guardian {
   private String name;
   @Column(nullable = false)
   private LocalDateTime createdAt;
-  @OneToOne(cascade = CascadeType.REMOVE, optional = false)
+  @OneToOne(cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, optional = false)
   private User user;
 
 }
