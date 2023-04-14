@@ -1,7 +1,10 @@
 package br.com.emendes.adopetapi.unit.service;
 
-import br.com.emendes.adopetapi.dto.request.ShelterRequest;
+import br.com.emendes.adopetapi.dto.request.CreateShelterRequest;
+import br.com.emendes.adopetapi.dto.request.UpdateShelterRequest;
 import br.com.emendes.adopetapi.dto.response.ShelterResponse;
+import br.com.emendes.adopetapi.exception.EmailAlreadyInUseException;
+import br.com.emendes.adopetapi.exception.PasswordsDoNotMatchException;
 import br.com.emendes.adopetapi.exception.ShelterNotFoundException;
 import br.com.emendes.adopetapi.mapper.ShelterMapper;
 import br.com.emendes.adopetapi.model.entity.Shelter;
@@ -15,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -45,26 +49,63 @@ class ShelterServiceImplTest {
     @Test
     @DisplayName("Create must return ShelterResponse when create successfully")
     void create_MustReturnShelterResponse_WhenCreateSuccessfully() {
-      BDDMockito.when(shelterMapperMock.shelterRequestToShelter(any(ShelterRequest.class)))
+      BDDMockito.when(shelterMapperMock.createShelterRequestToShelter(any(CreateShelterRequest.class)))
           .thenReturn(shelterWithoutId());
       BDDMockito.when(shelterRepositoryMock.save(any(Shelter.class)))
           .thenReturn(shelter());
       BDDMockito.when(shelterMapperMock.shelterToShelterResponse(any(Shelter.class)))
           .thenReturn(shelterResponse());
 
-      ShelterRequest shelterRequest = ShelterRequest.builder()
+      CreateShelterRequest createShelterRequest = CreateShelterRequest.builder()
           .name("Animal Shelter")
+          .email("animal.shelter@email.com")
+          .password("1234567890")
+          .confirmPassword("1234567890")
           .build();
 
-      ShelterResponse actualShelterResponse = shelterService.create(shelterRequest);
+      ShelterResponse actualShelterResponse = shelterService.create(createShelterRequest);
 
-      BDDMockito.verify(shelterMapperMock).shelterRequestToShelter(any(ShelterRequest.class));
+      BDDMockito.verify(shelterMapperMock).createShelterRequestToShelter(any(CreateShelterRequest.class));
       BDDMockito.verify(shelterMapperMock).shelterToShelterResponse(any(Shelter.class));
       BDDMockito.verify(shelterRepositoryMock).save(any(Shelter.class));
 
       Assertions.assertThat(actualShelterResponse).isNotNull();
-      Assertions.assertThat(actualShelterResponse.getId()).isNotNull().isEqualTo(1000L);
+      Assertions.assertThat(actualShelterResponse.getId()).isNotNull().isEqualTo(1_000L);
       Assertions.assertThat(actualShelterResponse.getName()).isNotNull().isEqualTo("Animal Shelter");
+      Assertions.assertThat(actualShelterResponse.getEmail()).isNotNull().isEqualTo("animal.shelter@email.com");
+    }
+
+    @Test
+    @DisplayName("Create must throw PasswordsDoNotMatchException when passwords do not match")
+    void create_MustThrowPasswordsDoNotMatchException_WhenPasswordsDoNotMatch() {
+      CreateShelterRequest createShelterRequest = CreateShelterRequest.builder()
+          .password("123456789")
+          .confirmPassword("12345678")
+          .build();
+
+      Assertions.assertThatExceptionOfType(PasswordsDoNotMatchException.class)
+          .isThrownBy(() -> shelterService.create(createShelterRequest))
+          .withMessage("Passwords do not match");
+    }
+
+    @Test
+    @DisplayName("Create must throw EmailAlreadyInUseException when already exists email in the database")
+    void create_MustThrowEmailAlreadyInUseException_WhenAlreadyExistsEmailInTheDatabase() {
+      BDDMockito.when(shelterMapperMock.createShelterRequestToShelter(any(CreateShelterRequest.class)))
+          .thenReturn(shelterWithoutId());
+      BDDMockito.when(shelterRepositoryMock.save(any(Shelter.class)))
+          .thenThrow(new DataIntegrityViolationException("unique_email constraint"));
+
+      CreateShelterRequest createShelterRequest = CreateShelterRequest.builder()
+          .name("Animal Shelter")
+          .email("animal.shelter@email.com")
+          .password("1234567890")
+          .confirmPassword("1234567890")
+          .build();
+
+      Assertions.assertThatExceptionOfType(EmailAlreadyInUseException.class)
+          .isThrownBy(() -> shelterService.create(createShelterRequest))
+          .withMessage("E-mail {animal.shelter@email.com} is already in use");
     }
 
   }
@@ -140,11 +181,11 @@ class ShelterServiceImplTest {
       BDDMockito.when(shelterMapperMock.shelterToShelterResponse(any(Shelter.class)))
           .thenReturn(updatedShelterResponse());
 
-      ShelterRequest shelterRequest = ShelterRequest.builder()
+      UpdateShelterRequest updateShelterRequest = UpdateShelterRequest.builder()
           .name("Animal Shelter ABC")
           .build();
 
-      ShelterResponse actualShelterResponse = shelterService.update(1000L, shelterRequest);
+      ShelterResponse actualShelterResponse = shelterService.update(1000L, updateShelterRequest);
 
       BDDMockito.verify(shelterMapperMock).shelterToShelterResponse(any(Shelter.class));
       BDDMockito.verify(shelterRepositoryMock).save(any(Shelter.class));
@@ -161,12 +202,12 @@ class ShelterServiceImplTest {
       BDDMockito.when(shelterRepositoryMock.findById(1000L))
           .thenReturn(Optional.empty());
 
-      ShelterRequest shelterRequest = ShelterRequest.builder()
+      UpdateShelterRequest updateShelterRequest = UpdateShelterRequest.builder()
           .name("Animal Shelter ABC")
           .build();
 
       Assertions.assertThatExceptionOfType(ShelterNotFoundException.class)
-          .isThrownBy(() -> shelterService.update(1000L, shelterRequest))
+          .isThrownBy(() -> shelterService.update(1000L, updateShelterRequest))
           .withMessage("Shelter not found");
     }
 
@@ -179,24 +220,24 @@ class ShelterServiceImplTest {
     @Test
     @DisplayName("DeleteById must call ShelterRepository#delete when delete shelter")
     void deleteById_MustCallShelterRepositoryDelete_WhenDeleteShelter() {
-      BDDMockito.when(shelterRepositoryMock.findById(100L))
+      BDDMockito.when(shelterRepositoryMock.findById(1_000L))
           .thenReturn(Optional.of(shelter()));
       BDDMockito.doNothing().when(shelterRepositoryMock).delete(any(Shelter.class));
 
-      shelterService.deleteById(100L);
+      shelterService.deleteById(1_000L);
 
-      BDDMockito.verify(shelterRepositoryMock).findById(100L);
+      BDDMockito.verify(shelterRepositoryMock).findById(1_000L);
       BDDMockito.verify(shelterRepositoryMock).delete(any(Shelter.class));
     }
 
     @Test
     @DisplayName("DeleteById must throw ShelterNotFoundException when shelter do not exists with given id")
     void deleteById_MustThrowShelterNotFoundException_WhenShelterDoNotExistsWithGivenId() {
-      BDDMockito.when(shelterRepositoryMock.findById(100L))
+      BDDMockito.when(shelterRepositoryMock.findById(1_000L))
           .thenReturn(Optional.empty());
 
       Assertions.assertThatExceptionOfType(ShelterNotFoundException.class)
-          .isThrownBy(() -> shelterService.deleteById(100L))
+          .isThrownBy(() -> shelterService.deleteById(1_000L))
           .withMessage("Shelter not found");
     }
 

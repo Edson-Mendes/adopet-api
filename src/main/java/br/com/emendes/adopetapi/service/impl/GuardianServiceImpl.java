@@ -8,7 +8,6 @@ import br.com.emendes.adopetapi.exception.GuardianNotFoundException;
 import br.com.emendes.adopetapi.exception.PasswordsDoNotMatchException;
 import br.com.emendes.adopetapi.mapper.GuardianMapper;
 import br.com.emendes.adopetapi.model.entity.Guardian;
-import br.com.emendes.adopetapi.model.entity.User;
 import br.com.emendes.adopetapi.repository.GuardianRepository;
 import br.com.emendes.adopetapi.service.GuardianService;
 import lombok.RequiredArgsConstructor;
@@ -30,12 +29,13 @@ public class GuardianServiceImpl implements GuardianService {
 
   @Override
   public GuardianResponse create(CreateGuardianRequest createGuardianRequest) {
+    // TODO: Transferir a lógica do isPasswordMatch aqui pra service.
     if (!createGuardianRequest.isPasswordsMatch()) {
       log.info("Passwords do not match at GuardianServiceImpl#create");
       throw new PasswordsDoNotMatchException("Passwords do not match");
     }
 
-    Guardian guardian = guardianMapper.guardianRequestToGuardian(createGuardianRequest);
+    Guardian guardian = guardianMapper.createGuardianRequestToGuardian(createGuardianRequest);
     guardian.setCreatedAt(LocalDateTime.now());
 
     // TODO: Criptografar Guardian.password antes de salvar no DB.

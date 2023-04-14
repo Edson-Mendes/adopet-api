@@ -24,7 +24,7 @@ class GuardianMapperImplTest {
   }
 
   @Test
-  @DisplayName("GuardianRequestToGuardian must return Guardian when map successfully")
+  @DisplayName("CreateGuardianRequestToGuardian must return Guardian when map successfully")
   void guardianRequestToGuardian_MustReturnGuardian_WhenMapSuccessfully() {
     CreateGuardianRequest createGuardianRequest = CreateGuardianRequest.builder()
         .name("Lorem Ipsum")
@@ -33,12 +33,13 @@ class GuardianMapperImplTest {
         .confirmPassword("1234567890")
         .build();
 
-    Guardian actualGuardian = guardianMapper.guardianRequestToGuardian(createGuardianRequest);
+    Guardian actualGuardian = guardianMapper.createGuardianRequestToGuardian(createGuardianRequest);
 
     Assertions.assertThat(actualGuardian).isNotNull();
     Assertions.assertThat(actualGuardian.getId()).isNull();
     Assertions.assertThat(actualGuardian.getCreatedAt()).isNull();
     Assertions.assertThat(actualGuardian.getName()).isNotNull().isEqualTo("Lorem Ipsum");
+    Assertions.assertThat(actualGuardian.getUser()).isNotNull();
     Assertions.assertThat(actualGuardian.getUser().getId()).isNull();
     Assertions.assertThat(actualGuardian.getUser().getEmail()).isNotNull().isEqualTo("lorem@email.com");
     Assertions.assertThat(actualGuardian.getUser().getPassword()).isNotNull().isEqualTo("1234567890");

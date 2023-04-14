@@ -20,4 +20,20 @@ public abstract class UserUtils {
         .build();
   }
 
+  public static User shelterUser() {
+    return User.builder()
+        .id(11L)
+        .email("animal.shelter@email.com")
+        .password("1234567890")
+        .build();
+  }
+
+  public static User shelterUserWithoutId() {
+    return User.builder()
+        .id(null)
+        .email("animal.shelter@email.com")
+        .password("1234567890")
+        .build();
+  }
+
 }

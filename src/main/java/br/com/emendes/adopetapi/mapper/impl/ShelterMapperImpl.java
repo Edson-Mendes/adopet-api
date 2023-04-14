@@ -1,6 +1,7 @@
 package br.com.emendes.adopetapi.mapper.impl;
 
-import br.com.emendes.adopetapi.dto.request.ShelterRequest;
+import br.com.emendes.adopetapi.dto.request.CreateShelterRequest;
+import br.com.emendes.adopetapi.dto.request.UpdateShelterRequest;
 import br.com.emendes.adopetapi.dto.response.ShelterResponse;
 import br.com.emendes.adopetapi.mapper.ShelterMapper;
 import br.com.emendes.adopetapi.model.entity.Shelter;
@@ -15,8 +16,8 @@ public class ShelterMapperImpl implements ShelterMapper {
   private final ModelMapper mapper;
 
   @Override
-  public Shelter shelterRequestToShelter(ShelterRequest shelterRequest) {
-    return mapper.map(shelterRequest, Shelter.class);
+  public Shelter createShelterRequestToShelter(CreateShelterRequest createShelterRequest) {
+    return mapper.map(createShelterRequest, Shelter.class);
   }
 
   @Override

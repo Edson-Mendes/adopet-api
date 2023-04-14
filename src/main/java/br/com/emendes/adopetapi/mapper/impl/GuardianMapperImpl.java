@@ -15,7 +15,7 @@ public class GuardianMapperImpl implements GuardianMapper {
   private final ModelMapper modelMapper;
 
   @Override
-  public Guardian guardianRequestToGuardian(CreateGuardianRequest createGuardianRequest) {
+  public Guardian createGuardianRequestToGuardian(CreateGuardianRequest createGuardianRequest) {
     return modelMapper.map(createGuardianRequest, Guardian.class);
   }
 

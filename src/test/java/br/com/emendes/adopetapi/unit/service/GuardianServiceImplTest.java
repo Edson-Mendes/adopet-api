@@ -49,7 +49,7 @@ class GuardianServiceImplTest {
     @Test
     @DisplayName("Create must return GuardianResponse when create successfully")
     void create_MustReturnGuardianResponse_WhenCreateSuccessfully() {
-      BDDMockito.when(guardianMapperMock.guardianRequestToGuardian(any(CreateGuardianRequest.class)))
+      BDDMockito.when(guardianMapperMock.createGuardianRequestToGuardian(any(CreateGuardianRequest.class)))
           .thenReturn(guardianWithoutId());
       BDDMockito.when(guardianRepositoryMock.save(any(Guardian.class)))
           .thenReturn(guardian());
@@ -65,7 +65,7 @@ class GuardianServiceImplTest {
 
       GuardianResponse actualGuardianResponse = guardianService.create(createGuardianRequest);
 
-      BDDMockito.verify(guardianMapperMock).guardianRequestToGuardian(any(CreateGuardianRequest.class));
+      BDDMockito.verify(guardianMapperMock).createGuardianRequestToGuardian(any(CreateGuardianRequest.class));
       BDDMockito.verify(guardianMapperMock).guardianToGuardianResponse(any(Guardian.class));
       BDDMockito.verify(guardianRepositoryMock).save(any(Guardian.class));
 
@@ -91,7 +91,7 @@ class GuardianServiceImplTest {
     @Test
     @DisplayName("Create must throw EmailAlreadyInUseException when already exists email in the database")
     void create_MustThrowEmailAlreadyInUseException_WhenAlreadyExistsEmailInTheDatabase() {
-      BDDMockito.when(guardianMapperMock.guardianRequestToGuardian(any(CreateGuardianRequest.class)))
+      BDDMockito.when(guardianMapperMock.createGuardianRequestToGuardian(any(CreateGuardianRequest.class)))
           .thenReturn(guardianWithoutId());
       BDDMockito.when(guardianRepositoryMock.save(any(Guardian.class)))
           .thenThrow(new DataIntegrityViolationException("unique_email constraint"));

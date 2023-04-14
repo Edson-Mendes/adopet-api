@@ -1,7 +1,10 @@
 package br.com.emendes.adopetapi.service.impl;
 
-import br.com.emendes.adopetapi.dto.request.ShelterRequest;
+import br.com.emendes.adopetapi.dto.request.CreateShelterRequest;
+import br.com.emendes.adopetapi.dto.request.UpdateShelterRequest;
 import br.com.emendes.adopetapi.dto.response.ShelterResponse;
+import br.com.emendes.adopetapi.exception.EmailAlreadyInUseException;
+import br.com.emendes.adopetapi.exception.PasswordsDoNotMatchException;
 import br.com.emendes.adopetapi.exception.ShelterNotFoundException;
 import br.com.emendes.adopetapi.mapper.ShelterMapper;
 import br.com.emendes.adopetapi.model.entity.Shelter;
@@ -9,6 +12,7 @@ import br.com.emendes.adopetapi.repository.ShelterRepository;
 import br.com.emendes.adopetapi.service.ShelterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,15 +28,26 @@ public class ShelterServiceImpl implements ShelterService {
   private final ShelterRepository shelterRepository;
 
   @Override
-  public ShelterResponse create(ShelterRequest shelterRequest) {
-    Shelter shelter = shelterMapper.shelterRequestToShelter(shelterRequest);
-
+  public ShelterResponse create(CreateShelterRequest createShelterRequest) {
+    if (!createShelterRequest.getPassword().equals(createShelterRequest.getConfirmPassword())) {
+      log.info("Passwords do not match at ShelterServiceImpl#create");
+      throw new PasswordsDoNotMatchException("Passwords do not match");
+    }
+    Shelter shelter = shelterMapper.createShelterRequestToShelter(createShelterRequest);
     shelter.setCreatedAt(LocalDateTime.now());
 
-    shelter = shelterRepository.save(shelter);
+    // TODO: Criptografar Guardian.password antes de salvar no DB.
 
-    log.info("Shelter created successfully with id : {}", shelter.getId());
-    return shelterMapper.shelterToShelterResponse(shelter);
+    try {
+      Shelter savedShelter = shelterRepository.save(shelter);
+      log.info("Shelter saved successfully with id : {}", savedShelter.getId());
+
+      return shelterMapper.shelterToShelterResponse(savedShelter);
+    } catch (DataIntegrityViolationException exception) {
+      log.info("Data Integrity Violation, message : {}", exception.getMessage());
+      throw new EmailAlreadyInUseException(String
+          .format("E-mail {%s} is already in use", createShelterRequest.getEmail()));
+    }
   }
 
   @Override
@@ -49,10 +64,10 @@ public class ShelterServiceImpl implements ShelterService {
   }
 
   @Override
-  public ShelterResponse update(Long id, ShelterRequest shelterRequest) {
+  public ShelterResponse update(Long id, UpdateShelterRequest updateShelterRequest) {
     Shelter shelter = findShelterById(id);
 
-    shelter.setName(shelterRequest.getName());
+    shelter.setName(updateShelterRequest.getName());
     Shelter updatedShelter = shelterRepository.save(shelter);
 
     log.info("Shelter updated successfully with id : {}", updatedShelter.getId());

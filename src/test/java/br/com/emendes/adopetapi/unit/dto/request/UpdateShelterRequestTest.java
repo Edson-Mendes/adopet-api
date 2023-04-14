@@ -1,6 +1,6 @@
 package br.com.emendes.adopetapi.unit.dto.request;
 
-import br.com.emendes.adopetapi.dto.request.ShelterRequest;
+import br.com.emendes.adopetapi.dto.request.UpdateShelterRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -15,8 +15,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.List;
 import java.util.Set;
 
-@DisplayName("Unit tests for ShelterRequest")
-class ShelterRequestTest {
+@DisplayName("Unit tests for UpdateShelterRequest")
+class UpdateShelterRequestTest {
 
   private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
@@ -31,12 +31,12 @@ class ShelterRequestTest {
     })
     @DisplayName("Validate name must not return violations when name is valid")
     void validateName_MustNotReturnViolations_WhenNameIsValid(String validName) {
-      ShelterRequest shelterRequest = ShelterRequest.builder()
+      UpdateShelterRequest updateShelterRequest = UpdateShelterRequest.builder()
           .name(validName)
           .build();
 
-      Set<ConstraintViolation<ShelterRequest>> actualViolations = validator
-          .validateProperty(shelterRequest, "name");
+      Set<ConstraintViolation<UpdateShelterRequest>> actualViolations = validator
+          .validateProperty(updateShelterRequest, "name");
 
       Assertions.assertThat(actualViolations).isEmpty();
     }
@@ -46,12 +46,12 @@ class ShelterRequestTest {
     @ValueSource(strings = {"   ", "\t", "\n"})
     @DisplayName("Validate name must return violations when name is blank")
     void validateName_MustReturnViolations_WhenNameIsBlank(String blankName) {
-      ShelterRequest shelterRequest = ShelterRequest.builder()
+      UpdateShelterRequest updateShelterRequest = UpdateShelterRequest.builder()
           .name(blankName)
           .build();
 
-      Set<ConstraintViolation<ShelterRequest>> actualViolations = validator
-          .validateProperty(shelterRequest, "name");
+      Set<ConstraintViolation<UpdateShelterRequest>> actualViolations = validator
+          .validateProperty(updateShelterRequest, "name");
 
       List<String> actualMessages = actualViolations.stream().map(ConstraintViolation::getMessage).toList();
 
@@ -66,12 +66,12 @@ class ShelterRequestTest {
 
       Assertions.assertThat(nameWithLessThan2Characters).hasSizeLessThan(2);
 
-      ShelterRequest shelterRequest = ShelterRequest.builder()
+      UpdateShelterRequest updateShelterRequest = UpdateShelterRequest.builder()
           .name(nameWithLessThan2Characters)
           .build();
 
-      Set<ConstraintViolation<ShelterRequest>> actualViolations = validator
-          .validateProperty(shelterRequest, "name");
+      Set<ConstraintViolation<UpdateShelterRequest>> actualViolations = validator
+          .validateProperty(updateShelterRequest, "name");
 
       List<String> actualMessages = actualViolations.stream().map(ConstraintViolation::getMessage).toList();
 
@@ -87,12 +87,12 @@ class ShelterRequestTest {
 
       Assertions.assertThat(nameWithMoreThan100Characters).hasSizeGreaterThan(100);
 
-      ShelterRequest shelterRequest = ShelterRequest.builder()
+      UpdateShelterRequest updateShelterRequest = UpdateShelterRequest.builder()
           .name(nameWithMoreThan100Characters)
           .build();
 
-      Set<ConstraintViolation<ShelterRequest>> actualViolations = validator
-          .validateProperty(shelterRequest, "name");
+      Set<ConstraintViolation<UpdateShelterRequest>> actualViolations = validator
+          .validateProperty(updateShelterRequest, "name");
 
       List<String> actualMessages = actualViolations.stream().map(ConstraintViolation::getMessage).toList();
 

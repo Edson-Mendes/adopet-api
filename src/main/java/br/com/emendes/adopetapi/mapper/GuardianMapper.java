@@ -6,7 +6,7 @@ import br.com.emendes.adopetapi.model.entity.Guardian;
 
 public interface GuardianMapper {
 
-  Guardian guardianRequestToGuardian(CreateGuardianRequest createGuardianRequest);
+  Guardian createGuardianRequestToGuardian(CreateGuardianRequest createGuardianRequest);
 
   GuardianResponse guardianToGuardianResponse(Guardian guardian);
 

@@ -1,6 +1,7 @@
 package br.com.emendes.adopetapi.controller;
 
-import br.com.emendes.adopetapi.dto.request.ShelterRequest;
+import br.com.emendes.adopetapi.dto.request.CreateShelterRequest;
+import br.com.emendes.adopetapi.dto.request.UpdateShelterRequest;
 import br.com.emendes.adopetapi.dto.response.ShelterResponse;
 import br.com.emendes.adopetapi.service.ShelterService;
 import jakarta.validation.Valid;
@@ -23,8 +24,8 @@ public class ShelterController {
 
   @PostMapping
   public ResponseEntity<ShelterResponse> create(
-      @RequestBody @Valid ShelterRequest shelterRequest, UriComponentsBuilder uriComponentsBuilder) {
-    ShelterResponse shelterResponse = shelterService.create(shelterRequest);
+      @RequestBody @Valid CreateShelterRequest createShelterRequest, UriComponentsBuilder uriComponentsBuilder) {
+    ShelterResponse shelterResponse = shelterService.create(createShelterRequest);
 
     URI uri = uriComponentsBuilder.path("/api/shelters/{id}").build(shelterResponse.getId());
 
@@ -43,8 +44,8 @@ public class ShelterController {
 
   @PutMapping("/{id}")
   public ResponseEntity<ShelterResponse> update(
-      @PathVariable(name = "id") Long id, @RequestBody @Valid ShelterRequest shelterRequest) {
-    return ResponseEntity.ok(shelterService.update(id, shelterRequest));
+      @PathVariable(name = "id") Long id, @RequestBody @Valid UpdateShelterRequest updateShelterRequest) {
+    return ResponseEntity.ok(shelterService.update(id, updateShelterRequest));
   }
 
   @DeleteMapping("/{id}")
