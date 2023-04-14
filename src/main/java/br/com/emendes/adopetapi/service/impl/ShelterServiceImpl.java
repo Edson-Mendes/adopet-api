@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+import static br.com.emendes.adopetapi.util.ConstantUtil.ROLE_SHELTER;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -35,6 +37,7 @@ public class ShelterServiceImpl implements ShelterService {
     }
     Shelter shelter = shelterMapper.createShelterRequestToShelter(createShelterRequest);
     shelter.setCreatedAt(LocalDateTime.now());
+    shelter.getUser().addRole(ROLE_SHELTER);
 
     // TODO: Criptografar Guardian.password antes de salvar no DB.
 

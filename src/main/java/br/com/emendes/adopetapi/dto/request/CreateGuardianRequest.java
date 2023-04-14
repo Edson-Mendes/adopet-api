@@ -31,10 +31,4 @@ public class CreateGuardianRequest {
   @Size(min = 8, max = 30, message = "confirmPassword must contain between {min} and {max} characters")
   private String confirmPassword;
 
-  public boolean isPasswordsMatch() {
-    if (password == null) return false;
-
-    return password.equals(confirmPassword);
-  }
-
 }

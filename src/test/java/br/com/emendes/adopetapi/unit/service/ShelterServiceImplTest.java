@@ -15,9 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -27,6 +25,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.List;
 import java.util.Optional;
 
+import static br.com.emendes.adopetapi.util.ConstantUtil.ROLE_SHELTER;
 import static br.com.emendes.adopetapi.util.ConstantUtils.PAGEABLE;
 import static br.com.emendes.adopetapi.util.ShelterUtils.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -45,6 +44,9 @@ class ShelterServiceImplTest {
   @Nested
   @DisplayName("Tests for create method")
   class CreateMethod {
+
+    @Captor
+    private ArgumentCaptor<Shelter> shelterCaptor;
 
     @Test
     @DisplayName("Create must return ShelterResponse when create successfully")
@@ -67,12 +69,17 @@ class ShelterServiceImplTest {
 
       BDDMockito.verify(shelterMapperMock).createShelterRequestToShelter(any(CreateShelterRequest.class));
       BDDMockito.verify(shelterMapperMock).shelterToShelterResponse(any(Shelter.class));
-      BDDMockito.verify(shelterRepositoryMock).save(any(Shelter.class));
+      BDDMockito.verify(shelterRepositoryMock).save(shelterCaptor.capture());
+
+      Shelter actualShelter = shelterCaptor.getValue();
 
       Assertions.assertThat(actualShelterResponse).isNotNull();
       Assertions.assertThat(actualShelterResponse.getId()).isNotNull().isEqualTo(1_000L);
       Assertions.assertThat(actualShelterResponse.getName()).isNotNull().isEqualTo("Animal Shelter");
       Assertions.assertThat(actualShelterResponse.getEmail()).isNotNull().isEqualTo("animal.shelter@email.com");
+      Assertions.assertThat(actualShelter).isNotNull();
+      Assertions.assertThat(actualShelter.getUser()).isNotNull();
+      Assertions.assertThat(actualShelter.getUser().getRoles()).isNotNull().contains(ROLE_SHELTER);
     }
 
     @Test

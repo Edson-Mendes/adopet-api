@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @AllArgsConstructor
@@ -31,5 +32,11 @@ public class User {
       inverseJoinColumns = @JoinColumn(name = "role_id", nullable = false)
   )
   private Collection<Role> roles;
+
+  public void addRole(Role role) {
+    if (roles == null) roles = new ArrayList<>();
+
+    roles.add(role);
+  }
 
 }

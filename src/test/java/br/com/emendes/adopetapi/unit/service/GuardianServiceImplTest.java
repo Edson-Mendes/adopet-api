@@ -15,9 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -27,6 +25,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.List;
 import java.util.Optional;
 
+import static br.com.emendes.adopetapi.util.ConstantUtil.ROLE_GUARDIAN;
 import static br.com.emendes.adopetapi.util.ConstantUtils.PAGEABLE;
 import static br.com.emendes.adopetapi.util.GuardianUtils.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -45,6 +44,9 @@ class GuardianServiceImplTest {
   @Nested
   @DisplayName("Tests for create method")
   class CreateMethod {
+
+    @Captor
+    private ArgumentCaptor<Guardian> guardianCaptor;
 
     @Test
     @DisplayName("Create must return GuardianResponse when create successfully")
@@ -67,12 +69,17 @@ class GuardianServiceImplTest {
 
       BDDMockito.verify(guardianMapperMock).createGuardianRequestToGuardian(any(CreateGuardianRequest.class));
       BDDMockito.verify(guardianMapperMock).guardianToGuardianResponse(any(Guardian.class));
-      BDDMockito.verify(guardianRepositoryMock).save(any(Guardian.class));
+      BDDMockito.verify(guardianRepositoryMock).save(guardianCaptor.capture());
+
+      Guardian actualGuardian = guardianCaptor.getValue();
 
       Assertions.assertThat(actualGuardianResponse).isNotNull();
       Assertions.assertThat(actualGuardianResponse.getId()).isNotNull().isEqualTo(100L);
       Assertions.assertThat(actualGuardianResponse.getName()).isNotNull().isEqualTo("Lorem Ipsum");
       Assertions.assertThat(actualGuardianResponse.getEmail()).isNotNull().isEqualTo("lorem@email.com");
+      Assertions.assertThat(actualGuardian).isNotNull();
+      Assertions.assertThat(actualGuardian.getUser()).isNotNull();
+      Assertions.assertThat(actualGuardian.getUser().getRoles()).isNotNull().contains(ROLE_GUARDIAN);
     }
 
     @Test

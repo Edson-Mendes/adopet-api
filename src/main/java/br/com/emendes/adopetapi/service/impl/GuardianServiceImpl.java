@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+import static br.com.emendes.adopetapi.util.ConstantUtil.ROLE_GUARDIAN;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -29,16 +31,16 @@ public class GuardianServiceImpl implements GuardianService {
 
   @Override
   public GuardianResponse create(CreateGuardianRequest createGuardianRequest) {
-    // TODO: Transferir a lógica do isPasswordMatch aqui pra service.
-    if (!createGuardianRequest.isPasswordsMatch()) {
+    if (!createGuardianRequest.getPassword().equals(createGuardianRequest.getConfirmPassword())) {
       log.info("Passwords do not match at GuardianServiceImpl#create");
       throw new PasswordsDoNotMatchException("Passwords do not match");
     }
 
     Guardian guardian = guardianMapper.createGuardianRequestToGuardian(createGuardianRequest);
     guardian.setCreatedAt(LocalDateTime.now());
+    guardian.getUser().addRole(ROLE_GUARDIAN);
 
-    // TODO: Criptografar Guardian.password antes de salvar no DB.
+    // TODO: Criptografar User.password antes de salvar no DB.
 
     try {
       Guardian savedGuardian = guardianRepository.save(guardian);
