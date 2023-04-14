@@ -1,0 +1,1 @@
+INSERT INTO t_role (name) VALUES ('ROLE_GUARDIAN'), ('ROLE_SHELTER');
