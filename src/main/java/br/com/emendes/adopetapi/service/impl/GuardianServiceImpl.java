@@ -57,7 +57,7 @@ public class GuardianServiceImpl implements GuardianService {
     Guardian guardian = findGuardianById(id);
 
     guardian.setName(updateGuardianRequest.getName());
-//    guardian.setEmail(updateGuardianRequest.getEmail());
+    guardian.getUser().setEmail(updateGuardianRequest.getEmail());
 
     try {
       Guardian updatedGuardian = guardianRepository.save(guardian);
@@ -78,6 +78,9 @@ public class GuardianServiceImpl implements GuardianService {
   public Page<GuardianResponse> fetchAll(Pageable pageable) {
     Page<Guardian> guardianPage = guardianRepository.findAll(pageable);
 
+    // FIXME: Essa busca está fazendo 3 consultas ao banco de dados.
+    // 1 - para trazer os dados de Guardian.
+    // 2 e 3 - Para trazer dados de User.
     log.info("Fetching page: {}, size: {} of Guardians", pageable.getPageNumber(), pageable.getPageSize());
     return guardianPage.map(guardianMapper::guardianToGuardianResponse);
   }

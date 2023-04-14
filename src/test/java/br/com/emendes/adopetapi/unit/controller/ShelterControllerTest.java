@@ -263,7 +263,8 @@ class ShelterControllerTest {
           .thenReturn(updatedShelterResponse());
       String requestBody = """
             {
-              "name" : "Animal Shelter ABC"
+              "name" : "Animal Shelter ABC",
+              "email" : "animal.shelter@email.com"
             }
           """;
 
@@ -317,7 +318,8 @@ class ShelterControllerTest {
           .thenThrow(new ShelterNotFoundException("Shelter not found"));
       String requestBody = """
             {
-              "name" : "Animal Shelter ABC"
+              "name" : "Animal Shelter ABC",
+              "email" : "animal.shelter@email.com"
             }
           """;
 
@@ -340,7 +342,8 @@ class ShelterControllerTest {
     void update_MustReturnStatus400AndProblemDetail_WhenGivenIdIsInvalid() throws Exception {
       String requestBody = """
             {
-              "name" : "Animal Shelter ABC"
+              "name" : "Animal Shelter ABC",
+              "email" : "animal.shelter@email.com"
             }
           """;
 

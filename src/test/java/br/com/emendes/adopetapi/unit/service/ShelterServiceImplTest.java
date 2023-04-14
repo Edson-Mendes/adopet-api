@@ -197,6 +197,24 @@ class ShelterServiceImplTest {
     }
 
     @Test
+    @DisplayName("Update must throw EmailAlreadyInUseException when already exists email in the database")
+    void update_MustThrowEmailAlreadyInUseException_WhenAlreadyExistsEmailInTheDatabase() {
+      BDDMockito.when(shelterRepositoryMock.findById(100L))
+          .thenReturn(Optional.of(shelter()));
+      BDDMockito.when(shelterRepositoryMock.save(any(Shelter.class)))
+          .thenThrow(new DataIntegrityViolationException("unique_email constraint"));
+
+      UpdateShelterRequest updateShelterRequest = UpdateShelterRequest.builder()
+          .name("Lorem Ipsum Dolor")
+          .email("shelter@email.com")
+          .build();
+
+      Assertions.assertThatExceptionOfType(EmailAlreadyInUseException.class)
+          .isThrownBy(() -> shelterService.update(100L, updateShelterRequest))
+          .withMessage("E-mail {shelter@email.com} is already in use");
+    }
+
+    @Test
     @DisplayName("Update must throw ShelterNotFoundException when shelter not found with given id")
     void update_MustThrowShelterNotFoundException_WhenShelterNotFoundWithGivenId() {
       BDDMockito.when(shelterRepositoryMock.findById(1000L))

@@ -7,6 +7,7 @@ import br.com.emendes.adopetapi.exception.EmailAlreadyInUseException;
 import br.com.emendes.adopetapi.exception.PasswordsDoNotMatchException;
 import br.com.emendes.adopetapi.exception.ShelterNotFoundException;
 import br.com.emendes.adopetapi.mapper.ShelterMapper;
+import br.com.emendes.adopetapi.model.entity.Guardian;
 import br.com.emendes.adopetapi.model.entity.Shelter;
 import br.com.emendes.adopetapi.repository.ShelterRepository;
 import br.com.emendes.adopetapi.service.ShelterService;
@@ -68,10 +69,16 @@ public class ShelterServiceImpl implements ShelterService {
     Shelter shelter = findShelterById(id);
 
     shelter.setName(updateShelterRequest.getName());
-    Shelter updatedShelter = shelterRepository.save(shelter);
+    shelter.getUser().setEmail(updateShelterRequest.getEmail());
 
-    log.info("Shelter updated successfully with id : {}", updatedShelter.getId());
-    return shelterMapper.shelterToShelterResponse(updatedShelter);
+    try {
+      Shelter updatedShelter = shelterRepository.save(shelter);
+      log.info("Shelter updated successfully with id : {}", updatedShelter.getId());
+      return shelterMapper.shelterToShelterResponse(updatedShelter);
+    } catch (DataIntegrityViolationException exception) {
+      log.info("Data Integrity Violation, message : {}", exception.getMessage());
+      throw new EmailAlreadyInUseException(String.format("E-mail {%s} is already in use", updateShelterRequest.getEmail()));
+    }
   }
 
   @Override
