@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ public class GuardianServiceImpl implements GuardianService {
 
   private final GuardianRepository guardianRepository;
   private final GuardianMapper guardianMapper;
+  private final PasswordEncoder passwordEncoder;
 
   @Override
   public GuardianResponse create(CreateGuardianRequest createGuardianRequest) {
@@ -40,7 +42,7 @@ public class GuardianServiceImpl implements GuardianService {
     guardian.setCreatedAt(LocalDateTime.now());
     guardian.getUser().addRole(ROLE_GUARDIAN);
 
-    // TODO: Criptografar User.password antes de salvar no DB.
+    guardian.getUser().setPassword(passwordEncoder.encode(createGuardianRequest.getPassword()));
 
     try {
       Guardian savedGuardian = guardianRepository.save(guardian);
