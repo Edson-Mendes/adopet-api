@@ -1,6 +1,7 @@
 package br.com.emendes.adopetapi.config.security.service.impl;
 
 import br.com.emendes.adopetapi.config.security.service.JwtService;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -29,6 +30,24 @@ public class JwtServiceImpl implements JwtService {
         .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(expiration)))
         .signWith(getKey(), SignatureAlgorithm.HS256)
         .compact();
+  }
+
+  @Override
+  public String extractUsername(String token) {
+    return extractAllClaims(token).getSubject();
+  }
+
+  @Override
+  public boolean isTokenExpired(String token) {
+    return extractAllClaims(token).getExpiration().before(new Date());
+  }
+
+  private Claims extractAllClaims(String token) {
+    return Jwts.parserBuilder()
+        .setSigningKey(getKey())
+        .build()
+        .parseClaimsJws(token)
+        .getBody();
   }
 
   private Key getKey() {

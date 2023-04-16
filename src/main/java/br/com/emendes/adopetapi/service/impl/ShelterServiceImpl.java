@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ public class ShelterServiceImpl implements ShelterService {
 
   private final ShelterMapper shelterMapper;
   private final ShelterRepository shelterRepository;
+  private final PasswordEncoder passwordEncoder;
 
   @Override
   public ShelterResponse create(CreateShelterRequest createShelterRequest) {
@@ -39,7 +41,7 @@ public class ShelterServiceImpl implements ShelterService {
     shelter.setCreatedAt(LocalDateTime.now());
     shelter.getUser().addRole(ROLE_SHELTER);
 
-    // TODO: Criptografar Guardian.password antes de salvar no DB.
+    shelter.getUser().setPassword(passwordEncoder.encode(createShelterRequest.getPassword()));
 
     try {
       Shelter savedShelter = shelterRepository.save(shelter);
