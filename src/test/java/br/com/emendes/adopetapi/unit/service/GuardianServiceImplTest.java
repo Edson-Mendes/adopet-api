@@ -20,6 +20,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
@@ -40,6 +41,8 @@ class GuardianServiceImplTest {
   private GuardianMapper guardianMapperMock;
   @Mock
   private GuardianRepository guardianRepositoryMock;
+  @Mock
+  private PasswordEncoder passwordEncoderMock;
 
   @Nested
   @DisplayName("Tests for create method")
@@ -57,6 +60,8 @@ class GuardianServiceImplTest {
           .thenReturn(guardian());
       BDDMockito.when(guardianMapperMock.guardianToGuardianResponse(any(Guardian.class)))
           .thenReturn(guardianResponse());
+      BDDMockito.when(passwordEncoderMock.encode(any(String.class)))
+          .thenReturn("1234567890");
 
       CreateGuardianRequest createGuardianRequest = CreateGuardianRequest.builder()
           .name("Lorem Ipsum")
