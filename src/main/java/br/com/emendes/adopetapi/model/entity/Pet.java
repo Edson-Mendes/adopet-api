@@ -29,5 +29,7 @@ public class Pet {
   private LocalDateTime createdAt;
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private Shelter shelter;
+  @OneToOne(mappedBy = "pet", optional = false, fetch = FetchType.LAZY)
+  private Adoption adoption;
 
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,5 +24,7 @@ public class Guardian {
   private LocalDateTime createdAt;
   @OneToOne(cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, optional = false)
   private User user;
+  @OneToMany(mappedBy = "guardian")
+  private Collection<Adoption> adoptions;
 
 }

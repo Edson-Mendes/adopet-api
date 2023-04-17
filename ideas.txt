@@ -1,6 +1,6 @@
 Ideias para aplicar no projeto.
 
-[ ] Tutor e Abrigo serem um tipo de Usuário.
+[x] Tutor e Abrigo serem um tipo de Usuário.
 [ ] Apenas Abrigo pode adicionar, atualizar e deletar um Pet.
 [ ] Tutor e Abrigo podem buscar pets.
 [ ] Apenas Tutor pode adotar um Pet.
