@@ -77,7 +77,6 @@ public class ModelMapperConfig {
       @Override
       protected void configure() {
         map().setId(null);
-        map().setDate(LocalDateTime.now());
         map().getPet().setId(this.source("petId"));
       }
     };

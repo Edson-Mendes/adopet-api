@@ -1,13 +1,10 @@
 package br.com.emendes.adopetapi.unit.controller;
 
 import br.com.emendes.adopetapi.controller.AuthenticationController;
-import br.com.emendes.adopetapi.dto.response.AuthenticationResponse;
 import br.com.emendes.adopetapi.dto.request.AuthenticationRequest;
-import br.com.emendes.adopetapi.exception.EmailAlreadyInUseException;
-import br.com.emendes.adopetapi.exception.PasswordsDoNotMatchException;
+import br.com.emendes.adopetapi.dto.response.AuthenticationResponse;
 import br.com.emendes.adopetapi.service.AuthenticationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -25,11 +22,14 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static br.com.emendes.adopetapi.util.AuthenticationUtils.authenticationResponse;
 import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
-@WebMvcTest(controllers = {AuthenticationController.class}, excludeAutoConfiguration = {SecurityAutoConfiguration.class})
+@WebMvcTest(
+    controllers = {AuthenticationController.class},
+    excludeAutoConfiguration = {SecurityAutoConfiguration.class}
+)
 @ActiveProfiles("test")
 @DisplayName("Unit tests for AuthenticationController")
 class AuthenticationControllerTest {

@@ -20,6 +20,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
@@ -40,6 +41,8 @@ class ShelterServiceImplTest {
   private ShelterMapper shelterMapperMock;
   @Mock
   private ShelterRepository shelterRepositoryMock;
+  @Mock
+  private PasswordEncoder passwordEncoderMock;
 
   @Nested
   @DisplayName("Tests for create method")
@@ -57,6 +60,8 @@ class ShelterServiceImplTest {
           .thenReturn(shelter());
       BDDMockito.when(shelterMapperMock.shelterToShelterResponse(any(Shelter.class)))
           .thenReturn(shelterResponse());
+      BDDMockito.when(passwordEncoderMock.encode(any(CharSequence.class)))
+          .thenReturn("EncryptedPassword");
 
       CreateShelterRequest createShelterRequest = CreateShelterRequest.builder()
           .name("Animal Shelter")
@@ -102,6 +107,8 @@ class ShelterServiceImplTest {
           .thenReturn(shelterWithoutId());
       BDDMockito.when(shelterRepositoryMock.save(any(Shelter.class)))
           .thenThrow(new DataIntegrityViolationException("unique_email constraint"));
+      BDDMockito.when(passwordEncoderMock.encode(any(CharSequence.class)))
+          .thenReturn("EncryptedPassword");
 
       CreateShelterRequest createShelterRequest = CreateShelterRequest.builder()
           .name("Animal Shelter")

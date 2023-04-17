@@ -1,6 +1,7 @@
 package br.com.emendes.adopetapi.mapper.impl;
 
 import br.com.emendes.adopetapi.dto.request.AdoptionRequest;
+import br.com.emendes.adopetapi.dto.response.AdoptionResponse;
 import br.com.emendes.adopetapi.mapper.AdoptionMapper;
 import br.com.emendes.adopetapi.model.entity.Adoption;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,11 @@ public class AdoptionMapperImpl implements AdoptionMapper {
   @Override
   public Adoption adoptionRequestToAdoption(AdoptionRequest adoptionRequest) {
     return mapper.map(adoptionRequest, Adoption.class);
+  }
+
+  @Override
+  public AdoptionResponse adoptionToAdoptionResponse(Adoption adoption) {
+    return mapper.map(adoption, AdoptionResponse.class);
   }
 
 }

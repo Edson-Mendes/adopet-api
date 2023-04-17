@@ -27,7 +27,6 @@ public abstract class GuardianUtils {
   }
 
   public static Guardian guardian() {
-
     return Guardian.builder()
         .id(100L)
         .name("Lorem Ipsum")

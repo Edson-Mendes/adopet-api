@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -14,5 +16,6 @@ public class AdoptionResponse {
   private Long id;
   private Long petId;
   private Long guardianId;
+  private LocalDateTime date;
 
 }
