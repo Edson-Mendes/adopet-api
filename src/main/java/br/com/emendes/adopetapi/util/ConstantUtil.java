@@ -8,6 +8,9 @@ public class ConstantUtil {
     throw new IllegalStateException("Utility class");
   }
 
+  public static final String ROLE_GUARDIAN_NAME = "ROLE_GUARDIAN";
+  public static final String ROLE_SHELTER_NAME = "ROLE_SHELTER";
+
   public static final Role ROLE_GUARDIAN = Role.builder()
       .id(1)
       .name("ROLE_GUARDIAN")

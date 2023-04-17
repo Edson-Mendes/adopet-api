@@ -68,6 +68,10 @@ os novos dados do guardian devem ser enviados no corpo da requisição.</br>
 
 - `Deletar`: Deletar Pet através de um **DELETE /api/pets/{ID}**, onde *{ID}* é o identificador do Pet.</br>
 
+#### Adoption
+- `Adotar`: Solicitar uma adoção de um Pet através de um **POST /api/adoptions** com as informações *petId* 
+  em um JSON no corpo da requisição. É necessário estar autenticado. Apenas *Guardians* podem solicitar uma adoção.
+
 
 ## :gear: Atualizações semana 2
 - [x] Modelagem da entidade Shelter.

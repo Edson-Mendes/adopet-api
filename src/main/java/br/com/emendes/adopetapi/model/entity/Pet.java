@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,7 +30,7 @@ public class Pet {
   private LocalDateTime createdAt;
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private Shelter shelter;
-  @OneToOne(mappedBy = "pet", optional = false, fetch = FetchType.LAZY)
-  private Adoption adoption;
+  @OneToMany(mappedBy = "pet", fetch = FetchType.LAZY)
+  private List<Adoption> adoptions;
 
 }
