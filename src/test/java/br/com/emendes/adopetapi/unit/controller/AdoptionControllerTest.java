@@ -2,8 +2,10 @@ package br.com.emendes.adopetapi.unit.controller;
 
 import br.com.emendes.adopetapi.controller.AdoptionController;
 import br.com.emendes.adopetapi.dto.request.AdoptionRequest;
+import br.com.emendes.adopetapi.dto.request.UpdateStatusRequest;
 import br.com.emendes.adopetapi.dto.response.AdoptionResponse;
 import br.com.emendes.adopetapi.dto.response.GuardianResponse;
+import br.com.emendes.adopetapi.exception.AdoptionNotFoundException;
 import br.com.emendes.adopetapi.exception.GuardianNotFoundException;
 import br.com.emendes.adopetapi.exception.InvalidArgumentException;
 import br.com.emendes.adopetapi.exception.ShelterNotFoundException;
@@ -31,10 +33,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static br.com.emendes.adopetapi.util.AdoptionUtils.adoptionResponse;
+import static br.com.emendes.adopetapi.util.AdoptionUtils.concludedAdoptionResponse;
 import static br.com.emendes.adopetapi.util.ConstantUtils.PAGEABLE;
 import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
@@ -216,6 +219,93 @@ class AdoptionControllerTest {
       Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
           .isEqualTo("Guardian not found");
       Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(404);
+    }
+
+  }
+
+  @Nested
+  @DisplayName("Tests for update status endpoint")
+  class UpdateStatusEndpoint {
+
+    @Test
+    @DisplayName("UpdateStatus must return status 200 and AdoptionResponse when update status successfully")
+    void updateStatus_MustReturnStatus200AndAdoptionResponse_WhenUpdateStatusSuccessfully() throws Exception {
+      BDDMockito.when(adoptionServiceMock.updateStatus(eq(1_000_000L), any(UpdateStatusRequest.class)))
+          .thenReturn(concludedAdoptionResponse());
+
+      String requestBody = """
+            {
+              "status" : "CONCLUDED"
+            }
+          """;
+
+      String actualContent = mockMvc.perform(put(ADOPTION_URI + "/1000000/status").contentType(CONTENT_TYPE).content(requestBody))
+          .andExpect(status().isOk())
+          .andReturn().getResponse().getContentAsString();
+
+      AdoptionResponse actualAdoptionResponse = mapper.readValue(actualContent, AdoptionResponse.class);
+
+      Assertions.assertThat(actualAdoptionResponse).isNotNull();
+      Assertions.assertThat(actualAdoptionResponse.getStatus()).isNotNull()
+          .isEqualByComparingTo(AdoptionStatus.CONCLUDED);
+    }
+
+    @Test
+    @DisplayName("UpdateStatus must return status 404 and ProblemDetail when not found Adoption")
+    void updateStatus_MustReturnStatus404AndProblemDetail_WhenNotFoundAdoption() throws Exception {
+      BDDMockito.when(adoptionServiceMock.updateStatus(eq(1_000_000L), any(UpdateStatusRequest.class)))
+          .thenThrow(new AdoptionNotFoundException("Adoption not found"));
+
+      String requestBody = """
+            {
+              "status" : "CONCLUDED"
+            }
+          """;
+
+      String actualContent = mockMvc.perform(put(ADOPTION_URI + "/1000000/status").contentType(CONTENT_TYPE).content(requestBody))
+          .andExpect(status().isNotFound())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Adoption not found");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("Adoption not found");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(404);
+    }
+
+    @Test
+    @DisplayName("UpdateStatus must return status 404 and ProblemDetail when request body is invalid")
+    void updateStatus_MustReturnStatus404AndProblemDetail_WhenRequestBodyIsInvalid() throws Exception {
+      BDDMockito.when(adoptionServiceMock.updateStatus(eq(1_000_000L), any(UpdateStatusRequest.class)))
+          .thenThrow(new AdoptionNotFoundException("Adoption not found"));
+
+      String requestBody = """
+            {
+              "status" : ""
+            }
+          """;
+
+      String actualContent = mockMvc.perform(put(ADOPTION_URI + "/1000000/status").contentType(CONTENT_TYPE).content(requestBody))
+          .andExpect(status().isBadRequest())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Invalid arguments");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("Some fields are invalid");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(400);
+
+      Assertions.assertThat(actualProblemDetail.getProperties()).isNotNull();
+
+      String actualFields = (String) actualProblemDetail.getProperties().get("fields");
+      String actualMessages = (String) actualProblemDetail.getProperties().get("messages");
+
+      Assertions.assertThat(actualFields).isNotNull().contains("status");
+      Assertions.assertThat(actualMessages).isNotNull().contains("status must not be blank");
     }
 
   }

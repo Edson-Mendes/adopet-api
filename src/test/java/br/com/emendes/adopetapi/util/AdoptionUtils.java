@@ -65,5 +65,15 @@ public class AdoptionUtils {
         .build();
   }
 
+  public static AdoptionResponse concludedAdoptionResponse() {
+    return AdoptionResponse.builder()
+        .id(1_000_000L)
+        .petId(10_000L)
+        .guardianId(100L)
+        .status(AdoptionStatus.CONCLUDED)
+        .date(LocalDateTime.parse("2023-04-17T10:00:00"))
+        .build();
+  }
+
 
 }

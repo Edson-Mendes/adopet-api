@@ -1,6 +1,7 @@
 package br.com.emendes.adopetapi.controller;
 
 import br.com.emendes.adopetapi.dto.request.AdoptionRequest;
+import br.com.emendes.adopetapi.dto.request.UpdateStatusRequest;
 import br.com.emendes.adopetapi.dto.response.AdoptionResponse;
 import br.com.emendes.adopetapi.service.AdoptionService;
 import jakarta.validation.Valid;
@@ -33,6 +34,12 @@ public class AdoptionController {
   @GetMapping
   public ResponseEntity<Page<AdoptionResponse>> fetchAll(@PageableDefault Pageable pageable) {
     return ResponseEntity.ok(adoptionService.fetchAll(pageable));
+  }
+
+  @PutMapping("/{id}/status")
+  public ResponseEntity<AdoptionResponse> updateStatus(
+      @PathVariable(name = "id") Long id, @RequestBody @Valid UpdateStatusRequest updateStatusRequest) {
+    return ResponseEntity.ok(adoptionService.updateStatus(id, updateStatusRequest));
   }
 
 }

@@ -8,6 +8,7 @@ import br.com.emendes.adopetapi.mapper.AdoptionMapper;
 import br.com.emendes.adopetapi.model.AdoptionStatus;
 import br.com.emendes.adopetapi.model.entity.Adoption;
 import br.com.emendes.adopetapi.model.entity.Guardian;
+import br.com.emendes.adopetapi.model.entity.Pet;
 import br.com.emendes.adopetapi.model.entity.Shelter;
 import br.com.emendes.adopetapi.repository.AdoptionRepository;
 import br.com.emendes.adopetapi.repository.GuardianRepository;
@@ -33,6 +34,7 @@ import java.util.Optional;
 import static br.com.emendes.adopetapi.util.AdoptionUtils.*;
 import static br.com.emendes.adopetapi.util.ConstantUtils.PAGEABLE;
 import static br.com.emendes.adopetapi.util.GuardianUtils.guardian;
+import static br.com.emendes.adopetapi.util.PetUtils.pet;
 import static br.com.emendes.adopetapi.util.ShelterUtils.shelter;
 import static br.com.emendes.adopetapi.util.UserUtils.guardianUser;
 import static br.com.emendes.adopetapi.util.UserUtils.shelterUser;
@@ -254,6 +256,8 @@ class AdoptionServiceImplTest {
           .thenReturn(Optional.of(adoption()));
       BDDMockito.when(adoptionRepositoryMock.save(any(Adoption.class)))
           .thenReturn(canceledAdoption());
+      BDDMockito.when(petRepositoryMock.save(any(Pet.class)))
+              .thenReturn(pet());
       BDDMockito.when(adoptionMapperMock.adoptionToAdoptionResponse(any(Adoption.class)))
           .thenReturn(canceledAdoptionResponse());
 
@@ -268,6 +272,7 @@ class AdoptionServiceImplTest {
       BDDMockito.verify(adoptionMapperMock).adoptionToAdoptionResponse(any(Adoption.class));
       BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
       BDDMockito.verify(shelterRepositoryMock).findByUserId(11L);
+      BDDMockito.verify(petRepositoryMock).save(any());
 
       Assertions.assertThat(actualAdoptionResponse).isNotNull();
       Assertions.assertThat(actualAdoptionResponse.getId()).isNotNull().isEqualTo(1_000_000L);

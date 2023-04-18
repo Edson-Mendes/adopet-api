@@ -90,6 +90,13 @@ public class AdoptionServiceImpl implements AdoptionService {
     adoption.setStatus(AdoptionStatus.valueOf(updateStatusRequest.getStatus()));
 
     adoptionRepository.save(adoption);
+
+    Pet pet = adoption.getPet();
+    // Mudar o adopted para true no Pet adotado.
+    pet.setAdopted(adoption.getStatus().equals(AdoptionStatus.CONCLUDED));
+    petRepository.save(pet);
+
+    log.info("Status update to {} for Adoption with id : {}", updateStatusRequest.getStatus(), adoption.getId());
     return adoptionMapper.adoptionToAdoptionResponse(adoption);
   }
 
