@@ -2,6 +2,7 @@ package br.com.emendes.adopetapi.service.impl;
 
 import br.com.emendes.adopetapi.dto.request.AdoptionRequest;
 import br.com.emendes.adopetapi.dto.response.AdoptionResponse;
+import br.com.emendes.adopetapi.exception.GuardianNotFoundException;
 import br.com.emendes.adopetapi.exception.InvalidArgumentException;
 import br.com.emendes.adopetapi.exception.ShelterNotFoundException;
 import br.com.emendes.adopetapi.mapper.AdoptionMapper;
@@ -79,7 +80,7 @@ public class AdoptionServiceImpl implements AdoptionService {
     Shelter shelter = shelterRepository.findByUserId(user.getId())
         .orElseThrow(() -> new ShelterNotFoundException("Shelter not found"));
 
-    Page<Adoption> adoptionsPage = adoptionRepository.findAllByPetShelterId(shelter.getId(), pageable);
+    Page<Adoption> adoptionsPage = adoptionRepository.findAllByPetShelter(shelter, pageable);
     log.info("Fetching {} elements for Shelter with id : {}", adoptionsPage.getNumberOfElements(), shelter.getId());
 
     return adoptionsPage.map(adoptionMapper::adoptionToAdoptionResponse);
@@ -87,7 +88,7 @@ public class AdoptionServiceImpl implements AdoptionService {
 
   private Page<AdoptionResponse> fetchAllForGuardian(Pageable pageable, User user) {
     Guardian guardian = guardianRepository.findByUserId(user.getId())
-        .orElseThrow(() -> new ShelterNotFoundException("Guardian not found"));
+        .orElseThrow(() -> new GuardianNotFoundException("Guardian not found"));
 
     Page<Adoption> adoptionsPage = adoptionRepository.findAllByGuardian(guardian, pageable);
     log.info("Fetching {} elements for Guardian with id : {}", adoptionsPage.getNumberOfElements(), guardian.getId());

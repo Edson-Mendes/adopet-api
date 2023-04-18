@@ -2,6 +2,11 @@ package br.com.emendes.adopetapi.util;
 
 import br.com.emendes.adopetapi.model.entity.User;
 
+import java.util.List;
+
+import static br.com.emendes.adopetapi.util.RoleUtils.guardianRole;
+import static br.com.emendes.adopetapi.util.RoleUtils.shelterRole;
+
 public abstract class UserUtils {
 
   public static User guardianUser() {
@@ -9,6 +14,7 @@ public abstract class UserUtils {
         .id(10L)
         .email("lorem@email.com")
         .password("1234567890")
+        .roles(List.of(guardianRole()))
         .build();
   }
 
@@ -25,6 +31,7 @@ public abstract class UserUtils {
         .id(11L)
         .email("animal.shelter@email.com")
         .password("1234567890")
+        .roles(List.of(shelterRole()))
         .build();
   }
 

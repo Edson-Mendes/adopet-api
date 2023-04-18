@@ -26,7 +26,6 @@ Projeto proposto pela Alura no Challenge Backend 6ª Edição.
 - `JUnit5`
 - `Unit tests`
 
-
 ## :bulb: Funcionalidades
 
 #### :bust_in_silhouette: Guardian
@@ -68,9 +67,12 @@ os novos dados do guardian devem ser enviados no corpo da requisição.</br>
 
 - `Deletar`: Deletar Pet através de um **DELETE /api/pets/{ID}**, onde *{ID}* é o identificador do Pet.</br>
 
-#### Adoption
+#### :heart_eyes_cat: Adoption
 - `Adotar`: Solicitar uma adoção de um Pet através de um **POST /api/adoptions** com as informações *petId* 
   em um JSON no corpo da requisição. É necessário estar autenticado. Apenas *Guardians* podem solicitar uma adoção.
+
+- `Buscar todos`: Busca paginada de adoções através de um **GET /api/adoptions**, retorna todas as adoções relacionadas 
+  com o usuário logado.
 
 
 ## :gear: Atualizações semana 2
@@ -87,5 +89,5 @@ os novos dados do guardian devem ser enviados no corpo da requisição.</br>
 - [x] Requisição GET para BUSCAR Pet por ID.
 - [x] Requisição DELETE para DELETAR Pet.
 - [x] Validações de todos os campos de Shelter e Pet.
-- [ ] Regra de negócio para adoção.
+- [x] Regra de negócio para adoção.
 - [ ] Testes automatizados (Pelo menos os testes de unidade).

@@ -3,8 +3,13 @@ package br.com.emendes.adopetapi.unit.controller;
 import br.com.emendes.adopetapi.controller.AdoptionController;
 import br.com.emendes.adopetapi.dto.request.AdoptionRequest;
 import br.com.emendes.adopetapi.dto.response.AdoptionResponse;
+import br.com.emendes.adopetapi.dto.response.GuardianResponse;
+import br.com.emendes.adopetapi.exception.GuardianNotFoundException;
 import br.com.emendes.adopetapi.exception.InvalidArgumentException;
+import br.com.emendes.adopetapi.exception.ShelterNotFoundException;
 import br.com.emendes.adopetapi.service.AdoptionService;
+import br.com.emendes.adopetapi.util.PageableResponse;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -16,12 +21,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ProblemDetail;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static br.com.emendes.adopetapi.util.AdoptionUtils.adoptionResponse;
+import static br.com.emendes.adopetapi.util.ConstantUtils.PAGEABLE;
+import static br.com.emendes.adopetapi.util.GuardianUtils.guardianResponse;
 import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -142,6 +154,67 @@ class AdoptionControllerTest {
 
       Assertions.assertThat(actualFields).isNotNull().contains("petId");
       Assertions.assertThat(actualMessages).isNotNull().contains("petId must be greater than zero");
+    }
+
+  }
+
+  @Nested
+  @DisplayName("Tests for fetch all endpoint")
+  class FetchAllEndpoint {
+
+    @Test
+    @DisplayName("fetchAll must return status 200 and Page<AdoptionResponse> when fetch successfully")
+    void fetchAll_MustReturnStatus200AndPageAdoptionResponse_WhenFetchSuccessfully() throws Exception {
+      BDDMockito.when(adoptionServiceMock.fetchAll(PAGEABLE))
+          .thenReturn(new PageImpl<>(List.of(adoptionResponse()), PAGEABLE, 1));
+
+      String actualContent = mockMvc.perform(get(ADOPTION_URI))
+          .andExpect(status().isOk())
+          .andReturn().getResponse().getContentAsString();
+
+      Page<GuardianResponse> actualGuardianResponsePage = mapper
+          .readValue(actualContent, new TypeReference<PageableResponse<GuardianResponse>>() {
+          });
+
+      Assertions.assertThat(actualGuardianResponsePage).isNotNull().isNotEmpty().hasSize(1);
+    }
+
+    @Test
+    @DisplayName("fetchAll must return status 404 and ProblemDetail when Shelter not found")
+    void fetchAll_MustReturnStatus404AndProblemDetail_WhenShelterNotFound() throws Exception {
+      BDDMockito.when(adoptionServiceMock.fetchAll(PAGEABLE))
+          .thenThrow(new ShelterNotFoundException("Shelter not found"));
+
+      String actualContent = mockMvc.perform(get(ADOPTION_URI))
+          .andExpect(status().isNotFound())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Shelter not found");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("Shelter not found");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(404);
+    }
+
+    @Test
+    @DisplayName("fetchAll must return status 404 and ProblemDetail when Guardian not found")
+    void fetchAll_MustReturnStatus404AndProblemDetail_WhenGuardianNotFound() throws Exception {
+      BDDMockito.when(adoptionServiceMock.fetchAll(PAGEABLE))
+          .thenThrow(new GuardianNotFoundException("Guardian not found"));
+
+      String actualContent = mockMvc.perform(get(ADOPTION_URI))
+          .andExpect(status().isNotFound())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Guardian not found");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("Guardian not found");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(404);
     }
 
   }
