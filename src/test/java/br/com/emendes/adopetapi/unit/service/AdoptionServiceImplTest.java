@@ -1,11 +1,9 @@
 package br.com.emendes.adopetapi.unit.service;
 
 import br.com.emendes.adopetapi.dto.request.AdoptionRequest;
+import br.com.emendes.adopetapi.dto.request.UpdateStatusRequest;
 import br.com.emendes.adopetapi.dto.response.AdoptionResponse;
-import br.com.emendes.adopetapi.exception.GuardianNotFoundException;
-import br.com.emendes.adopetapi.exception.InvalidArgumentException;
-import br.com.emendes.adopetapi.exception.ShelterNotFoundException;
-import br.com.emendes.adopetapi.exception.UserIsNotAuthenticateException;
+import br.com.emendes.adopetapi.exception.*;
 import br.com.emendes.adopetapi.mapper.AdoptionMapper;
 import br.com.emendes.adopetapi.model.AdoptionStatus;
 import br.com.emendes.adopetapi.model.entity.Adoption;
@@ -239,6 +237,62 @@ class AdoptionServiceImplTest {
 
       BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
       BDDMockito.verify(guardianRepositoryMock).findByUserId(any());
+    }
+
+  }
+
+  @Nested
+  @DisplayName("Tests for updateStatus method")
+  class UpdateStatusMethod {
+
+    @Test
+    @DisplayName("UpdateStatus must return AdoptionResponse when update status successfully")
+    void updateStatus_MustReturnAdoptionResponse_WhenUpdateStatusSuccessfully() {
+      BDDMockito.when(authenticationFacadeMock.getCurrentUser()).thenReturn(shelterUser());
+      BDDMockito.when(shelterRepositoryMock.findByUserId(11L)).thenReturn(Optional.of(shelter()));
+      BDDMockito.when(adoptionRepositoryMock.findByIdAndPetShelter(eq(1_000_000L), any(Shelter.class)))
+          .thenReturn(Optional.of(adoption()));
+      BDDMockito.when(adoptionRepositoryMock.save(any(Adoption.class)))
+          .thenReturn(canceledAdoption());
+      BDDMockito.when(adoptionMapperMock.adoptionToAdoptionResponse(any(Adoption.class)))
+          .thenReturn(canceledAdoptionResponse());
+
+      UpdateStatusRequest updateStatusRequest = UpdateStatusRequest.builder()
+          .status("CANCELED")
+          .build();
+
+      AdoptionResponse actualAdoptionResponse = adoptionService.updateStatus(1_000_000L, updateStatusRequest);
+
+      BDDMockito.verify(adoptionRepositoryMock).findByIdAndPetShelter(eq(1_000_000L),any());
+      BDDMockito.verify(adoptionRepositoryMock).save(any(Adoption.class));
+      BDDMockito.verify(adoptionMapperMock).adoptionToAdoptionResponse(any(Adoption.class));
+      BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
+      BDDMockito.verify(shelterRepositoryMock).findByUserId(11L);
+
+      Assertions.assertThat(actualAdoptionResponse).isNotNull();
+      Assertions.assertThat(actualAdoptionResponse.getId()).isNotNull().isEqualTo(1_000_000L);
+      Assertions.assertThat(actualAdoptionResponse.getStatus()).isNotNull()
+          .isEqualByComparingTo(AdoptionStatus.CANCELED);
+    }
+
+    @Test
+    @DisplayName("UpdateStatus must throw AdoptionNotFoundException when not found Adoption")
+    void updateStatus_MustThrowAdoptionNotFoundException_WhenNotFoundAdoption() {
+      BDDMockito.when(authenticationFacadeMock.getCurrentUser()).thenReturn(shelterUser());
+      BDDMockito.when(shelterRepositoryMock.findByUserId(11L)).thenReturn(Optional.of(shelter()));
+      BDDMockito.when(adoptionRepositoryMock.findByIdAndPetShelter(eq(1_000_000L), any(Shelter.class)))
+          .thenReturn(Optional.empty());
+
+      UpdateStatusRequest updateStatusRequest = UpdateStatusRequest.builder()
+          .status("CANCELED")
+          .build();
+
+      Assertions.assertThatExceptionOfType(AdoptionNotFoundException.class)
+          .isThrownBy(() -> adoptionService.updateStatus(1_000_000L, updateStatusRequest))
+          .withMessage("Adoption not found");
+
+      BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
+      BDDMockito.verify(shelterRepositoryMock).findByUserId(11L);
     }
 
   }

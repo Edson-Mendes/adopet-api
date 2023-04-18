@@ -21,6 +21,7 @@ public class AdoptionUtils {
         .id(null)
         .date(null)
         .pet(pet)
+        .status(AdoptionStatus.ANALYSING)
         .build();
   }
 
@@ -30,6 +31,17 @@ public class AdoptionUtils {
         .date(LocalDateTime.parse("2023-04-17T10:00:00"))
         .pet(pet())
         .guardian(guardian())
+        .status(AdoptionStatus.ANALYSING)
+        .build();
+  }
+
+  public static Adoption canceledAdoption() {
+    return Adoption.builder()
+        .id(1_000_000L)
+        .date(LocalDateTime.parse("2023-04-17T10:00:00"))
+        .pet(pet())
+        .guardian(guardian())
+        .status(AdoptionStatus.CANCELED)
         .build();
   }
 
@@ -42,5 +54,16 @@ public class AdoptionUtils {
         .date(LocalDateTime.parse("2023-04-17T10:00:00"))
         .build();
   }
+
+  public static AdoptionResponse canceledAdoptionResponse() {
+    return AdoptionResponse.builder()
+        .id(1_000_000L)
+        .petId(10_000L)
+        .guardianId(100L)
+        .status(AdoptionStatus.CANCELED)
+        .date(LocalDateTime.parse("2023-04-17T10:00:00"))
+        .build();
+  }
+
 
 }

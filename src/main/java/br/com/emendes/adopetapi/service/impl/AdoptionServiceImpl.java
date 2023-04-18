@@ -1,7 +1,9 @@
 package br.com.emendes.adopetapi.service.impl;
 
 import br.com.emendes.adopetapi.dto.request.AdoptionRequest;
+import br.com.emendes.adopetapi.dto.request.UpdateStatusRequest;
 import br.com.emendes.adopetapi.dto.response.AdoptionResponse;
+import br.com.emendes.adopetapi.exception.AdoptionNotFoundException;
 import br.com.emendes.adopetapi.exception.GuardianNotFoundException;
 import br.com.emendes.adopetapi.exception.InvalidArgumentException;
 import br.com.emendes.adopetapi.exception.ShelterNotFoundException;
@@ -75,6 +77,26 @@ public class AdoptionServiceImpl implements AdoptionService {
       case ROLE_GUARDIAN_NAME -> fetchAllForGuardian(pageable, currentUser);
       default -> throw new InvalidArgumentException("Unexpected value: " + role.getName());
     };
+  }
+
+  @Override
+  public AdoptionResponse updateStatus(Long id, UpdateStatusRequest updateStatusRequest) {
+    User currentUser = authenticationFacade.getCurrentUser();
+
+    Shelter shelter = shelterRepository.findByUserId(currentUser.getId())
+        .orElseThrow(() -> new ShelterNotFoundException("Shelter not found"));
+
+    Adoption adoption = findAdoptionByIdAndShelter(id, shelter);
+    adoption.setStatus(AdoptionStatus.valueOf(updateStatusRequest.getStatus()));
+
+    adoptionRepository.save(adoption);
+    return adoptionMapper.adoptionToAdoptionResponse(adoption);
+  }
+
+  private Adoption findAdoptionByIdAndShelter(Long id, Shelter shelter) {
+    log.info("Searching for Adoption with id: {}", id);
+    return adoptionRepository.findByIdAndPetShelter(id, shelter)
+        .orElseThrow(() -> new AdoptionNotFoundException("Adoption not found"));
   }
 
   private Page<AdoptionResponse> fetchAllForShelter(Pageable pageable, User user) {
