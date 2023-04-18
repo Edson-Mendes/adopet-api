@@ -1,6 +1,7 @@
 package br.com.emendes.adopetapi.util;
 
 import br.com.emendes.adopetapi.dto.response.AdoptionResponse;
+import br.com.emendes.adopetapi.model.AdoptionStatus;
 import br.com.emendes.adopetapi.model.entity.Adoption;
 import br.com.emendes.adopetapi.model.entity.Pet;
 
@@ -37,6 +38,7 @@ public class AdoptionUtils {
         .id(1_000_000L)
         .petId(10_000L)
         .guardianId(100L)
+        .status(AdoptionStatus.ANALYSING)
         .date(LocalDateTime.parse("2023-04-17T10:00:00"))
         .build();
   }

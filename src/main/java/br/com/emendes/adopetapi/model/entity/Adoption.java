@@ -1,5 +1,6 @@
 package br.com.emendes.adopetapi.model.entity;
 
+import br.com.emendes.adopetapi.model.AdoptionStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,6 +20,9 @@ public class Adoption {
   private Long id;
   @Column(nullable = false)
   private LocalDateTime date;
+  @Column(nullable = false, length = 50)
+  @Enumerated(EnumType.STRING)
+  private AdoptionStatus status;
   @OneToOne(optional = false, fetch = FetchType.LAZY)
   private Pet pet;
   @ManyToOne(optional = false, fetch = FetchType.LAZY)

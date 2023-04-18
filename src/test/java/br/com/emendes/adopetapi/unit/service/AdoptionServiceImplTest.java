@@ -7,6 +7,7 @@ import br.com.emendes.adopetapi.exception.InvalidArgumentException;
 import br.com.emendes.adopetapi.exception.ShelterNotFoundException;
 import br.com.emendes.adopetapi.exception.UserIsNotAuthenticateException;
 import br.com.emendes.adopetapi.mapper.AdoptionMapper;
+import br.com.emendes.adopetapi.model.AdoptionStatus;
 import br.com.emendes.adopetapi.model.entity.Adoption;
 import br.com.emendes.adopetapi.model.entity.Guardian;
 import br.com.emendes.adopetapi.model.entity.Shelter;
@@ -91,6 +92,7 @@ class AdoptionServiceImplTest {
       Assertions.assertThat(actualAdoptionResponse.getId()).isNotNull().isEqualTo(1_000_000L);
       Assertions.assertThat(actualAdoptionResponse.getPetId()).isNotNull().isEqualTo(10_000L);
       Assertions.assertThat(actualAdoptionResponse.getGuardianId()).isNotNull().isEqualTo(100L);
+      Assertions.assertThat(actualAdoptionResponse.getStatus()).isNotNull().isEqualTo(AdoptionStatus.ANALYSING);
     }
 
     @Test

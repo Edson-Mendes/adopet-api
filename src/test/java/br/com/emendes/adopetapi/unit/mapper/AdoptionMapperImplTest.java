@@ -4,6 +4,7 @@ import br.com.emendes.adopetapi.config.ModelMapperConfig;
 import br.com.emendes.adopetapi.dto.request.AdoptionRequest;
 import br.com.emendes.adopetapi.dto.response.AdoptionResponse;
 import br.com.emendes.adopetapi.mapper.impl.AdoptionMapperImpl;
+import br.com.emendes.adopetapi.model.AdoptionStatus;
 import br.com.emendes.adopetapi.model.entity.Adoption;
 import br.com.emendes.adopetapi.model.entity.Guardian;
 import br.com.emendes.adopetapi.model.entity.Pet;
@@ -76,6 +77,7 @@ class AdoptionMapperImplTest {
         .pet(pet)
         .guardian(guardian)
         .date(LocalDateTime.parse("2023-04-17T10:00:00"))
+        .status(AdoptionStatus.ANALYSING)
         .build();
 
     AdoptionResponse actualAdoptionResponse = adoptionMapper.adoptionToAdoptionResponse(adoption);
@@ -84,8 +86,8 @@ class AdoptionMapperImplTest {
     Assertions.assertThat(actualAdoptionResponse.getId()).isNotNull().isEqualTo(1_000_000L);
     Assertions.assertThat(actualAdoptionResponse.getPetId()).isNotNull().isEqualTo(10_000L);
     Assertions.assertThat(actualAdoptionResponse.getGuardianId()).isNotNull().isEqualTo(100L);
+    Assertions.assertThat(actualAdoptionResponse.getStatus()).isNotNull().isEqualTo(AdoptionStatus.ANALYSING);
     Assertions.assertThat(actualAdoptionResponse.getDate()).isNotNull().isEqualTo("2023-04-17T10:00:00");
-
   }
 
 }

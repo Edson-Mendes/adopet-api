@@ -7,6 +7,7 @@ import br.com.emendes.adopetapi.dto.response.GuardianResponse;
 import br.com.emendes.adopetapi.exception.GuardianNotFoundException;
 import br.com.emendes.adopetapi.exception.InvalidArgumentException;
 import br.com.emendes.adopetapi.exception.ShelterNotFoundException;
+import br.com.emendes.adopetapi.model.AdoptionStatus;
 import br.com.emendes.adopetapi.service.AdoptionService;
 import br.com.emendes.adopetapi.util.PageableResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -31,7 +32,6 @@ import java.util.List;
 
 import static br.com.emendes.adopetapi.util.AdoptionUtils.adoptionResponse;
 import static br.com.emendes.adopetapi.util.ConstantUtils.PAGEABLE;
-import static br.com.emendes.adopetapi.util.GuardianUtils.guardianResponse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -78,6 +78,7 @@ class AdoptionControllerTest {
       Assertions.assertThat(actualAdoptionResponse.getId()).isNotNull().isEqualTo(1_000_000L);
       Assertions.assertThat(actualAdoptionResponse.getPetId()).isNotNull().isEqualTo(10_000L);
       Assertions.assertThat(actualAdoptionResponse.getGuardianId()).isNotNull().isEqualTo(100L);
+      Assertions.assertThat(actualAdoptionResponse.getStatus()).isNotNull().isEqualTo(AdoptionStatus.ANALYSING);
     }
 
     @Test

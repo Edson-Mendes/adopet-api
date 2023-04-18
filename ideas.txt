@@ -4,3 +4,10 @@ Ideias para aplicar no projeto.
 [ ] Apenas Abrigo pode adicionar, atualizar e deletar um Pet.
 [ ] Tutor e Abrigo podem buscar pets.
 [ ] Apenas Tutor pode adotar um Pet.
+
+-- Regras da adoção.
+[ ] Não deve ser possível ADOTAR um Pet que já esteja adotado.
+[ ] Apenas SHELTER podem alterar o status de uma adoção.
+
+-- Regras de Pet
+[ ] GUARDIAN só pode buscar Pet que não foram adotados.

@@ -6,6 +6,7 @@ import br.com.emendes.adopetapi.exception.GuardianNotFoundException;
 import br.com.emendes.adopetapi.exception.InvalidArgumentException;
 import br.com.emendes.adopetapi.exception.ShelterNotFoundException;
 import br.com.emendes.adopetapi.mapper.AdoptionMapper;
+import br.com.emendes.adopetapi.model.AdoptionStatus;
 import br.com.emendes.adopetapi.model.entity.*;
 import br.com.emendes.adopetapi.repository.AdoptionRepository;
 import br.com.emendes.adopetapi.repository.GuardianRepository;
@@ -39,10 +40,11 @@ public class AdoptionServiceImpl implements AdoptionService {
 
   @Override
   public AdoptionResponse adopt(AdoptionRequest adoptionRequest) {
+    // TODO: Alterar essa solicitação para verificar se existe por id e não adotado.
     if (!petRepository.existsById(adoptionRequest.getPetId())) {
+      log.info("Not found non adopted pet with id  : {}", adoptionRequest.getPetId());
       throw new InvalidArgumentException("Invalid pet id");
     }
-    log.info("exists pet with id : {}", adoptionRequest.getPetId());
 
     User currentUser = authenticationFacade.getCurrentUser();
     Guardian guardian = guardianRepository.findByUserId(currentUser.getId())
@@ -52,11 +54,10 @@ public class AdoptionServiceImpl implements AdoptionService {
     Adoption adoption = adoptionMapper.adoptionRequestToAdoption(adoptionRequest);
     adoption.setGuardian(guardian);
     adoption.setDate(LocalDateTime.now());
-    log.info("Converting AdoptionRequest to Adoption");
+    adoption.setStatus(AdoptionStatus.ANALYSING);
 
     adoption = adoptionRepository.save(adoption);
     log.info("Adoptions saved successfully with id : {}", adoption.getId());
-    log.info("Adoptions date : {}", adoption.getDate());
 
     return adoptionMapper.adoptionToAdoptionResponse(adoption);
   }
