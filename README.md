@@ -33,11 +33,14 @@ Projeto proposto pela Alura no Challenge Backend 6ª Edição.
 em um JSON no corpo da requisição.</br>
 
 - `Atualizar`: Atualizar Guardian através de um **PUT /api/guardians/{ID}**, onde *ID* é o identificador do Guardian, 
-os novos dados do guardian devem ser enviados no corpo da requisição.</br>
+os novos dados do guardian devem ser enviados no corpo da requisição.
+  - Apenas o próprio usuário Guardian pode atualizar seus dados.<br>
 
-- `Buscar por id`: Busca Guardian por ID através de um **GET /api/guardians/{ID}**, onde *{ID}* é o identificador do Guardian.</br>
+- `Buscar por id`: Busca Guardian por ID através de um **GET /api/guardians/{ID}**, onde *{ID}* é o identificador do Guardian.
+  - É necessário estar autenticado.<br>
 
-- `Buscar todos`: Busca paginada de guardians através de um **GET /api/guardians**.</br>
+- `Buscar todos`: Busca paginada de guardians através de um **GET /api/guardians**.
+  - É necessário estar autenticado.<br>
 
 - `Deletar`: Deletar Guardian através de um **DELETE /api/guardians/{ID}**, onde *{ID}* é o identificador do Guardian.</br>
 

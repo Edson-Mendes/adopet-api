@@ -61,8 +61,7 @@ public class GuardianServiceImpl implements GuardianService {
 
   @Override
   public GuardianResponse update(Long id, UpdateGuardianRequest updateGuardianRequest) {
-    User currentUser = authenticationFacade.getCurrentUser();
-    Guardian guardian = findGuardianByIdAndUser(id, currentUser);
+    Guardian guardian = findGuardianByIdAndUser(id);
 
     guardian.setName(updateGuardianRequest.getName());
     guardian.getUser().setEmail(updateGuardianRequest.getEmail());
@@ -95,10 +94,12 @@ public class GuardianServiceImpl implements GuardianService {
 
   @Override
   public void deleteById(Long id) {
-    Guardian guardian = findGuardianById(id);
+    Guardian guardian = findGuardianByIdAndUser(id);
 
-    log.info("Deleting Shelter with id: {}", id);
-    guardianRepository.delete(guardian);
+    guardian.getUser().setEnabled(false);
+    guardianRepository.save(guardian);
+
+    log.info("Disable Guardian with id: {}", id);
   }
 
   private Guardian findGuardianById(Long id) {
@@ -106,9 +107,10 @@ public class GuardianServiceImpl implements GuardianService {
     return guardianRepository.findById(id).orElseThrow(() -> new GuardianNotFoundException("Guardian not found"));
   }
 
-  private Guardian findGuardianByIdAndUser(Long id, User user) {
-    log.info("Searching for Guardian with id: {} and User.id : {}", id, user.getId());
-    return guardianRepository.findByIdAndUser(id, user).orElseThrow(() -> new GuardianNotFoundException("Guardian not found"));
+  private Guardian findGuardianByIdAndUser(Long id) {
+    User currentUser = authenticationFacade.getCurrentUser();
+    log.info("Searching for Guardian with id: {} and User.id : {}", id, currentUser.getId());
+    return guardianRepository.findByIdAndUser(id, currentUser).orElseThrow(() -> new GuardianNotFoundException("Guardian not found"));
   }
 
 }

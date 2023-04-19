@@ -2,6 +2,7 @@ package br.com.emendes.adopetapi.config.security;
 
 import br.com.emendes.adopetapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+@Slf4j
 @RequiredArgsConstructor
 @Configuration
 public class SecurityBeansConfig {
@@ -40,8 +42,12 @@ public class SecurityBeansConfig {
 
   @Bean
   public UserDetailsService userDetailsService() {
-    return username -> userRepository.findByEmail(username)
-        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    return username -> {
+      log.info("Searching for user with email : {}", username);
+
+      return userRepository.findByEmail(username)
+          .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    };
   }
 
 }

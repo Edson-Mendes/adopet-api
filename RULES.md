@@ -8,15 +8,15 @@
   - [x] É necessário estar autenticado.<br>
 
 - Buscar por ID - GET /api/guardians/ID
-  - [ ] Qualquer **usuário autenticado** pode buscar Guardian por ID.<br>
+  - [x] Qualquer **usuário autenticado** pode buscar Guardian por ID.<br>
 
 - Buscar todos os Guardians - GET /api/guardians
-  - [ ] Qualquer **usuário autenticado** pode buscar **todos** os guardians.<br>
+  - [x] Qualquer **usuário autenticado** pode buscar **todos** os guardians.<br>
 
 - Deletar Guardian por ID - DELETE /api/guardians/ID
-  - [ ] Apenas o próprio usuário Guardian pode se deletar.
+  - [x] Apenas o próprio usuário Guardian pode se deletar.
   - [x] É necessário estar autenticado.
-  - [ ] A ação de deletar não remove a entidade da base de dados, apenas muda o status para DELETED.<br>
+  - [ ] A ação de deletar não remove a entidade da base de dados, apenas muda a flag DELETED para true.<br>
 
 ### Endpoint /api/shelter
 - Criar Shelter - POST /api/shelter

@@ -26,6 +26,8 @@ public class User implements UserDetails {
   private String email;
   @Column(nullable = false)
   private String password;
+  @Column(nullable = false)
+  private boolean enabled;
   @ManyToMany(fetch = FetchType.EAGER)
   @OnDelete(action = OnDeleteAction.CASCADE)
   @JoinTable(
@@ -68,6 +70,7 @@ public class User implements UserDetails {
 
   @Override
   public boolean isEnabled() {
-    return true;
+    return this.enabled;
   }
+
 }

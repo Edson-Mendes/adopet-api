@@ -13,12 +13,12 @@ public class ConstantUtil {
 
   public static final Role ROLE_GUARDIAN = Role.builder()
       .id(1)
-      .name("ROLE_GUARDIAN")
+      .name(ROLE_GUARDIAN_NAME)
       .build();
 
   public static final Role ROLE_SHELTER = Role.builder()
       .id(2)
-      .name("ROLE_SHELTER")
+      .name(ROLE_SHELTER_NAME)
       .build();
 
 }

@@ -1,0 +1,1 @@
+ALTER TABLE t_user ADD COLUMN enabled bool NOT NULL DEFAULT true;
