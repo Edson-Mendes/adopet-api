@@ -84,14 +84,14 @@ class PetServiceImplTest {
     @Test
     @DisplayName("fetchAll must return Page<PetResponse> when fetch successfully")
     void fetchAll_MustReturnPagePetResponse_WhenFetchSuccessfully() {
-      BDDMockito.when(petRepositoryMock.findAll(PAGEABLE))
+      BDDMockito.when(petRepositoryMock.findByAdoptedFalse(PAGEABLE))
           .thenReturn(new PageImpl<>(List.of(pet()), PAGEABLE, 1));
       BDDMockito.when(petMapperMock.petToPetResponse(any(Pet.class)))
           .thenReturn(petResponse());
 
       Page<PetResponse> actualPetResponsePage = petService.fetchAll(PAGEABLE);
 
-      BDDMockito.verify(petRepositoryMock).findAll(any(Pageable.class));
+      BDDMockito.verify(petRepositoryMock).findByAdoptedFalse(any(Pageable.class));
       BDDMockito.verify(petMapperMock).petToPetResponse(any(Pet.class));
 
       Assertions.assertThat(actualPetResponsePage).isNotNull().isNotEmpty().hasSize(1);

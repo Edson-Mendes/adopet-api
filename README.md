@@ -74,6 +74,10 @@ os novos dados do guardian devem ser enviados no corpo da requisição.</br>
 - `Buscar todos`: Busca paginada de adoções através de um **GET /api/adoptions**, retorna todas as adoções relacionadas 
   com o usuário logado.
 
+- `Atualizar status`: Atualização de status através de um **PUT /api/adoptions/{ID}/status** com a informação *status* 
+  em um JSON no corpor da requisição. Os status possíveis são *ANALYSING*, *CONCLUDED* e *CANCELED*. Apenas usuários do tipo 
+  Shelter atualizar status.
+
 
 ## :gear: Atualizações semana 2
 - [x] Modelagem da entidade Shelter.
@@ -90,4 +94,4 @@ os novos dados do guardian devem ser enviados no corpo da requisição.</br>
 - [x] Requisição DELETE para DELETAR Pet.
 - [x] Validações de todos os campos de Shelter e Pet.
 - [x] Regra de negócio para adoção.
-- [ ] Testes automatizados (Pelo menos os testes de unidade).
+- [x] Testes automatizados (Pelo menos os testes de unidade).

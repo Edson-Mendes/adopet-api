@@ -29,6 +29,7 @@ public class SecurityConfig {
     http.csrf().disable()
         .authorizeHttpRequests().requestMatchers(HttpMethod.POST, POST_WHITELISTING).permitAll()
         .requestMatchers(HttpMethod.POST, "/api/adoptions").hasRole("GUARDIAN")
+        .requestMatchers(HttpMethod.PUT, "/api/guardians/*").hasRole("GUARDIAN")
         .requestMatchers(HttpMethod.PUT, "/api/adoptions/*/status").hasRole("SHELTER")
         .anyRequest().authenticated()
         .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

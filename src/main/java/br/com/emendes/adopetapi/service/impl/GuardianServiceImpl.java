@@ -8,8 +8,10 @@ import br.com.emendes.adopetapi.exception.GuardianNotFoundException;
 import br.com.emendes.adopetapi.exception.PasswordsDoNotMatchException;
 import br.com.emendes.adopetapi.mapper.GuardianMapper;
 import br.com.emendes.adopetapi.model.entity.Guardian;
+import br.com.emendes.adopetapi.model.entity.User;
 import br.com.emendes.adopetapi.repository.GuardianRepository;
 import br.com.emendes.adopetapi.service.GuardianService;
+import br.com.emendes.adopetapi.util.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,6 +32,7 @@ public class GuardianServiceImpl implements GuardianService {
   private final GuardianRepository guardianRepository;
   private final GuardianMapper guardianMapper;
   private final PasswordEncoder passwordEncoder;
+  private final AuthenticationFacade authenticationFacade;
 
   @Override
   public GuardianResponse create(CreateGuardianRequest createGuardianRequest) {
@@ -58,7 +61,8 @@ public class GuardianServiceImpl implements GuardianService {
 
   @Override
   public GuardianResponse update(Long id, UpdateGuardianRequest updateGuardianRequest) {
-    Guardian guardian = findGuardianById(id);
+    User currentUser = authenticationFacade.getCurrentUser();
+    Guardian guardian = findGuardianByIdAndUser(id, currentUser);
 
     guardian.setName(updateGuardianRequest.getName());
     guardian.getUser().setEmail(updateGuardianRequest.getEmail());
@@ -100,6 +104,11 @@ public class GuardianServiceImpl implements GuardianService {
   private Guardian findGuardianById(Long id) {
     log.info("Searching for Guardian with id: {}", id);
     return guardianRepository.findById(id).orElseThrow(() -> new GuardianNotFoundException("Guardian not found"));
+  }
+
+  private Guardian findGuardianByIdAndUser(Long id, User user) {
+    log.info("Searching for Guardian with id: {} and User.id : {}", id, user.getId());
+    return guardianRepository.findByIdAndUser(id, user).orElseThrow(() -> new GuardianNotFoundException("Guardian not found"));
   }
 
 }

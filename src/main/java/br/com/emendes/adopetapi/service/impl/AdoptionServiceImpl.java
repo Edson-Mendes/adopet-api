@@ -27,6 +27,7 @@ import java.time.LocalDateTime;
 import static br.com.emendes.adopetapi.util.ConstantUtil.ROLE_GUARDIAN_NAME;
 import static br.com.emendes.adopetapi.util.ConstantUtil.ROLE_SHELTER_NAME;
 
+// TODO: Refatorar está classe.
 @Slf4j
 @RequiredArgsConstructor
 @Service

@@ -8,8 +8,10 @@ import br.com.emendes.adopetapi.exception.GuardianNotFoundException;
 import br.com.emendes.adopetapi.exception.PasswordsDoNotMatchException;
 import br.com.emendes.adopetapi.mapper.GuardianMapper;
 import br.com.emendes.adopetapi.model.entity.Guardian;
+import br.com.emendes.adopetapi.model.entity.User;
 import br.com.emendes.adopetapi.repository.GuardianRepository;
 import br.com.emendes.adopetapi.service.impl.GuardianServiceImpl;
+import br.com.emendes.adopetapi.util.AuthenticationFacade;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -29,7 +31,9 @@ import java.util.Optional;
 import static br.com.emendes.adopetapi.util.ConstantUtil.ROLE_GUARDIAN;
 import static br.com.emendes.adopetapi.util.ConstantUtils.PAGEABLE;
 import static br.com.emendes.adopetapi.util.GuardianUtils.*;
+import static br.com.emendes.adopetapi.util.UserUtils.guardianUser;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("Unit tests for GuardianServiceImpl")
@@ -43,6 +47,8 @@ class GuardianServiceImplTest {
   private GuardianRepository guardianRepositoryMock;
   @Mock
   private PasswordEncoder passwordEncoderMock;
+  @Mock
+  private AuthenticationFacade authenticationFacadeMock;
 
   @Nested
   @DisplayName("Tests for create method")
@@ -129,7 +135,9 @@ class GuardianServiceImplTest {
     @Test
     @DisplayName("Update must return GuardianResponse when update successfully")
     void update_MustReturnGuardianResponse_WhenUpdateSuccessfully() {
-      BDDMockito.when(guardianRepositoryMock.findById(100L))
+      BDDMockito.when(authenticationFacadeMock.getCurrentUser())
+              .thenReturn(guardianUser());
+      BDDMockito.when(guardianRepositoryMock.findByIdAndUser(eq(100L), any(User.class)))
           .thenReturn(Optional.of(guardian()));
       BDDMockito.when(guardianRepositoryMock.save(any(Guardian.class)))
           .thenReturn(updatedGuardian());
@@ -145,7 +153,8 @@ class GuardianServiceImplTest {
 
       BDDMockito.verify(guardianMapperMock).guardianToGuardianResponse(any(Guardian.class));
       BDDMockito.verify(guardianRepositoryMock).save(any(Guardian.class));
-      BDDMockito.verify(guardianRepositoryMock).findById(100L);
+      BDDMockito.verify(guardianRepositoryMock).findByIdAndUser(eq(100L), any(User.class));
+      BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
 
       Assertions.assertThat(actualGuardianResponse).isNotNull();
       Assertions.assertThat(actualGuardianResponse.getId()).isNotNull().isEqualTo(100L);
@@ -156,7 +165,9 @@ class GuardianServiceImplTest {
     @Test
     @DisplayName("Update must throw EmailAlreadyInUseException when already exists email in the database")
     void update_MustThrowEmailAlreadyInUseException_WhenAlreadyExistsEmailInTheDatabase() {
-      BDDMockito.when(guardianRepositoryMock.findById(100L))
+      BDDMockito.when(authenticationFacadeMock.getCurrentUser())
+          .thenReturn(guardianUser());
+      BDDMockito.when(guardianRepositoryMock.findByIdAndUser(eq(100L), any(User.class)))
           .thenReturn(Optional.of(guardian()));
       BDDMockito.when(guardianRepositoryMock.save(any(Guardian.class)))
           .thenThrow(new DataIntegrityViolationException("unique_email constraint"));
@@ -169,12 +180,18 @@ class GuardianServiceImplTest {
       Assertions.assertThatExceptionOfType(EmailAlreadyInUseException.class)
           .isThrownBy(() -> guardianService.update(100L, updateGuardianRequest))
           .withMessage("E-mail {loremdolor@email.com} is already in use");
+
+      BDDMockito.verify(guardianRepositoryMock).save(any(Guardian.class));
+      BDDMockito.verify(guardianRepositoryMock).findByIdAndUser(eq(100L), any(User.class));
+      BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
     }
 
     @Test
     @DisplayName("Update must throw GuardianNotFoundException when guardian not found with given id")
     void update_MustThrowGuardianNotFoundException_WhenGuardianNotFoundWithGivenId() {
-      BDDMockito.when(guardianRepositoryMock.findById(100L))
+      BDDMockito.when(authenticationFacadeMock.getCurrentUser())
+          .thenReturn(guardianUser());
+      BDDMockito.when(guardianRepositoryMock.findByIdAndUser(eq(100L), any(User.class)))
           .thenReturn(Optional.empty());
 
       UpdateGuardianRequest updateGuardianRequest = UpdateGuardianRequest.builder()
@@ -185,6 +202,9 @@ class GuardianServiceImplTest {
       Assertions.assertThatExceptionOfType(GuardianNotFoundException.class)
           .isThrownBy(() -> guardianService.update(100L, updateGuardianRequest))
           .withMessage("Guardian not found");
+
+      BDDMockito.verify(guardianRepositoryMock).findByIdAndUser(eq(100L), any(User.class));
+      BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
     }
 
   }

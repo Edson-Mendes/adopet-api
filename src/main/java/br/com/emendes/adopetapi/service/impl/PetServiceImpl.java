@@ -38,7 +38,7 @@ public class PetServiceImpl implements PetService {
 
   @Override
   public Page<PetResponse> fetchAll(Pageable pageable) {
-    Page<Pet> petPage = petRepository.findAll(pageable);
+    Page<Pet> petPage = petRepository.findByAdoptedFalse(pageable);
 
     log.info("Fetching page: {}, size: {} of Pets", pageable.getPageNumber(), pageable.getPageSize());
     return petPage.map(petMapper::petToPetResponse);
