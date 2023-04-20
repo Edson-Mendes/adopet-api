@@ -46,6 +46,7 @@ public class GuardianServiceImpl implements GuardianService {
     guardian.getUser().addRole(ROLE_GUARDIAN);
 
     guardian.getUser().setPassword(passwordEncoder.encode(createGuardianRequest.getPassword()));
+    guardian.getUser().setEnabled(true);
 
     try {
       Guardian savedGuardian = guardianRepository.save(guardian);

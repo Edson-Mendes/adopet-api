@@ -272,27 +272,36 @@ class GuardianServiceImplTest {
   class DeleteByIdMethod {
 
     @Test
-    @DisplayName("DeleteById must call GuardianRepository#delete when delete guardian")
-    void deleteById_MustCallGuardianRepositoryDelete_WhenDeleteGuardian() {
-      BDDMockito.when(guardianRepositoryMock.findById(100L))
+    @DisplayName("DeleteById must save Guardian with enabled equals false when delete guardian")
+    void deleteById_MustSaveGuardianWithEnabledEqualsFalse_WhenDeleteGuardian() {
+      BDDMockito.when(authenticationFacadeMock.getCurrentUser())
+              .thenReturn(guardianUser());
+      BDDMockito.when(guardianRepositoryMock.findByIdAndUser(eq(100L), any(User.class)))
           .thenReturn(Optional.of(guardian()));
-      BDDMockito.doNothing().when(guardianRepositoryMock).delete(any(Guardian.class));
+      BDDMockito.when(guardianRepositoryMock.save(any(Guardian.class)))
+          .thenReturn(guardian());
 
       guardianService.deleteById(100L);
 
-      BDDMockito.verify(guardianRepositoryMock).findById(100L);
-      BDDMockito.verify(guardianRepositoryMock).delete(any(Guardian.class));
+      BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
+      BDDMockito.verify(guardianRepositoryMock).findByIdAndUser(eq(100L), any(User.class));
+      BDDMockito.verify(guardianRepositoryMock).save(any(Guardian.class));
     }
 
     @Test
     @DisplayName("DeleteById must throw GuardianNotFoundException when guardian do not exists with given id")
     void deleteById_MustThrowGuardianNotFoundException_WhenGuardianDoNotExistsWithGivenId() {
-      BDDMockito.when(guardianRepositoryMock.findById(100L))
+      BDDMockito.when(authenticationFacadeMock.getCurrentUser())
+          .thenReturn(guardianUser());
+      BDDMockito.when(guardianRepositoryMock.findByIdAndUser(eq(100L), any(User.class)))
           .thenReturn(Optional.empty());
 
       Assertions.assertThatExceptionOfType(GuardianNotFoundException.class)
           .isThrownBy(() -> guardianService.deleteById(100L))
           .withMessage("Guardian not found");
+
+      BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
+      BDDMockito.verify(guardianRepositoryMock).findByIdAndUser(eq(100L), any(User.class));
     }
 
   }

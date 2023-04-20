@@ -8,8 +8,10 @@ import br.com.emendes.adopetapi.exception.PasswordsDoNotMatchException;
 import br.com.emendes.adopetapi.exception.ShelterNotFoundException;
 import br.com.emendes.adopetapi.mapper.ShelterMapper;
 import br.com.emendes.adopetapi.model.entity.Shelter;
+import br.com.emendes.adopetapi.model.entity.User;
 import br.com.emendes.adopetapi.repository.ShelterRepository;
 import br.com.emendes.adopetapi.service.ShelterService;
+import br.com.emendes.adopetapi.util.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,6 +32,7 @@ public class ShelterServiceImpl implements ShelterService {
   private final ShelterMapper shelterMapper;
   private final ShelterRepository shelterRepository;
   private final PasswordEncoder passwordEncoder;
+  private final AuthenticationFacade authenticationFacade;
 
   @Override
   public ShelterResponse create(CreateShelterRequest createShelterRequest) {
@@ -42,6 +45,7 @@ public class ShelterServiceImpl implements ShelterService {
     shelter.getUser().addRole(ROLE_SHELTER);
 
     shelter.getUser().setPassword(passwordEncoder.encode(createShelterRequest.getPassword()));
+    shelter.getUser().setEnabled(true);
 
     try {
       Shelter savedShelter = shelterRepository.save(shelter);
@@ -70,7 +74,7 @@ public class ShelterServiceImpl implements ShelterService {
 
   @Override
   public ShelterResponse update(Long id, UpdateShelterRequest updateShelterRequest) {
-    Shelter shelter = findShelterById(id);
+    Shelter shelter = findShelterByIdAndUser(id);
 
     shelter.setName(updateShelterRequest.getName());
     shelter.getUser().setEmail(updateShelterRequest.getEmail());
@@ -96,6 +100,13 @@ public class ShelterServiceImpl implements ShelterService {
   private Shelter findShelterById(Long id) {
     log.info("Searching for Shelter with id: {}", id);
     return shelterRepository.findById(id).orElseThrow(() -> new ShelterNotFoundException("Shelter not found"));
+  }
+
+  private Shelter findShelterByIdAndUser(Long id) {
+    User currentUser = authenticationFacade.getCurrentUser();
+    log.info("Searching for Shelter with id: {} and User.id : {}", id, currentUser.getId());
+    return shelterRepository.findByIdAndUser(id, currentUser)
+        .orElseThrow(() -> new ShelterNotFoundException("Shelter not found"));
   }
 
 }

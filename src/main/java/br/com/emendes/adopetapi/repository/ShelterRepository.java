@@ -10,4 +10,6 @@ public interface ShelterRepository extends JpaRepository<Shelter, Long> {
 
   Optional<Shelter> findByUserId(Long id);
 
+  Optional<Shelter> findByIdAndUser(Long id, User user);
+
 }

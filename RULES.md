@@ -20,18 +20,18 @@
 
 ### Endpoint /api/shelter
 - Criar Shelter - POST /api/shelter
-  - [ ] Qualquer um pode criar Shelter.
+  - [x] Qualquer um pode criar Shelter.
   - [x] Não é necessário estar autenticado.<br>
 
 - Atualizar Shelter - PUT /api/shelters/ID
-  - [ ] Apenas **o próprio** usuário shelter pode atualizar seus dados.
+  - [x] Apenas **o próprio** usuário shelter pode atualizar seus dados.
   - [x] É necessário estar autenticado.<br>
 
 - Buscar por ID - GET /api/shelters/ID
-  - [ ] Qualquer **usuário autenticado** pode buscar Shelter por ID.<br>
+  - [x] Qualquer **usuário autenticado** pode buscar Shelter por ID.<br>
 
 - Buscar todos os Shelters - GET /api/shelters
-  - [ ] Qualquer **usuário autenticado** pode buscar **todos** os shelters.<br>
+  - [x] Qualquer **usuário autenticado** pode buscar **todos** os shelters.<br>
 
 - Deletar Shelter por ID - DELETE /api/shelters/ID
   - [ ] Apenas o próprio usuário Shelter pode se deletar.

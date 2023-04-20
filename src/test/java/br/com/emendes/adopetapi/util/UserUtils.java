@@ -14,6 +14,7 @@ public abstract class UserUtils {
         .id(10L)
         .email("lorem@email.com")
         .password("1234567890")
+        .enabled(true)
         .roles(List.of(guardianRole()))
         .build();
   }
@@ -23,6 +24,7 @@ public abstract class UserUtils {
         .id(null)
         .email("lorem@email.com")
         .password("1234567890")
+        .enabled(true)
         .build();
   }
 
@@ -31,6 +33,7 @@ public abstract class UserUtils {
         .id(11L)
         .email("animal.shelter@email.com")
         .password("1234567890")
+        .enabled(true)
         .roles(List.of(shelterRole()))
         .build();
   }
@@ -40,6 +43,7 @@ public abstract class UserUtils {
         .id(null)
         .email("animal.shelter@email.com")
         .password("1234567890")
+        .enabled(true)
         .build();
   }
 
