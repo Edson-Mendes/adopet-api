@@ -22,6 +22,8 @@ public class Guardian {
   private String name;
   @Column(nullable = false)
   private LocalDateTime createdAt;
+  @Column(nullable = false)
+  private boolean deleted;
   @OneToOne(cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, optional = false, fetch = FetchType.LAZY)
   private User user;
   @OneToMany(mappedBy = "guardian")

@@ -84,7 +84,7 @@ public class GuardianServiceImpl implements GuardianService {
 
   @Override
   public Page<GuardianResponse> fetchAll(Pageable pageable) {
-    Page<Guardian> guardianPage = guardianRepository.findAll(pageable);
+    Page<Guardian> guardianPage = guardianRepository.findByDeletedFalse(pageable);
 
     // FIXME: Essa busca está fazendo 3 consultas ao banco de dados.
     // 1 - para trazer os dados de Guardian.
@@ -98,20 +98,23 @@ public class GuardianServiceImpl implements GuardianService {
     Guardian guardian = findGuardianByIdAndUser(id);
 
     guardian.getUser().setEnabled(false);
+    guardian.setDeleted(true);
     guardianRepository.save(guardian);
 
     log.info("Disable Guardian with id: {}", id);
   }
 
   private Guardian findGuardianById(Long id) {
+    //FIXME: Essa busca retorna junto as roles do usuário, o que não é necessário para a funcionalidade.
     log.info("Searching for Guardian with id: {}", id);
-    return guardianRepository.findById(id).orElseThrow(() -> new GuardianNotFoundException("Guardian not found"));
+    return guardianRepository.findByIdAndDeletedFalse(id)
+        .orElseThrow(() -> new GuardianNotFoundException("Guardian not found"));
   }
 
   private Guardian findGuardianByIdAndUser(Long id) {
     User currentUser = authenticationFacade.getCurrentUser();
     log.info("Searching for Guardian with id: {} and User.id : {}", id, currentUser.getId());
-    return guardianRepository.findByIdAndUser(id, currentUser).orElseThrow(() -> new GuardianNotFoundException("Guardian not found"));
+    return guardianRepository.findByIdAndUserAndDeletedFalse(id, currentUser).orElseThrow(() -> new GuardianNotFoundException("Guardian not found"));
   }
 
 }

@@ -9,14 +9,16 @@
 
 - Buscar por ID - GET /api/guardians/ID
   - [x] Qualquer **usuário autenticado** pode buscar Guardian por ID.<br>
+  - [x] Não retorna usuário deletado. 
 
 - Buscar todos os Guardians - GET /api/guardians
   - [x] Qualquer **usuário autenticado** pode buscar **todos** os guardians.<br>
+  - [x] Não devolver usuários deletados.
 
 - Deletar Guardian por ID - DELETE /api/guardians/ID
   - [x] Apenas o próprio usuário Guardian pode se deletar.
   - [x] É necessário estar autenticado.
-  - [ ] A ação de deletar não remove a entidade da base de dados, apenas muda a flag DELETED para true.<br>
+  - [x] A ação de deletar não remove a entidade da base de dados, apenas muda a flag DELETED para true.<br>
 
 ### Endpoint /api/shelter
 - Criar Shelter - POST /api/shelter
@@ -36,7 +38,7 @@
 - Deletar Shelter por ID - DELETE /api/shelters/ID
   - [ ] Apenas o próprio usuário Shelter pode se deletar.
   - [x] É necessário estar autenticado.
-  - [ ] A ação de deletar não remove a entidade da base de dados, apenas muda o status para DELETED.<br>
+  - [ ] A ação de deletar não remove a entidade da base de dados, apenas muda a flag deleted para true<br>
 
 ### Endpoint /api/pet
 - Criar Pet - POST /api/pet

@@ -1,0 +1,1 @@
+ALTER TABLE t_guardian ADD COLUMN deleted bool NOT NULL DEFAULT false;

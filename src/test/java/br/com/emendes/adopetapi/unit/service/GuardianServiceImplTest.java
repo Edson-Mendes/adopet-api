@@ -137,7 +137,7 @@ class GuardianServiceImplTest {
     void update_MustReturnGuardianResponse_WhenUpdateSuccessfully() {
       BDDMockito.when(authenticationFacadeMock.getCurrentUser())
               .thenReturn(guardianUser());
-      BDDMockito.when(guardianRepositoryMock.findByIdAndUser(eq(100L), any(User.class)))
+      BDDMockito.when(guardianRepositoryMock.findByIdAndUserAndDeletedFalse(eq(100L), any(User.class)))
           .thenReturn(Optional.of(guardian()));
       BDDMockito.when(guardianRepositoryMock.save(any(Guardian.class)))
           .thenReturn(updatedGuardian());
@@ -153,7 +153,7 @@ class GuardianServiceImplTest {
 
       BDDMockito.verify(guardianMapperMock).guardianToGuardianResponse(any(Guardian.class));
       BDDMockito.verify(guardianRepositoryMock).save(any(Guardian.class));
-      BDDMockito.verify(guardianRepositoryMock).findByIdAndUser(eq(100L), any(User.class));
+      BDDMockito.verify(guardianRepositoryMock).findByIdAndUserAndDeletedFalse(eq(100L), any(User.class));
       BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
 
       Assertions.assertThat(actualGuardianResponse).isNotNull();
@@ -167,7 +167,7 @@ class GuardianServiceImplTest {
     void update_MustThrowEmailAlreadyInUseException_WhenAlreadyExistsEmailInTheDatabase() {
       BDDMockito.when(authenticationFacadeMock.getCurrentUser())
           .thenReturn(guardianUser());
-      BDDMockito.when(guardianRepositoryMock.findByIdAndUser(eq(100L), any(User.class)))
+      BDDMockito.when(guardianRepositoryMock.findByIdAndUserAndDeletedFalse(eq(100L), any(User.class)))
           .thenReturn(Optional.of(guardian()));
       BDDMockito.when(guardianRepositoryMock.save(any(Guardian.class)))
           .thenThrow(new DataIntegrityViolationException("unique_email constraint"));
@@ -182,7 +182,7 @@ class GuardianServiceImplTest {
           .withMessage("E-mail {loremdolor@email.com} is already in use");
 
       BDDMockito.verify(guardianRepositoryMock).save(any(Guardian.class));
-      BDDMockito.verify(guardianRepositoryMock).findByIdAndUser(eq(100L), any(User.class));
+      BDDMockito.verify(guardianRepositoryMock).findByIdAndUserAndDeletedFalse(eq(100L), any(User.class));
       BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
     }
 
@@ -191,7 +191,7 @@ class GuardianServiceImplTest {
     void update_MustThrowGuardianNotFoundException_WhenGuardianNotFoundWithGivenId() {
       BDDMockito.when(authenticationFacadeMock.getCurrentUser())
           .thenReturn(guardianUser());
-      BDDMockito.when(guardianRepositoryMock.findByIdAndUser(eq(100L), any(User.class)))
+      BDDMockito.when(guardianRepositoryMock.findByIdAndUserAndDeletedFalse(eq(100L), any(User.class)))
           .thenReturn(Optional.empty());
 
       UpdateGuardianRequest updateGuardianRequest = UpdateGuardianRequest.builder()
@@ -203,7 +203,7 @@ class GuardianServiceImplTest {
           .isThrownBy(() -> guardianService.update(100L, updateGuardianRequest))
           .withMessage("Guardian not found");
 
-      BDDMockito.verify(guardianRepositoryMock).findByIdAndUser(eq(100L), any(User.class));
+      BDDMockito.verify(guardianRepositoryMock).findByIdAndUserAndDeletedFalse(eq(100L), any(User.class));
       BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
     }
 
@@ -216,14 +216,14 @@ class GuardianServiceImplTest {
     @Test
     @DisplayName("FindById must return GuardianResponse when found successfully")
     void findById_MustReturnGuardianResponse_WhenFoundSuccessfully() {
-      BDDMockito.when(guardianRepositoryMock.findById(100L))
+      BDDMockito.when(guardianRepositoryMock.findByIdAndDeletedFalse(100L))
           .thenReturn(Optional.of(guardian()));
       BDDMockito.when(guardianMapperMock.guardianToGuardianResponse(any(Guardian.class)))
           .thenReturn(guardianResponse());
 
       GuardianResponse actualGuardianResponse = guardianService.findById(100L);
 
-      BDDMockito.verify(guardianRepositoryMock).findById(100L);
+      BDDMockito.verify(guardianRepositoryMock).findByIdAndDeletedFalse(100L);
       BDDMockito.verify(guardianMapperMock).guardianToGuardianResponse(any(Guardian.class));
 
       Assertions.assertThat(actualGuardianResponse).isNotNull();
@@ -235,12 +235,14 @@ class GuardianServiceImplTest {
     @Test
     @DisplayName("FindById must throw GuardianNotFoundException when guardian not found with given id")
     void findById_MustThrowGuardianNotFoundException_WhenGuardianNotFoundWithGivenId() {
-      BDDMockito.when(guardianRepositoryMock.findById(100L))
+      BDDMockito.when(guardianRepositoryMock.findByIdAndDeletedFalse(100L))
           .thenReturn(Optional.empty());
 
       Assertions.assertThatExceptionOfType(GuardianNotFoundException.class)
           .isThrownBy(() -> guardianService.findById(100L))
           .withMessage("Guardian not found");
+
+      BDDMockito.verify(guardianRepositoryMock).findByIdAndDeletedFalse(100L);
     }
 
   }
@@ -252,14 +254,14 @@ class GuardianServiceImplTest {
     @Test
     @DisplayName("fetchAll must return Page<GuardianResponse> when fetch successfully")
     void fetchAll_MustReturnPageGuardianResponse_WhenFetchSuccessfully() {
-      BDDMockito.when(guardianRepositoryMock.findAll(PAGEABLE))
+      BDDMockito.when(guardianRepositoryMock.findByDeletedFalse(PAGEABLE))
           .thenReturn(new PageImpl<>(List.of(guardian()), PAGEABLE, 1));
       BDDMockito.when(guardianMapperMock.guardianToGuardianResponse(any(Guardian.class)))
           .thenReturn(guardianResponse());
 
       Page<GuardianResponse> actualGuardianResponsePage = guardianService.fetchAll(PAGEABLE);
 
-      BDDMockito.verify(guardianRepositoryMock).findAll(any(Pageable.class));
+      BDDMockito.verify(guardianRepositoryMock).findByDeletedFalse(any(Pageable.class));
       BDDMockito.verify(guardianMapperMock).guardianToGuardianResponse(any(Guardian.class));
 
       Assertions.assertThat(actualGuardianResponsePage).isNotNull().isNotEmpty().hasSize(1);
@@ -276,7 +278,7 @@ class GuardianServiceImplTest {
     void deleteById_MustSaveGuardianWithEnabledEqualsFalse_WhenDeleteGuardian() {
       BDDMockito.when(authenticationFacadeMock.getCurrentUser())
               .thenReturn(guardianUser());
-      BDDMockito.when(guardianRepositoryMock.findByIdAndUser(eq(100L), any(User.class)))
+      BDDMockito.when(guardianRepositoryMock.findByIdAndUserAndDeletedFalse(eq(100L), any(User.class)))
           .thenReturn(Optional.of(guardian()));
       BDDMockito.when(guardianRepositoryMock.save(any(Guardian.class)))
           .thenReturn(guardian());
@@ -284,7 +286,7 @@ class GuardianServiceImplTest {
       guardianService.deleteById(100L);
 
       BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
-      BDDMockito.verify(guardianRepositoryMock).findByIdAndUser(eq(100L), any(User.class));
+      BDDMockito.verify(guardianRepositoryMock).findByIdAndUserAndDeletedFalse(eq(100L), any(User.class));
       BDDMockito.verify(guardianRepositoryMock).save(any(Guardian.class));
     }
 
@@ -293,7 +295,7 @@ class GuardianServiceImplTest {
     void deleteById_MustThrowGuardianNotFoundException_WhenGuardianDoNotExistsWithGivenId() {
       BDDMockito.when(authenticationFacadeMock.getCurrentUser())
           .thenReturn(guardianUser());
-      BDDMockito.when(guardianRepositoryMock.findByIdAndUser(eq(100L), any(User.class)))
+      BDDMockito.when(guardianRepositoryMock.findByIdAndUserAndDeletedFalse(eq(100L), any(User.class)))
           .thenReturn(Optional.empty());
 
       Assertions.assertThatExceptionOfType(GuardianNotFoundException.class)
@@ -301,7 +303,7 @@ class GuardianServiceImplTest {
           .withMessage("Guardian not found");
 
       BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
-      BDDMockito.verify(guardianRepositoryMock).findByIdAndUser(eq(100L), any(User.class));
+      BDDMockito.verify(guardianRepositoryMock).findByIdAndUserAndDeletedFalse(eq(100L), any(User.class));
     }
 
   }
