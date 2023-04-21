@@ -45,7 +45,7 @@ public class PetServiceImpl implements PetService {
 
   @Override
   public Page<PetResponse> fetchAll(Pageable pageable) {
-    Page<Pet> petPage = petRepository.findByAdoptedFalse(pageable);
+    Page<Pet> petPage = petRepository.findByAdoptedFalseAndShelterDeletedFalse(pageable);
 
     log.info("Fetching page: {}, size: {} of Pets", pageable.getPageNumber(), pageable.getPageSize());
     return petPage.map(petMapper::petToPetResponse);
@@ -83,7 +83,8 @@ public class PetServiceImpl implements PetService {
 
   private Pet findPetById(Long id) {
     log.info("Searching for Pet with id: {}", id);
-    return petRepository.findById(id).orElseThrow(() -> new PetNotFoundException("Pet not found"));
+    return petRepository.findByIdAndShelterDeletedFalse(id)
+        .orElseThrow(() -> new PetNotFoundException("Pet not found"));
   }
 
   private Pet findPetByIdAndShelter(Long id) {

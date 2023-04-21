@@ -53,12 +53,12 @@
 
 - Buscar por ID - GET /api/pets/ID
   - [x] Qualquer **usuário autenticado** pode buscar Pet por ID.<br>
-  - [ ] Pet que esta em Shelter *deletado* não é retornado.
+  - [x] Pet que esta em Shelter *deletado* não é retornado.
 
 - Buscar todos os Pets - GET /api/pets
   - [x] Qualquer **usuário autenticado** pode buscar **todos** os pets.
   - [x] A busca retorna apenas os pets **não adotados**<br>
-  - [ ] A busca não retorna pets que estão em shelters deletados.
+  - [x] A busca não retorna pets que estão em shelters deletados.
 
 - Deletar Pet por ID - DELETE /api/pets/ID
   - [x] Apenas o usuário shelter que cadastrou o Pet pode deleta-lo.

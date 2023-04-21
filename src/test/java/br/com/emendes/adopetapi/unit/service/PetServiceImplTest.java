@@ -90,14 +90,14 @@ class PetServiceImplTest {
     @Test
     @DisplayName("fetchAll must return Page<PetResponse> when fetch successfully")
     void fetchAll_MustReturnPagePetResponse_WhenFetchSuccessfully() {
-      BDDMockito.when(petRepositoryMock.findByAdoptedFalse(PAGEABLE))
+      BDDMockito.when(petRepositoryMock.findByAdoptedFalseAndShelterDeletedFalse(PAGEABLE))
           .thenReturn(new PageImpl<>(List.of(pet()), PAGEABLE, 1));
       BDDMockito.when(petMapperMock.petToPetResponse(any(Pet.class)))
           .thenReturn(petResponse());
 
       Page<PetResponse> actualPetResponsePage = petService.fetchAll(PAGEABLE);
 
-      BDDMockito.verify(petRepositoryMock).findByAdoptedFalse(any(Pageable.class));
+      BDDMockito.verify(petRepositoryMock).findByAdoptedFalseAndShelterDeletedFalse(any(Pageable.class));
       BDDMockito.verify(petMapperMock).petToPetResponse(any(Pet.class));
 
       Assertions.assertThat(actualPetResponsePage).isNotNull().isNotEmpty().hasSize(1);
@@ -112,14 +112,14 @@ class PetServiceImplTest {
     @Test
     @DisplayName("FindById must return PetResponse when found successfully")
     void findById_MustReturnPetResponse_WhenFoundSuccessfully() {
-      BDDMockito.when(petRepositoryMock.findById(10_000L))
+      BDDMockito.when(petRepositoryMock.findByIdAndShelterDeletedFalse(10_000L))
           .thenReturn(Optional.of(pet()));
       BDDMockito.when(petMapperMock.petToPetResponse(any(Pet.class)))
           .thenReturn(petResponse());
 
       PetResponse actualPetResponse = petService.findById(10_000L);
 
-      BDDMockito.verify(petRepositoryMock).findById(10_000L);
+      BDDMockito.verify(petRepositoryMock).findByIdAndShelterDeletedFalse(10_000L);
       BDDMockito.verify(petMapperMock).petToPetResponse(any(Pet.class));
 
       Assertions.assertThat(actualPetResponse).isNotNull();
@@ -132,12 +132,14 @@ class PetServiceImplTest {
     @Test
     @DisplayName("FindById must throw PetNotFoundException when pet not found with given id")
     void findById_MustThrowPetNotFoundException_WhenPetNotFoundWithGivenId() {
-      BDDMockito.when(petRepositoryMock.findById(10_000L))
+      BDDMockito.when(petRepositoryMock.findByIdAndShelterDeletedFalse(10_000L))
           .thenReturn(Optional.empty());
 
       Assertions.assertThatExceptionOfType(PetNotFoundException.class)
           .isThrownBy(() -> petService.findById(10_000L))
           .withMessage("Pet not found");
+
+      BDDMockito.verify(petRepositoryMock).findByIdAndShelterDeletedFalse(10_000L);
     }
 
   }

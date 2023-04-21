@@ -10,7 +10,6 @@ Adopet API é uma REST API de uma plataforma para conectar pessoas que desejam a
 
 Projeto proposto pela Alura no Challenge Backend 6ª Edição.
 
-
 ## :toolbox: Tecnologias e ferramentas
 
 - `IntelliJ`
@@ -82,7 +81,7 @@ os novos dados do guardian devem ser enviados no corpo da requisição.
   - Apenas o Shelter que cadastrou o Pet pode atualiza-lo.<br>
 
 - `Deletar`: Deletar Pet através de um **DELETE /api/pets/{ID}**, onde *{ID}* é o identificador do Pet.</br>
-  - Apenas o Shelter que cadastrou o Pet pode atualiza-lo.
+  - Apenas o Shelter que cadastrou o Pet pode deleta-lo.
   - Pet relacionado a uma Adoption não pode ser deletado.
 
 #### :heart_eyes_cat: Adoption
