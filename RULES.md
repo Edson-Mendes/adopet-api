@@ -48,7 +48,7 @@
   - [x] É necessário estar autenticado.<br>
 
 - Atualizar Pet - PUT /api/pets/ID
-  - [ ] Apenas o usuário shelter que cadastrou o Pet pode atualiza-lo.
+  - [x] Apenas o usuário shelter que cadastrou o Pet pode atualiza-lo.
   - [x] É necessário estar autenticado.<br>
 
 - Buscar por ID - GET /api/pets/ID

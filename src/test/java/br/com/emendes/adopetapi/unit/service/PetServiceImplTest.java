@@ -6,6 +6,7 @@ import br.com.emendes.adopetapi.dto.response.PetResponse;
 import br.com.emendes.adopetapi.exception.PetNotFoundException;
 import br.com.emendes.adopetapi.mapper.PetMapper;
 import br.com.emendes.adopetapi.model.entity.Pet;
+import br.com.emendes.adopetapi.model.entity.Shelter;
 import br.com.emendes.adopetapi.repository.PetRepository;
 import br.com.emendes.adopetapi.service.UserService;
 import br.com.emendes.adopetapi.service.impl.PetServiceImpl;
@@ -29,6 +30,7 @@ import static br.com.emendes.adopetapi.util.ConstantUtils.PAGEABLE;
 import static br.com.emendes.adopetapi.util.PetUtils.*;
 import static br.com.emendes.adopetapi.util.ShelterUtils.shelter;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("Unit tests for PetServiceImpl")
@@ -145,7 +147,8 @@ class PetServiceImplTest {
     @Test
     @DisplayName("Update must return PetResponse when update successfully")
     void update_MustReturnPetResponse_WhenUpdateSuccessfully() {
-      BDDMockito.when(petRepositoryMock.findById(10_000L))
+      BDDMockito.when(userServiceMock.getCurrentUserAsShelter()).thenReturn(Optional.of(shelter()));
+      BDDMockito.when(petRepositoryMock.findByIdAndShelter(eq(10_000L), any(Shelter.class)))
           .thenReturn(Optional.of(pet()));
       BDDMockito.when(petRepositoryMock.save(any(Pet.class)))
           .thenReturn(updatedPet());
@@ -162,7 +165,8 @@ class PetServiceImplTest {
 
       BDDMockito.verify(petMapperMock).petToPetResponse(any(Pet.class));
       BDDMockito.verify(petRepositoryMock).save(any(Pet.class));
-      BDDMockito.verify(petRepositoryMock).findById(10_000L);
+      BDDMockito.verify(petRepositoryMock).findByIdAndShelter(eq(10_000L), any(Shelter.class));
+      BDDMockito.verify(userServiceMock).getCurrentUserAsShelter();
 
       Assertions.assertThat(actualPetResponse).isNotNull();
       Assertions.assertThat(actualPetResponse.getId()).isNotNull().isEqualTo(10_000L);
@@ -174,7 +178,8 @@ class PetServiceImplTest {
     @Test
     @DisplayName("Update must throw PetNotFoundException when pet not found with given id")
     void update_MustThrowPetNotFoundException_WhenPetNotFoundWithGivenId() {
-      BDDMockito.when(petRepositoryMock.findById(10_000L))
+      BDDMockito.when(userServiceMock.getCurrentUserAsShelter()).thenReturn(Optional.of(shelter()));
+      BDDMockito.when(petRepositoryMock.findByIdAndShelter(eq(10_000L), any(Shelter.class)))
           .thenReturn(Optional.empty());
 
       UpdatePetRequest petRequest = UpdatePetRequest.builder()
@@ -184,8 +189,11 @@ class PetServiceImplTest {
           .build();
 
       Assertions.assertThatExceptionOfType(PetNotFoundException.class)
-          .isThrownBy(() -> petService.update(1000L, petRequest))
+          .isThrownBy(() -> petService.update(10_000L, petRequest))
           .withMessage("Pet not found");
+
+      BDDMockito.verify(userServiceMock).getCurrentUserAsShelter();
+      BDDMockito.verify(petRepositoryMock).findByIdAndShelter(eq(10_000L), any(Shelter.class));
     }
 
   }

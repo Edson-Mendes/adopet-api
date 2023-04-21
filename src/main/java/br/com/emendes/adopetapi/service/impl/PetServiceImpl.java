@@ -33,8 +33,7 @@ public class PetServiceImpl implements PetService {
     Pet pet = petMapper.createPetRequestToPet(createPetRequest);
 
     pet.setCreatedAt(LocalDateTime.now());
-    Shelter currentShelter = userService.getCurrentUserAsShelter()
-        .orElseThrow(() -> new InvalidArgumentException("Current user is not a Shelter"));
+    Shelter currentShelter = getCurrentShelter();
     pet.setShelter(currentShelter);
 
     pet = petRepository.save(pet);
@@ -58,7 +57,7 @@ public class PetServiceImpl implements PetService {
 
   @Override
   public PetResponse update(Long id, UpdatePetRequest updatePetRequest) {
-    Pet pet = findPetById(id);
+    Pet pet = findPetByIdAndShelter(id);
 
     petMapper.merge(updatePetRequest, pet);
     Pet updatedPet = petRepository.save(pet);
@@ -78,6 +77,18 @@ public class PetServiceImpl implements PetService {
   private Pet findPetById(Long id) {
     log.info("Searching for Pet with id: {}", id);
     return petRepository.findById(id).orElseThrow(() -> new PetNotFoundException("Pet not found"));
+  }
+
+  private Pet findPetByIdAndShelter(Long id) {
+    Shelter shelter = getCurrentShelter();
+    log.info("Searching for Pet with id: {} and Shelter.id : {}", id, shelter.getId());
+    return petRepository.findByIdAndShelter(id, shelter)
+        .orElseThrow(() -> new PetNotFoundException("Pet not found"));
+  }
+
+  private Shelter getCurrentShelter() {
+    return userService.getCurrentUserAsShelter()
+        .orElseThrow(() -> new InvalidArgumentException("Current user is not a Shelter"));
   }
 
 }

@@ -72,11 +72,14 @@ os novos dados do guardian devem ser enviados no corpo da requisição.
   - Apenas Shelters podem cadastrar Pets.
 
 - `Buscar todos`: Busca paginada de pets através de um **GET /api/pets**.</br>
+  - É necessário estar autenticado.<br>
 
 - `Buscar por id`: Busca Pet por ID através de um **GET /api/pets/{ID}**, onde *{ID}* é o identificador do Pet.</br>
+  - É necessário estar autenticado.<br>
 
 - `Atualizar`: Atualizar Pet através de um **PUT /api/pets/{ID}**, onde *ID* é o identificador do Pet,
-  os novos dados do pet devem ser enviados no corpo da requisição.</br>
+  os novos dados do pet devem ser enviados no corpo da requisição.
+  - Apenas o Shelter que cadastrou o Pet pode atualiza-lo.<br>
 
 - `Deletar`: Deletar Pet através de um **DELETE /api/pets/{ID}**, onde *{ID}* é o identificador do Pet.</br>
 
