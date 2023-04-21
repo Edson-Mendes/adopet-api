@@ -52,24 +52,24 @@
   - [x] É necessário estar autenticado.<br>
 
 - Buscar por ID - GET /api/pets/ID
-  - [ ] Qualquer **usuário autenticado** pode buscar Pet por ID.<br>
+  - [x] Qualquer **usuário autenticado** pode buscar Pet por ID.<br>
   - [ ] Pet que esta em Shelter *deletado* não é retornado.
 
 - Buscar todos os Pets - GET /api/pets
-  - [ ] Qualquer **usuário autenticado** pode buscar **todos** os pets.
+  - [x] Qualquer **usuário autenticado** pode buscar **todos** os pets.
   - [x] A busca retorna apenas os pets **não adotados**<br>
   - [ ] A busca não retorna pets que estão em shelters deletados.
 
 - Deletar Pet por ID - DELETE /api/pets/ID
-  - [ ] Apenas o usuário shelter que cadastrou o Pet pode deleta-lo.
+  - [x] Apenas o usuário shelter que cadastrou o Pet pode deleta-lo.
   - [x] É necessário estar autenticado.
-  - [ ] A ação de deletar não remove a entidade da base de dados, apenas muda o status para DELETED.<br>
+  - [x] Pet que estiver relacionado a uma adoção não pode ser deletado.<br>
 
 ### Endpoint /api/adoptions
 - Adotar Pet - POST /api/adoptions
   - [x] Apenas usuários Guardian podem realizar adoção.
   - [x] É necessário estar autenticado.
-  - [ ] Apenas Pets não adotados podem se adotados.<br>
+  - [ ] Apenas Pets não adotados podem ser adotados.<br>
 
 - Buscar todas as adoções - GET /api/adoptions
   - [x] É necessário estar autenticado.

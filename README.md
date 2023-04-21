@@ -82,6 +82,8 @@ os novos dados do guardian devem ser enviados no corpo da requisição.
   - Apenas o Shelter que cadastrou o Pet pode atualiza-lo.<br>
 
 - `Deletar`: Deletar Pet através de um **DELETE /api/pets/{ID}**, onde *{ID}* é o identificador do Pet.</br>
+  - Apenas o Shelter que cadastrou o Pet pode atualiza-lo.
+  - Pet relacionado a uma Adoption não pode ser deletado.
 
 #### :heart_eyes_cat: Adoption
 - `Adotar`: Solicitar uma adoção de um Pet através de um **POST /api/adoptions** com as informações *petId* 

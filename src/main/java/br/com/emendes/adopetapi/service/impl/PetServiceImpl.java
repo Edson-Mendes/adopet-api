@@ -13,6 +13,7 @@ import br.com.emendes.adopetapi.service.PetService;
 import br.com.emendes.adopetapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -68,10 +69,16 @@ public class PetServiceImpl implements PetService {
 
   @Override
   public void deleteById(Long id) {
-    Pet pet = findPetById(id);
+    Pet pet = findPetByIdAndShelter(id);
 
     log.info("Deleting Pet with id: {}", id);
-    petRepository.delete(pet);
+    try {
+      petRepository.delete(pet);
+    } catch (DataIntegrityViolationException exception) {
+      log.info("Can not delete Pet with id : {}", id);
+      log.info("Exception message : {}", exception.getMessage());
+      throw new InvalidArgumentException("This pet cannot be deleted because it is in process of being adopted.");
+    }
   }
 
   private Pet findPetById(Long id) {
