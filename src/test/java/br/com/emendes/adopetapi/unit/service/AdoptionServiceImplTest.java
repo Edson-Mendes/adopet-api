@@ -14,6 +14,7 @@ import br.com.emendes.adopetapi.repository.AdoptionRepository;
 import br.com.emendes.adopetapi.repository.GuardianRepository;
 import br.com.emendes.adopetapi.repository.PetRepository;
 import br.com.emendes.adopetapi.repository.ShelterRepository;
+import br.com.emendes.adopetapi.service.UserService;
 import br.com.emendes.adopetapi.service.impl.AdoptionServiceImpl;
 import br.com.emendes.adopetapi.util.AuthenticationFacade;
 import org.assertj.core.api.Assertions;
@@ -59,6 +60,8 @@ class AdoptionServiceImplTest {
   private PetRepository petRepositoryMock;
   @Mock
   private AdoptionRepository adoptionRepositoryMock;
+  @Mock
+  private UserService userServiceMock;
 
   @Nested
   @DisplayName("Tests for adopt method")
@@ -67,9 +70,10 @@ class AdoptionServiceImplTest {
     @Test
     @DisplayName("Adopt must return AdoptionResponse when adopt successfully")
     void adopt_MustReturnAdoptionResponse_WhenAdoptSuccessfully() {
-      BDDMockito.when(petRepositoryMock.existsById(10_000L)).thenReturn(true);
-      BDDMockito.when(authenticationFacadeMock.getCurrentUser()).thenReturn(guardianUser());
-      BDDMockito.when(guardianRepositoryMock.findByUserId(10L)).thenReturn(Optional.of(guardian()));
+      BDDMockito.when(petRepositoryMock.existsByIdAndAdoptedFalseAndShelterDeletedFalse(10_000L))
+          .thenReturn(true);
+      BDDMockito.when(userServiceMock.getCurrentUserAsGuardian())
+              .thenReturn(Optional.of(guardian()));
       BDDMockito.when(adoptionMapperMock.adoptionRequestToAdoption(any(AdoptionRequest.class)))
           .thenReturn(adoptionWithoutId());
       BDDMockito.when(adoptionRepositoryMock.save(any(Adoption.class))).thenReturn(adoption());
@@ -81,9 +85,8 @@ class AdoptionServiceImplTest {
 
       AdoptionResponse actualAdoptionResponse = adoptionService.adopt(adoptionRequest);
 
-      BDDMockito.verify(petRepositoryMock).existsById(10_000L);
-      BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
-      BDDMockito.verify(guardianRepositoryMock).findByUserId(10L);
+      BDDMockito.verify(petRepositoryMock).existsByIdAndAdoptedFalseAndShelterDeletedFalse(10_000L);
+      BDDMockito.verify(userServiceMock).getCurrentUserAsGuardian();
       BDDMockito.verify(adoptionMapperMock).adoptionRequestToAdoption(any());
       BDDMockito.verify(adoptionRepositoryMock).save(any());
       BDDMockito.verify(adoptionMapperMock).adoptionToAdoptionResponse(any());
@@ -106,35 +109,16 @@ class AdoptionServiceImplTest {
           .isThrownBy(() -> adoptionService.adopt(adoptionRequest))
           .withMessage("Invalid pet id");
 
-      BDDMockito.verify(petRepositoryMock).existsById(10_000L);
+      BDDMockito.verify(petRepositoryMock).existsByIdAndAdoptedFalseAndShelterDeletedFalse(10_000L);
     }
 
     @Test
-    @DisplayName("Adopt must throw UserIsNotAuthenticateException when User is not authenticate")
-    void adopt_MustThrowUserNotAuthenticateException_WhenUserIsNotAuthenticate() {
-      BDDMockito.when(petRepositoryMock.existsById(10_000L)).thenReturn(true);
-      BDDMockito.when(authenticationFacadeMock.getCurrentUser())
-          .thenThrow(new UserIsNotAuthenticateException("User is not authenticate"));
-
-      AdoptionRequest adoptionRequest = AdoptionRequest.builder()
-          .petId(10_000L)
-          .build();
-
-      Assertions.assertThatExceptionOfType(UserIsNotAuthenticateException.class)
-          .isThrownBy(() -> adoptionService.adopt(adoptionRequest))
-          .withMessage("User is not authenticate");
-
-      BDDMockito.verify(petRepositoryMock).existsById(10_000L);
-      BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
-    }
-
-    @Test
-    @DisplayName("Adopt must throw InvalidArgumentException when not found current user")
-    void adopt_MustThrowInvalidArgumentException_WhenNotFoundCurrentUser() {
-      BDDMockito.when(petRepositoryMock.existsById(10_000L)).thenReturn(true);
-      BDDMockito.when(authenticationFacadeMock.getCurrentUser()).thenReturn(guardianUser());
-      BDDMockito.when(guardianRepositoryMock.findByUserId(any()))
-          .thenThrow(new InvalidArgumentException("Current user not found"));
+    @DisplayName("Adopt must throw InvalidArgumentException when not found current guardian user")
+    void adopt_MustThrowInvalidArgumentException_WhenNotFoundCurrentGuardianUser() {
+      BDDMockito.when(petRepositoryMock.existsByIdAndAdoptedFalseAndShelterDeletedFalse(10_000L))
+          .thenReturn(true);
+      BDDMockito.when(userServiceMock.getCurrentUserAsGuardian())
+          .thenReturn(Optional.empty());
 
       AdoptionRequest adoptionRequest = AdoptionRequest.builder()
           .petId(10_000L)
@@ -144,9 +128,8 @@ class AdoptionServiceImplTest {
           .isThrownBy(() -> adoptionService.adopt(adoptionRequest))
           .withMessage("Current user not found");
 
-      BDDMockito.verify(petRepositoryMock).existsById(10_000L);
-      BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
-      BDDMockito.verify(guardianRepositoryMock).findByUserId(any());
+      BDDMockito.verify(petRepositoryMock).existsByIdAndAdoptedFalseAndShelterDeletedFalse(10_000L);
+      BDDMockito.verify(userServiceMock).getCurrentUserAsGuardian();
     }
 
   }

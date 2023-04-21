@@ -15,6 +15,7 @@ import br.com.emendes.adopetapi.repository.GuardianRepository;
 import br.com.emendes.adopetapi.repository.PetRepository;
 import br.com.emendes.adopetapi.repository.ShelterRepository;
 import br.com.emendes.adopetapi.service.AdoptionService;
+import br.com.emendes.adopetapi.service.UserService;
 import br.com.emendes.adopetapi.util.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,18 +41,18 @@ public class AdoptionServiceImpl implements AdoptionService {
   private final PetRepository petRepository;
   private final AdoptionRepository adoptionRepository;
   private final ShelterRepository shelterRepository;
+  private final UserService userService;
 
   @Override
   public AdoptionResponse adopt(AdoptionRequest adoptionRequest) {
-    // TODO: Alterar essa solicitação para verificar se existe por id e não adotado.
-    if (!petRepository.existsById(adoptionRequest.getPetId())) {
-      log.info("Not found non adopted pet with id  : {}", adoptionRequest.getPetId());
+    if (!petRepository.existsByIdAndAdoptedFalseAndShelterDeletedFalse(adoptionRequest.getPetId())) {
+      log.info("Not found non adopted pet with id : {}", adoptionRequest.getPetId());
       throw new InvalidArgumentException("Invalid pet id");
     }
 
-    User currentUser = authenticationFacade.getCurrentUser();
-    Guardian guardian = guardianRepository.findByUserId(currentUser.getId())
+    Guardian guardian = userService.getCurrentUserAsGuardian()
         .orElseThrow(() -> new InvalidArgumentException("Current user not found"));
+
     log.info("found guardian with id : {}", guardian.getId());
 
     Adoption adoption = adoptionMapper.adoptionRequestToAdoption(adoptionRequest);
@@ -60,7 +61,7 @@ public class AdoptionServiceImpl implements AdoptionService {
     adoption.setStatus(AdoptionStatus.ANALYSING);
 
     adoption = adoptionRepository.save(adoption);
-    log.info("Adoptions saved successfully with id : {}", adoption.getId());
+    log.info("Adoption saved successfully with id : {} and status : {}", adoption.getId(), adoption.getStatus().name());
 
     return adoptionMapper.adoptionToAdoptionResponse(adoption);
   }
@@ -126,6 +127,5 @@ public class AdoptionServiceImpl implements AdoptionService {
 
     return adoptionsPage.map(adoptionMapper::adoptionToAdoptionResponse);
   }
-
 
 }

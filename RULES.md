@@ -69,7 +69,8 @@
 - Adotar Pet - POST /api/adoptions
   - [x] Apenas usuários Guardian podem realizar adoção.
   - [x] É necessário estar autenticado.
-  - [ ] Apenas Pets não adotados podem ser adotados.<br>
+  - [x] Apenas Pets não adotados podem ser adotados.
+  - [x] Pets relacionados a *Shelters deletados* não podem ser adotados<br>
 
 - Buscar todas as adoções - GET /api/adoptions
   - [x] É necessário estar autenticado.

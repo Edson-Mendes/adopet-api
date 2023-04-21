@@ -16,4 +16,15 @@ public interface PetRepository extends JpaRepository<Pet, Long> {
 
   Optional<Pet> findByIdAndShelterDeletedFalse(Long id);
 
+  /**
+   * Verifica se existe Pet que satisfaça as seguintes restrições:<br>
+   * <li>Pet.id == {@code id} AND</li>
+   * <li>Pet.adopted == {@code false} AND</li>
+   * <li>Pet.shelter.deleted == {@code false}</li>
+   * @param id do Pet
+   * @return true se satisfazer as condições listadas acima,
+   * false caso contrário.
+   */
+  boolean existsByIdAndAdoptedFalseAndShelterDeletedFalse(Long id);
+
 }
