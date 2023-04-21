@@ -7,6 +7,7 @@ import br.com.emendes.adopetapi.exception.PetNotFoundException;
 import br.com.emendes.adopetapi.mapper.PetMapper;
 import br.com.emendes.adopetapi.model.entity.Pet;
 import br.com.emendes.adopetapi.repository.PetRepository;
+import br.com.emendes.adopetapi.service.UserService;
 import br.com.emendes.adopetapi.service.impl.PetServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +27,7 @@ import java.util.Optional;
 
 import static br.com.emendes.adopetapi.util.ConstantUtils.PAGEABLE;
 import static br.com.emendes.adopetapi.util.PetUtils.*;
+import static br.com.emendes.adopetapi.util.ShelterUtils.shelter;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(SpringExtension.class)
@@ -38,6 +40,8 @@ class PetServiceImplTest {
   private PetMapper petMapperMock;
   @Mock
   private PetRepository petRepositoryMock;
+  @Mock
+  private UserService userServiceMock;
 
   @Nested
   @DisplayName("Tests for create method")
@@ -46,18 +50,15 @@ class PetServiceImplTest {
     @Test
     @DisplayName("Create must return PetResponse when create successfully")
     void create_MustReturnPetResponse_WhenCreateSuccessfully() {
-      BDDMockito.when(petMapperMock.createPetRequestToPet(any(CreatePetRequest.class)))
-          .thenReturn(petWithoutId());
-      BDDMockito.when(petRepositoryMock.save(any(Pet.class)))
-          .thenReturn(pet());
-      BDDMockito.when(petMapperMock.petToPetResponse(any(Pet.class)))
-          .thenReturn(petResponse());
+      BDDMockito.when(petMapperMock.createPetRequestToPet(any(CreatePetRequest.class))).thenReturn(petWithoutId());
+      BDDMockito.when(petRepositoryMock.save(any(Pet.class))).thenReturn(pet());
+      BDDMockito.when(userServiceMock.getCurrentUserAsShelter()).thenReturn(Optional.of(shelter()));
+      BDDMockito.when(petMapperMock.petToPetResponse(any(Pet.class))).thenReturn(petResponse());
 
       CreatePetRequest createPetRequest = CreatePetRequest.builder()
           .name("Dark")
           .description("A very calm and cute cat")
           .age("2 years old")
-          .shelterId(1_000L)
           .build();
 
       PetResponse actualPetResponse = petService.create(createPetRequest);
@@ -65,6 +66,7 @@ class PetServiceImplTest {
       BDDMockito.verify(petMapperMock).createPetRequestToPet(any(CreatePetRequest.class));
       BDDMockito.verify(petMapperMock).petToPetResponse(any(Pet.class));
       BDDMockito.verify(petRepositoryMock).save(any(Pet.class));
+      BDDMockito.verify(userServiceMock).getCurrentUserAsShelter();
 
       Assertions.assertThat(actualPetResponse).isNotNull();
       Assertions.assertThat(actualPetResponse.getId()).isNotNull().isEqualTo(10_000L);

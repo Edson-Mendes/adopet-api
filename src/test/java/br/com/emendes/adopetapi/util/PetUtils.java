@@ -2,7 +2,6 @@ package br.com.emendes.adopetapi.util;
 
 import br.com.emendes.adopetapi.dto.response.PetResponse;
 import br.com.emendes.adopetapi.model.entity.Pet;
-import br.com.emendes.adopetapi.model.entity.Shelter;
 
 import java.time.LocalDateTime;
 
@@ -33,9 +32,6 @@ public abstract class PetUtils {
   }
 
   public static Pet petWithoutId() {
-    Shelter shelter = Shelter.builder()
-        .id(1_000L)
-        .build();
     return Pet.builder()
         .id(null)
         .name("Dark")
@@ -43,7 +39,6 @@ public abstract class PetUtils {
         .age("2 years old")
         .adopted(false)
         .createdAt(LocalDateTime.parse("2022-04-10T12:00:00"))
-        .shelter(shelter)
         .build();
   }
 

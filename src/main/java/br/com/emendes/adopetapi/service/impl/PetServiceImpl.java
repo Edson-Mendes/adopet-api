@@ -3,11 +3,14 @@ package br.com.emendes.adopetapi.service.impl;
 import br.com.emendes.adopetapi.dto.request.CreatePetRequest;
 import br.com.emendes.adopetapi.dto.request.UpdatePetRequest;
 import br.com.emendes.adopetapi.dto.response.PetResponse;
+import br.com.emendes.adopetapi.exception.InvalidArgumentException;
 import br.com.emendes.adopetapi.exception.PetNotFoundException;
 import br.com.emendes.adopetapi.mapper.PetMapper;
 import br.com.emendes.adopetapi.model.entity.Pet;
+import br.com.emendes.adopetapi.model.entity.Shelter;
 import br.com.emendes.adopetapi.repository.PetRepository;
 import br.com.emendes.adopetapi.service.PetService;
+import br.com.emendes.adopetapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,13 +26,17 @@ public class PetServiceImpl implements PetService {
 
   private final PetRepository petRepository;
   private final PetMapper petMapper;
+  private final UserService userService;
 
   @Override
   public PetResponse create(CreatePetRequest createPetRequest) {
     Pet pet = petMapper.createPetRequestToPet(createPetRequest);
 
     pet.setCreatedAt(LocalDateTime.now());
-    // FIXME: Caso shelter não corresponda a nenhuma linha em t_shelter uma exception é lançada!
+    Shelter currentShelter = userService.getCurrentUserAsShelter()
+        .orElseThrow(() -> new InvalidArgumentException("Current user is not a Shelter"));
+    pet.setShelter(currentShelter);
+
     pet = petRepository.save(pet);
 
     log.info("Pet created successfully with id : {}", pet.getId());

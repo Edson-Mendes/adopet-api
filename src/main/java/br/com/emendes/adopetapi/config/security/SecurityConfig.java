@@ -14,9 +14,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static br.com.emendes.adopetapi.util.ConstantUtil.ROLE_GUARDIAN_NAME;
-import static br.com.emendes.adopetapi.util.ConstantUtil.ROLE_SHELTER_NAME;
-
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
@@ -26,17 +23,20 @@ public class SecurityConfig {
   private final JwtAuthenticationFilter jwtAuthFilter;
 
   private static final String[] POST_WHITELISTING = {"/api/auth", "/api/shelters", "/api/guardians"};
+  private static final String GUARDIAN = "GUARDIAN";
+  private static final String SHELTER = "SHELTER";
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf().disable()
         .authorizeHttpRequests().requestMatchers(HttpMethod.POST, POST_WHITELISTING).permitAll()
-        .requestMatchers(HttpMethod.POST, "/api/adoptions").hasRole(ROLE_GUARDIAN_NAME)
-        .requestMatchers(HttpMethod.DELETE, "/api/guardians").hasRole(ROLE_GUARDIAN_NAME)
-        .requestMatchers(HttpMethod.PUT, "/api/guardians/*").hasRole(ROLE_GUARDIAN_NAME)
-        .requestMatchers(HttpMethod.DELETE, "/api/shelters").hasRole(ROLE_SHELTER_NAME)
-        .requestMatchers(HttpMethod.PUT, "/api/shelters/*").hasRole(ROLE_SHELTER_NAME)
-        .requestMatchers(HttpMethod.PUT, "/api/adoptions/*/status").hasRole(ROLE_SHELTER_NAME)
+        .requestMatchers(HttpMethod.POST, "/api/adoptions").hasRole(GUARDIAN)
+        .requestMatchers(HttpMethod.DELETE, "/api/guardians/*").hasRole(GUARDIAN)
+        .requestMatchers(HttpMethod.PUT, "/api/guardians/*").hasRole(GUARDIAN)
+        .requestMatchers(HttpMethod.POST, "/api/pets").hasRole(SHELTER)
+        .requestMatchers(HttpMethod.DELETE, "/api/shelters/*").hasRole(SHELTER)
+        .requestMatchers(HttpMethod.PUT, "/api/shelters/*").hasRole(SHELTER)
+        .requestMatchers(HttpMethod.PUT, "/api/adoptions/*/status").hasRole(SHELTER)
         .anyRequest().authenticated()
         .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and().authenticationProvider(authenticationProvider)

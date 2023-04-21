@@ -44,7 +44,7 @@
 
 ### Endpoint /api/pet
 - Criar Pet - POST /api/pet
-  - [ ] Apenas usuário Shelter pode cadastrar Pet.
+  - [x] Apenas usuário Shelter pode cadastrar Pet.
   - [x] É necessário estar autenticado.<br>
 
 - Atualizar Pet - PUT /api/pets/ID

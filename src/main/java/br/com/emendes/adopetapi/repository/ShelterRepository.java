@@ -18,4 +18,6 @@ public interface ShelterRepository extends JpaRepository<Shelter, Long> {
 
   Page<Shelter> findByDeletedFalse(Pageable pageable);
 
+  Optional<Shelter> findByUser(User user);
+
 }

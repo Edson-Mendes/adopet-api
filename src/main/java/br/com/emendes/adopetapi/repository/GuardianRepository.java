@@ -18,4 +18,5 @@ public interface GuardianRepository extends JpaRepository<Guardian, Long> {
 
   Page<Guardian> findByDeletedFalse(Pageable pageable);
 
+  Optional<Guardian> findByUser(User user);
 }

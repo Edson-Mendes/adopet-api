@@ -30,8 +30,7 @@ class PetMapperImplTest {
     CreatePetRequest createPetRequest = CreatePetRequest.builder()
         .name("Dark")
         .description("A very calm and cute cat")
-        .age("3 meses")
-        .shelterId(1000L)
+        .age("3 months old")
         .build();
 
     Pet actualPet = petMapper.createPetRequestToPet(createPetRequest);
@@ -41,9 +40,9 @@ class PetMapperImplTest {
     Assertions.assertThat(actualPet.getCreatedAt()).isNull();
     Assertions.assertThat(actualPet.getName()).isNotNull().isEqualTo("Dark");
     Assertions.assertThat(actualPet.getDescription()).isNotNull().isEqualTo("A very calm and cute cat");
-    Assertions.assertThat(actualPet.getAge()).isNotNull().isEqualTo("3 meses");
+    Assertions.assertThat(actualPet.getAge()).isNotNull().isEqualTo("3 months old");
     Assertions.assertThat(actualPet.isAdopted()).isFalse();
-    Assertions.assertThat(actualPet.getShelter().getId()).isNotNull().isEqualTo(1000L);
+    Assertions.assertThat(actualPet.getShelter()).isNull();
   }
 
   @Test
