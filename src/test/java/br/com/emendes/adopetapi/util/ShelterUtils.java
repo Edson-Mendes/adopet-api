@@ -23,6 +23,7 @@ public abstract class ShelterUtils {
         .id(1000L)
         .name("Animal Shelter")
         .user(shelterUser())
+        .deleted(false)
         .createdAt(LocalDateTime.parse("2023-04-10T13:00:00"))
         .pets(null)
         .build();
@@ -32,6 +33,7 @@ public abstract class ShelterUtils {
     return Shelter.builder()
         .name("Animal Shelter")
         .user(shelterUserWithoutId())
+        .deleted(false)
         .build();
   }
 
@@ -40,6 +42,7 @@ public abstract class ShelterUtils {
         .id(1000L)
         .name("Animal Shelter ABC")
         .createdAt(LocalDateTime.parse("2023-04-10T13:00:00"))
+        .deleted(false)
         .pets(null)
         .build();
   }

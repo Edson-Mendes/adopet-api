@@ -137,14 +137,14 @@ class ShelterServiceImplTest {
     @Test
     @DisplayName("fetchAll must return Page<ShelterResponse> when fetch successfully")
     void fetchAll_MustReturnPageShelterResponse_WhenFetchSuccessfully() {
-      BDDMockito.when(shelterRepositoryMock.findAll(PAGEABLE))
+      BDDMockito.when(shelterRepositoryMock.findByDeletedFalse(PAGEABLE))
           .thenReturn(new PageImpl<>(List.of(shelter()), PAGEABLE, 1));
       BDDMockito.when(shelterMapperMock.shelterToShelterResponse(any(Shelter.class)))
           .thenReturn(shelterResponse());
 
       Page<ShelterResponse> actualShelterResponsePage = shelterService.fetchAll(PAGEABLE);
 
-      BDDMockito.verify(shelterRepositoryMock).findAll(any(Pageable.class));
+      BDDMockito.verify(shelterRepositoryMock).findByDeletedFalse(any(Pageable.class));
       BDDMockito.verify(shelterMapperMock).shelterToShelterResponse(any(Shelter.class));
 
       Assertions.assertThat(actualShelterResponsePage).isNotNull().isNotEmpty().hasSize(1);
@@ -159,14 +159,14 @@ class ShelterServiceImplTest {
     @Test
     @DisplayName("FindById must return ShelterResponse when found successfully")
     void findById_MustReturnShelterResponse_WhenFoundSuccessfully() {
-      BDDMockito.when(shelterRepositoryMock.findById(1000L))
+      BDDMockito.when(shelterRepositoryMock.findByIdAndDeletedFalse(1000L))
           .thenReturn(Optional.of(shelter()));
       BDDMockito.when(shelterMapperMock.shelterToShelterResponse(any(Shelter.class)))
           .thenReturn(shelterResponse());
 
       ShelterResponse actualShelterResponse = shelterService.findById(1000L);
 
-      BDDMockito.verify(shelterRepositoryMock).findById(1000L);
+      BDDMockito.verify(shelterRepositoryMock).findByIdAndDeletedFalse(1000L);
       BDDMockito.verify(shelterMapperMock).shelterToShelterResponse(any(Shelter.class));
 
       Assertions.assertThat(actualShelterResponse).isNotNull();
@@ -177,12 +177,14 @@ class ShelterServiceImplTest {
     @Test
     @DisplayName("FindById must throw ShelterNotFoundException when shelter not found with given id")
     void findById_MustThrowShelterNotFoundException_WhenShelterNotFoundWithGivenId() {
-      BDDMockito.when(shelterRepositoryMock.findById(1000L))
+      BDDMockito.when(shelterRepositoryMock.findByIdAndDeletedFalse(1000L))
           .thenReturn(Optional.empty());
 
       Assertions.assertThatExceptionOfType(ShelterNotFoundException.class)
           .isThrownBy(() -> shelterService.findById(1000L))
           .withMessage("Shelter not found");
+
+      BDDMockito.verify(shelterRepositoryMock).findByIdAndDeletedFalse(1000L);
     }
 
   }
@@ -196,7 +198,7 @@ class ShelterServiceImplTest {
     void update_MustReturnShelterResponse_WhenUpdateSuccessfully() {
       BDDMockito.when(authenticationFacadeMock.getCurrentUser())
           .thenReturn(shelterUser());
-      BDDMockito.when(shelterRepositoryMock.findByIdAndUser(eq(1000L), any(User.class)))
+      BDDMockito.when(shelterRepositoryMock.findByIdAndUserAndDeletedFalse(eq(1000L), any(User.class)))
           .thenReturn(Optional.of(shelter()));
       BDDMockito.when(shelterRepositoryMock.save(any(Shelter.class)))
           .thenReturn(updatedShelter());
@@ -211,7 +213,7 @@ class ShelterServiceImplTest {
 
       BDDMockito.verify(shelterMapperMock).shelterToShelterResponse(any(Shelter.class));
       BDDMockito.verify(shelterRepositoryMock).save(any(Shelter.class));
-      BDDMockito.verify(shelterRepositoryMock).findByIdAndUser(eq(1000L), any(User.class));
+      BDDMockito.verify(shelterRepositoryMock).findByIdAndUserAndDeletedFalse(eq(1000L), any(User.class));
       BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
 
       Assertions.assertThat(actualShelterResponse).isNotNull();
@@ -224,7 +226,7 @@ class ShelterServiceImplTest {
     void update_MustThrowEmailAlreadyInUseException_WhenAlreadyExistsEmailInTheDatabase() {
       BDDMockito.when(authenticationFacadeMock.getCurrentUser())
           .thenReturn(shelterUser());
-      BDDMockito.when(shelterRepositoryMock.findByIdAndUser(eq(1000L), any(User.class)))
+      BDDMockito.when(shelterRepositoryMock.findByIdAndUserAndDeletedFalse(eq(1000L), any(User.class)))
           .thenReturn(Optional.of(shelter()));
       BDDMockito.when(shelterRepositoryMock.save(any(Shelter.class)))
           .thenThrow(new DataIntegrityViolationException("unique_email constraint"));
@@ -239,7 +241,7 @@ class ShelterServiceImplTest {
           .withMessage("E-mail {shelter@email.com} is already in use");
 
       BDDMockito.verify(shelterRepositoryMock).save(any(Shelter.class));
-      BDDMockito.verify(shelterRepositoryMock).findByIdAndUser(eq(1000L), any(User.class));
+      BDDMockito.verify(shelterRepositoryMock).findByIdAndUserAndDeletedFalse(eq(1000L), any(User.class));
       BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
     }
 
@@ -248,7 +250,7 @@ class ShelterServiceImplTest {
     void update_MustThrowShelterNotFoundException_WhenShelterNotFoundWithGivenId() {
       BDDMockito.when(authenticationFacadeMock.getCurrentUser())
           .thenReturn(shelterUser());
-      BDDMockito.when(shelterRepositoryMock.findByIdAndUser(eq(1000L), any(User.class)))
+      BDDMockito.when(shelterRepositoryMock.findByIdAndUserAndDeletedFalse(eq(1000L), any(User.class)))
           .thenReturn(Optional.empty());
 
       UpdateShelterRequest updateShelterRequest = UpdateShelterRequest.builder()
@@ -259,7 +261,7 @@ class ShelterServiceImplTest {
           .isThrownBy(() -> shelterService.update(1000L, updateShelterRequest))
           .withMessage("Shelter not found");
 
-      BDDMockito.verify(shelterRepositoryMock).findByIdAndUser(eq(1000L), any(User.class));
+      BDDMockito.verify(shelterRepositoryMock).findByIdAndUserAndDeletedFalse(eq(1000L), any(User.class));
       BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
     }
 
@@ -270,27 +272,35 @@ class ShelterServiceImplTest {
   class DeleteByIdMethod {
 
     @Test
-    @DisplayName("DeleteById must call ShelterRepository#delete when delete shelter")
-    void deleteById_MustCallShelterRepositoryDelete_WhenDeleteShelter() {
-      BDDMockito.when(shelterRepositoryMock.findById(1_000L))
+    @DisplayName("DeleteById must save shelter with enabled equals false when delete shelter")
+    void deleteById_MustSaveShelterWithEnabledEqualsFalse_WhenDeleteShelter() {
+      BDDMockito.when(authenticationFacadeMock.getCurrentUser())
+          .thenReturn(shelterUser());
+      BDDMockito.when(shelterRepositoryMock.findByIdAndUserAndDeletedFalse(eq(1_000L), any(User.class)))
           .thenReturn(Optional.of(shelter()));
       BDDMockito.doNothing().when(shelterRepositoryMock).delete(any(Shelter.class));
 
       shelterService.deleteById(1_000L);
 
-      BDDMockito.verify(shelterRepositoryMock).findById(1_000L);
-      BDDMockito.verify(shelterRepositoryMock).delete(any(Shelter.class));
+      BDDMockito.verify(shelterRepositoryMock).findByIdAndUserAndDeletedFalse(eq(1_000L), any(User.class));
+      BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
+      BDDMockito.verify(shelterRepositoryMock).save(any(Shelter.class));
     }
 
     @Test
     @DisplayName("DeleteById must throw ShelterNotFoundException when shelter do not exists with given id")
     void deleteById_MustThrowShelterNotFoundException_WhenShelterDoNotExistsWithGivenId() {
-      BDDMockito.when(shelterRepositoryMock.findById(1_000L))
+      BDDMockito.when(authenticationFacadeMock.getCurrentUser())
+          .thenReturn(shelterUser());
+      BDDMockito.when(shelterRepositoryMock.findByIdAndUserAndDeletedFalse(eq(1_000L), any(User.class)))
           .thenReturn(Optional.empty());
 
       Assertions.assertThatExceptionOfType(ShelterNotFoundException.class)
           .isThrownBy(() -> shelterService.deleteById(1_000L))
           .withMessage("Shelter not found");
+
+      BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
+      BDDMockito.verify(shelterRepositoryMock).findByIdAndUserAndDeletedFalse(eq(1_000L), any(User.class));
     }
 
   }

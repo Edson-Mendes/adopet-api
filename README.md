@@ -34,7 +34,8 @@ em um JSON no corpo da requisição.</br>
 
 - `Atualizar`: Atualizar Guardian através de um **PUT /api/guardians/{ID}**, onde *ID* é o identificador do Guardian, 
 os novos dados do guardian devem ser enviados no corpo da requisição.
-  - Apenas o próprio usuário Guardian pode atualizar seus dados.<br>
+  - Apenas o próprio usuário Guardian pode atualizar seus dados.
+  - É necessário estar autenticado.<br>
 
 - `Buscar por id`: Busca Guardian por ID através de um **GET /api/guardians/{ID}**, onde *{ID}* é o identificador do Guardian.
   - É necessário estar autenticado.<br>
@@ -43,19 +44,27 @@ os novos dados do guardian devem ser enviados no corpo da requisição.
   - É necessário estar autenticado.<br>
 
 - `Deletar`: Deletar Guardian através de um **DELETE /api/guardians/{ID}**, onde *{ID}* é o identificador do Guardian.</br>
+  - Apenas o próprio usuário Guardian pode se deletar.
+  - É necessário estar autenticado.<br>
 
 #### :european_castle: Shelter
 - `Cadastrar`: Salvar Shelter através de um **POST /api/shelters** com as informações de *name*
   em um JSON no corpo da requisição.</br>
 
-- `Buscar todos`: Busca paginada de shelters através de um **GET /api/shelters**.</br>
+- `Buscar todos`: Busca paginada de shelters através de um **GET /api/shelters**.
+  - É necessário estar autenticado.<br>
  
-- `Buscar por id`: Busca Shelter por ID através de um **GET /api/shelters/{ID}**, onde *{ID}* é o identificador do Shelter.</br>
+- `Buscar por id`: Busca Shelter por ID através de um **GET /api/shelters/{ID}**, onde *{ID}* é o identificador do Shelter.
+  - É necessário estar autenticado.<br>
 
 - `Atualizar`: Atualizar Shelter através de um **PUT /api/shelters/{ID}**, onde *ID* é o identificador do Shelter,
-  os novos dados do abrigo devem ser enviados no corpo da requisição.</br>
+  os novos dados do abrigo devem ser enviados no corpo da requisição.
+  - Apenas o próprio usuário Shelter pode atualizar seus dados.
+  - É necessário estar autenticado.<br>
 
-- `Deletar`: Deletar Shelter através de um **DELETE /api/shelters/{ID}**, onde *{ID}* é o identificador do Shelter.</br>
+- `Deletar`: Deletar Shelter através de um **DELETE /api/shelters/{ID}**, onde *{ID}* é o identificador do Shelter.
+  - Apenas o próprio usuário Shelter pode se deletar.
+  - É necessário estar autenticado.<br>
 
 #### :cat: Pet
 - `Cadastrar`: Salvar Pet através de um **POST /api/pets** com as informações de *name*, *description*, *age* e *shelterId*

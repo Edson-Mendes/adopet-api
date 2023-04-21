@@ -61,7 +61,7 @@ public class ShelterServiceImpl implements ShelterService {
 
   @Override
   public Page<ShelterResponse> fetchAll(Pageable pageable) {
-    Page<Shelter> shelterPage = shelterRepository.findAll(pageable);
+    Page<Shelter> shelterPage = shelterRepository.findByDeletedFalse(pageable);
 
     log.info("Fetching page: {}, size: {} of Shelters", pageable.getPageNumber(), pageable.getPageSize());
     return shelterPage.map(shelterMapper::shelterToShelterResponse);
@@ -91,21 +91,25 @@ public class ShelterServiceImpl implements ShelterService {
 
   @Override
   public void deleteById(Long id) {
-    Shelter shelter = findShelterById(id);
+    Shelter shelter = findShelterByIdAndUser(id);
 
-    log.info("Deleting Shelter with id: {}", id);
-    shelterRepository.delete(shelter);
+    log.info("Setting deleted to true on Shelter with id: {}", id);
+
+    shelter.getUser().setEnabled(false);
+    shelter.setDeleted(true);
+
+    shelterRepository.save(shelter);
   }
 
   private Shelter findShelterById(Long id) {
     log.info("Searching for Shelter with id: {}", id);
-    return shelterRepository.findById(id).orElseThrow(() -> new ShelterNotFoundException("Shelter not found"));
+    return shelterRepository.findByIdAndDeletedFalse(id).orElseThrow(() -> new ShelterNotFoundException("Shelter not found"));
   }
 
   private Shelter findShelterByIdAndUser(Long id) {
     User currentUser = authenticationFacade.getCurrentUser();
     log.info("Searching for Shelter with id: {} and User.id : {}", id, currentUser.getId());
-    return shelterRepository.findByIdAndUser(id, currentUser)
+    return shelterRepository.findByIdAndUserAndDeletedFalse(id, currentUser)
         .orElseThrow(() -> new ShelterNotFoundException("Shelter not found"));
   }
 

@@ -9,11 +9,11 @@
 
 - Buscar por ID - GET /api/guardians/ID
   - [x] Qualquer **usuário autenticado** pode buscar Guardian por ID.<br>
-  - [x] Não retorna usuário deletado. 
+  - [x] Não retorna guardian deletado. 
 
 - Buscar todos os Guardians - GET /api/guardians
   - [x] Qualquer **usuário autenticado** pode buscar **todos** os guardians.<br>
-  - [x] Não devolver usuários deletados.
+  - [x] Não devolver guardians deletados.
 
 - Deletar Guardian por ID - DELETE /api/guardians/ID
   - [x] Apenas o próprio usuário Guardian pode se deletar.
@@ -31,14 +31,16 @@
 
 - Buscar por ID - GET /api/shelters/ID
   - [x] Qualquer **usuário autenticado** pode buscar Shelter por ID.<br>
+  - [x] Não retorna shelter deletado.
 
 - Buscar todos os Shelters - GET /api/shelters
   - [x] Qualquer **usuário autenticado** pode buscar **todos** os shelters.<br>
+  - [x] Não retorna shelters deletados.
 
 - Deletar Shelter por ID - DELETE /api/shelters/ID
-  - [ ] Apenas o próprio usuário Shelter pode se deletar.
+  - [x] Apenas o próprio usuário Shelter pode se deletar.
   - [x] É necessário estar autenticado.
-  - [ ] A ação de deletar não remove a entidade da base de dados, apenas muda a flag deleted para true<br>
+  - [x] A ação de deletar não remove a entidade da base de dados, apenas muda a flag deleted para true<br>
 
 ### Endpoint /api/pet
 - Criar Pet - POST /api/pet
@@ -51,10 +53,12 @@
 
 - Buscar por ID - GET /api/pets/ID
   - [ ] Qualquer **usuário autenticado** pode buscar Pet por ID.<br>
+  - [ ] Pet que esta em Shelter *deletado* não é retornado.
 
 - Buscar todos os Pets - GET /api/pets
   - [ ] Qualquer **usuário autenticado** pode buscar **todos** os pets.
   - [x] A busca retorna apenas os pets **não adotados**<br>
+  - [ ] A busca não retorna pets que estão em shelters deletados.
 
 - Deletar Pet por ID - DELETE /api/pets/ID
   - [ ] Apenas o usuário shelter que cadastrou o Pet pode deleta-lo.

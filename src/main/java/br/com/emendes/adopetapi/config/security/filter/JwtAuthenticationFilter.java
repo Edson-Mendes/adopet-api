@@ -57,7 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
       } catch (UsernameNotFoundException exception) {
-        log.info("User {} not found at JwtAuthenticationFilter", username);
+        log.info("User {} not found", username);
       }
     }
 

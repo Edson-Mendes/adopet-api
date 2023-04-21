@@ -31,6 +31,7 @@ public abstract class GuardianUtils {
         .id(100L)
         .name("Lorem Ipsum")
         .user(guardianUser())
+        .deleted(false)
         .createdAt(LocalDateTime.parse("2023-04-02T10:30:00"))
         .build();
   }
@@ -40,6 +41,7 @@ public abstract class GuardianUtils {
         .id(100L)
         .name("Lorem Ipsum Dolor")
         .user(guardianUser())
+        .deleted(false)
         .createdAt(LocalDateTime.parse("2023-04-02T10:30:00"))
         .build();
   }
@@ -49,6 +51,7 @@ public abstract class GuardianUtils {
         .id(null)
         .name("Lorem Ipsum")
         .user(guardianUserWithoutId())
+        .deleted(false)
         .createdAt(null)
         .build();
   }

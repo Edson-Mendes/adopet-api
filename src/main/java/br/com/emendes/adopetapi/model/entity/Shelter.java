@@ -21,6 +21,8 @@ public class Shelter {
   @Column(length = 100, nullable = false)
   private String name;
   @Column(nullable = false)
+  private boolean deleted;
+  @Column(nullable = false)
   private LocalDateTime createdAt;
   @OneToMany(mappedBy = "shelter", cascade = {CascadeType.REMOVE})
   private Collection<Pet> pets;

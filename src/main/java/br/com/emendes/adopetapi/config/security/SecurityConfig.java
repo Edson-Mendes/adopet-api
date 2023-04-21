@@ -35,6 +35,7 @@ public class SecurityConfig {
         .requestMatchers(HttpMethod.DELETE, "/api/guardians").hasRole(ROLE_GUARDIAN_NAME)
         .requestMatchers(HttpMethod.PUT, "/api/guardians/*").hasRole(ROLE_GUARDIAN_NAME)
         .requestMatchers(HttpMethod.DELETE, "/api/shelters").hasRole(ROLE_SHELTER_NAME)
+        .requestMatchers(HttpMethod.PUT, "/api/shelters/*").hasRole(ROLE_SHELTER_NAME)
         .requestMatchers(HttpMethod.PUT, "/api/adoptions/*/status").hasRole(ROLE_SHELTER_NAME)
         .anyRequest().authenticated()
         .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
