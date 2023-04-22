@@ -28,19 +28,14 @@ import java.time.LocalDateTime;
 import static br.com.emendes.adopetapi.util.ConstantUtil.ROLE_GUARDIAN_NAME;
 import static br.com.emendes.adopetapi.util.ConstantUtil.ROLE_SHELTER_NAME;
 
-// TODO: Refatorar está classe.
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class AdoptionServiceImpl implements AdoptionService {
 
-  // TODO: Extrair essas chamadas de repositories para services.
   private final AdoptionMapper adoptionMapper;
-  private final AuthenticationFacade authenticationFacade;
-  private final GuardianRepository guardianRepository;
   private final PetRepository petRepository;
   private final AdoptionRepository adoptionRepository;
-  private final ShelterRepository shelterRepository;
   private final UserService userService;
 
   @Override
@@ -68,24 +63,22 @@ public class AdoptionServiceImpl implements AdoptionService {
 
   @Override
   public Page<AdoptionResponse> fetchAll(Pageable pageable) {
-    User currentUser = authenticationFacade.getCurrentUser();
+    User currentUser = userService.getCurrentUser();
     log.info("Fetching page: {}, size: {} of Adoptions", pageable.getPageNumber(), pageable.getPageSize());
 
     Role role = currentUser.getRoles().stream().findFirst()
         .orElseThrow(() -> new InvalidArgumentException("Not found authorities"));
 
     return switch (role.getName()) {
-      case ROLE_SHELTER_NAME -> fetchAllForShelter(pageable, currentUser);
-      case ROLE_GUARDIAN_NAME -> fetchAllForGuardian(pageable, currentUser);
+      case ROLE_SHELTER_NAME -> fetchAllForShelter(pageable);
+      case ROLE_GUARDIAN_NAME -> fetchAllForGuardian(pageable);
       default -> throw new InvalidArgumentException("Unexpected value: " + role.getName());
     };
   }
 
   @Override
   public AdoptionResponse updateStatus(Long id, UpdateStatusRequest updateStatusRequest) {
-    User currentUser = authenticationFacade.getCurrentUser();
-
-    Shelter shelter = shelterRepository.findByUserId(currentUser.getId())
+    Shelter shelter = userService.getCurrentUserAsShelter()
         .orElseThrow(() -> new ShelterNotFoundException("Shelter not found"));
 
     Adoption adoption = findAdoptionByIdAndShelter(id, shelter);
@@ -94,7 +87,6 @@ public class AdoptionServiceImpl implements AdoptionService {
     adoptionRepository.save(adoption);
 
     Pet pet = adoption.getPet();
-    // Mudar o adopted para true no Pet adotado.
     pet.setAdopted(adoption.getStatus().equals(AdoptionStatus.CONCLUDED));
     petRepository.save(pet);
 
@@ -108,8 +100,8 @@ public class AdoptionServiceImpl implements AdoptionService {
         .orElseThrow(() -> new AdoptionNotFoundException("Adoption not found"));
   }
 
-  private Page<AdoptionResponse> fetchAllForShelter(Pageable pageable, User user) {
-    Shelter shelter = shelterRepository.findByUserId(user.getId())
+  private Page<AdoptionResponse> fetchAllForShelter(Pageable pageable) {
+    Shelter shelter = userService.getCurrentUserAsShelter()
         .orElseThrow(() -> new ShelterNotFoundException("Shelter not found"));
 
     Page<Adoption> adoptionsPage = adoptionRepository.findAllByPetShelter(shelter, pageable);
@@ -118,8 +110,8 @@ public class AdoptionServiceImpl implements AdoptionService {
     return adoptionsPage.map(adoptionMapper::adoptionToAdoptionResponse);
   }
 
-  private Page<AdoptionResponse> fetchAllForGuardian(Pageable pageable, User user) {
-    Guardian guardian = guardianRepository.findByUserId(user.getId())
+  private Page<AdoptionResponse> fetchAllForGuardian(Pageable pageable) {
+    Guardian guardian = userService.getCurrentUserAsGuardian()
         .orElseThrow(() -> new GuardianNotFoundException("Guardian not found"));
 
     Page<Adoption> adoptionsPage = adoptionRepository.findAllByGuardian(guardian, pageable);

@@ -2,6 +2,7 @@ package br.com.emendes.adopetapi.config.security;
 
 import br.com.emendes.adopetapi.config.security.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@Slf4j
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
@@ -31,6 +33,7 @@ public class SecurityConfig {
     http.csrf().disable()
         .authorizeHttpRequests().requestMatchers(HttpMethod.POST, POST_WHITELISTING).permitAll()
         .requestMatchers(HttpMethod.POST, "/api/adoptions").hasRole(GUARDIAN)
+        .requestMatchers(HttpMethod.PUT, "/api/adoptions/*/status").hasRole(SHELTER)
 
         .requestMatchers(HttpMethod.DELETE, "/api/guardians/*").hasRole(GUARDIAN)
         .requestMatchers(HttpMethod.PUT, "/api/guardians/*").hasRole(GUARDIAN)
@@ -42,12 +45,12 @@ public class SecurityConfig {
         .requestMatchers(HttpMethod.DELETE, "/api/shelters/*").hasRole(SHELTER)
         .requestMatchers(HttpMethod.PUT, "/api/shelters/*").hasRole(SHELTER)
 
-        .requestMatchers(HttpMethod.PUT, "/api/adoptions/*/status").hasRole(SHELTER)
         .anyRequest().authenticated()
         .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and().authenticationProvider(authenticationProvider)
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-        .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
+        .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+        .accessDeniedHandler(((request, response, accessDeniedException) -> response.setStatus(HttpStatus.FORBIDDEN.value())));
 
     return http.build();
   }

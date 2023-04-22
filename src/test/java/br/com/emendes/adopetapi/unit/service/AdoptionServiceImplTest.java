@@ -11,12 +11,9 @@ import br.com.emendes.adopetapi.model.entity.Guardian;
 import br.com.emendes.adopetapi.model.entity.Pet;
 import br.com.emendes.adopetapi.model.entity.Shelter;
 import br.com.emendes.adopetapi.repository.AdoptionRepository;
-import br.com.emendes.adopetapi.repository.GuardianRepository;
 import br.com.emendes.adopetapi.repository.PetRepository;
-import br.com.emendes.adopetapi.repository.ShelterRepository;
 import br.com.emendes.adopetapi.service.UserService;
 import br.com.emendes.adopetapi.service.impl.AdoptionServiceImpl;
-import br.com.emendes.adopetapi.util.AuthenticationFacade;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -51,12 +48,6 @@ class AdoptionServiceImplTest {
   @Mock
   private AdoptionMapper adoptionMapperMock;
   @Mock
-  private AuthenticationFacade authenticationFacadeMock;
-  @Mock
-  private GuardianRepository guardianRepositoryMock;
-  @Mock
-  private ShelterRepository shelterRepositoryMock;
-  @Mock
   private PetRepository petRepositoryMock;
   @Mock
   private AdoptionRepository adoptionRepositoryMock;
@@ -73,7 +64,7 @@ class AdoptionServiceImplTest {
       BDDMockito.when(petRepositoryMock.existsByIdAndAdoptedFalseAndShelterDeletedFalse(10_000L))
           .thenReturn(true);
       BDDMockito.when(userServiceMock.getCurrentUserAsGuardian())
-              .thenReturn(Optional.of(guardian()));
+          .thenReturn(Optional.of(guardian()));
       BDDMockito.when(adoptionMapperMock.adoptionRequestToAdoption(any(AdoptionRequest.class)))
           .thenReturn(adoptionWithoutId());
       BDDMockito.when(adoptionRepositoryMock.save(any(Adoption.class))).thenReturn(adoption());
@@ -141,8 +132,8 @@ class AdoptionServiceImplTest {
     @Test
     @DisplayName("FetchAll must return Page<AdoptionResponse> when fetch all for guardian successfully")
     void fetchAll_MustReturnPageAdoptionResponse_WhenFetchAllForGuardianSuccessfully() {
-      BDDMockito.when(authenticationFacadeMock.getCurrentUser()).thenReturn(guardianUser());
-      BDDMockito.when(guardianRepositoryMock.findByUserId(10L)).thenReturn(Optional.of(guardian()));
+      BDDMockito.when(userServiceMock.getCurrentUser()).thenReturn(guardianUser());
+      BDDMockito.when(userServiceMock.getCurrentUserAsGuardian()).thenReturn(Optional.of(guardian()));
       BDDMockito.when(adoptionRepositoryMock.findAllByGuardian(any(Guardian.class), eq(PAGEABLE)))
           .thenReturn(new PageImpl<>(List.of(adoption()), PAGEABLE, 1));
       BDDMockito.when(adoptionMapperMock.adoptionToAdoptionResponse(any(Adoption.class)))
@@ -150,8 +141,8 @@ class AdoptionServiceImplTest {
 
       Page<AdoptionResponse> actualAdoptionResponsePage = adoptionService.fetchAll(PAGEABLE);
 
-      BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
-      BDDMockito.verify(guardianRepositoryMock).findByUserId(any());
+      BDDMockito.verify(userServiceMock).getCurrentUser();
+      BDDMockito.verify(userServiceMock).getCurrentUserAsGuardian();
       BDDMockito.verify(adoptionRepositoryMock).findAllByGuardian(any(), any());
       BDDMockito.verify(adoptionMapperMock).adoptionToAdoptionResponse(any());
 
@@ -161,8 +152,8 @@ class AdoptionServiceImplTest {
     @Test
     @DisplayName("FetchAll must return Page<AdoptionResponse> when fetch all for shelter successfully")
     void fetchAll_MustReturnPageAdoptionResponse_WhenFetchAllForShelterSuccessfully() {
-      BDDMockito.when(authenticationFacadeMock.getCurrentUser()).thenReturn(shelterUser());
-      BDDMockito.when(shelterRepositoryMock.findByUserId(11L)).thenReturn(Optional.of(shelter()));
+      BDDMockito.when(userServiceMock.getCurrentUser()).thenReturn(shelterUser());
+      BDDMockito.when(userServiceMock.getCurrentUserAsShelter()).thenReturn(Optional.of(shelter()));
       BDDMockito.when(adoptionRepositoryMock.findAllByPetShelter(any(Shelter.class), eq(PAGEABLE)))
           .thenReturn(new PageImpl<>(List.of(adoption()), PAGEABLE, 1));
       BDDMockito.when(adoptionMapperMock.adoptionToAdoptionResponse(any(Adoption.class)))
@@ -170,8 +161,8 @@ class AdoptionServiceImplTest {
 
       Page<AdoptionResponse> actualAdoptionResponsePage = adoptionService.fetchAll(PAGEABLE);
 
-      BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
-      BDDMockito.verify(shelterRepositoryMock).findByUserId(any());
+      BDDMockito.verify(userServiceMock).getCurrentUser();
+      BDDMockito.verify(userServiceMock).getCurrentUserAsShelter();
       BDDMockito.verify(adoptionRepositoryMock).findAllByPetShelter(any(), any());
       BDDMockito.verify(adoptionMapperMock).adoptionToAdoptionResponse(any());
 
@@ -181,47 +172,44 @@ class AdoptionServiceImplTest {
     @Test
     @DisplayName("FetchAll must throw UserIsNotAuthenticateException when user is not authenticate")
     void fetchAll_MustThrowUserIsNotAuthenticateException_WhenUserIsNotAuthenticate() {
-      BDDMockito.when(authenticationFacadeMock.getCurrentUser())
+      BDDMockito.when(userServiceMock.getCurrentUser())
           .thenThrow(new UserIsNotAuthenticateException("User is not authenticate"));
-
 
       Assertions.assertThatExceptionOfType(UserIsNotAuthenticateException.class)
           .isThrownBy(() -> adoptionService.fetchAll(PAGEABLE))
           .withMessage("User is not authenticate");
 
-      BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
+      BDDMockito.verify(userServiceMock).getCurrentUser();
     }
 
     @Test
     @DisplayName("FetchAll must throw ShelterNotFoundException when Shelter not found")
     void fetchAll_MustThrowShelterNotFoundException_WhenShelterNotFound() {
-      BDDMockito.when(authenticationFacadeMock.getCurrentUser()).thenReturn(shelterUser());
-      BDDMockito.when(shelterRepositoryMock.findByUserId(11L))
+      BDDMockito.when(userServiceMock.getCurrentUser()).thenReturn(shelterUser());
+      BDDMockito.when(userServiceMock.getCurrentUserAsShelter())
           .thenReturn(Optional.empty());
-
 
       Assertions.assertThatExceptionOfType(ShelterNotFoundException.class)
           .isThrownBy(() -> adoptionService.fetchAll(PAGEABLE))
           .withMessage("Shelter not found");
 
-      BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
-      BDDMockito.verify(shelterRepositoryMock).findByUserId(any());
+      BDDMockito.verify(userServiceMock).getCurrentUser();
+      BDDMockito.verify(userServiceMock).getCurrentUserAsShelter();
     }
 
     @Test
     @DisplayName("FetchAll must throw GuardianNotFoundException when Guardian not found")
     void fetchAll_MustThrowGuardianNotFoundException_WhenGuardianNotFound() {
-      BDDMockito.when(authenticationFacadeMock.getCurrentUser()).thenReturn(guardianUser());
-      BDDMockito.when(guardianRepositoryMock.findByUserId(11L))
+      BDDMockito.when(userServiceMock.getCurrentUser()).thenReturn(guardianUser());
+      BDDMockito.when(userServiceMock.getCurrentUserAsGuardian())
           .thenReturn(Optional.empty());
-
 
       Assertions.assertThatExceptionOfType(GuardianNotFoundException.class)
           .isThrownBy(() -> adoptionService.fetchAll(PAGEABLE))
           .withMessage("Guardian not found");
 
-      BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
-      BDDMockito.verify(guardianRepositoryMock).findByUserId(any());
+      BDDMockito.verify(userServiceMock).getCurrentUser();
+      BDDMockito.verify(userServiceMock).getCurrentUserAsGuardian();
     }
 
   }
@@ -233,14 +221,14 @@ class AdoptionServiceImplTest {
     @Test
     @DisplayName("UpdateStatus must return AdoptionResponse when update status successfully")
     void updateStatus_MustReturnAdoptionResponse_WhenUpdateStatusSuccessfully() {
-      BDDMockito.when(authenticationFacadeMock.getCurrentUser()).thenReturn(shelterUser());
-      BDDMockito.when(shelterRepositoryMock.findByUserId(11L)).thenReturn(Optional.of(shelter()));
+      BDDMockito.when(userServiceMock.getCurrentUserAsShelter())
+          .thenReturn(Optional.of(shelter()));
       BDDMockito.when(adoptionRepositoryMock.findByIdAndPetShelter(eq(1_000_000L), any(Shelter.class)))
           .thenReturn(Optional.of(adoption()));
       BDDMockito.when(adoptionRepositoryMock.save(any(Adoption.class)))
           .thenReturn(canceledAdoption());
       BDDMockito.when(petRepositoryMock.save(any(Pet.class)))
-              .thenReturn(pet());
+          .thenReturn(pet());
       BDDMockito.when(adoptionMapperMock.adoptionToAdoptionResponse(any(Adoption.class)))
           .thenReturn(canceledAdoptionResponse());
 
@@ -250,11 +238,10 @@ class AdoptionServiceImplTest {
 
       AdoptionResponse actualAdoptionResponse = adoptionService.updateStatus(1_000_000L, updateStatusRequest);
 
-      BDDMockito.verify(adoptionRepositoryMock).findByIdAndPetShelter(eq(1_000_000L),any());
+      BDDMockito.verify(adoptionRepositoryMock).findByIdAndPetShelter(eq(1_000_000L), any());
       BDDMockito.verify(adoptionRepositoryMock).save(any(Adoption.class));
       BDDMockito.verify(adoptionMapperMock).adoptionToAdoptionResponse(any(Adoption.class));
-      BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
-      BDDMockito.verify(shelterRepositoryMock).findByUserId(11L);
+      BDDMockito.verify(userServiceMock).getCurrentUserAsShelter();
       BDDMockito.verify(petRepositoryMock).save(any());
 
       Assertions.assertThat(actualAdoptionResponse).isNotNull();
@@ -266,8 +253,8 @@ class AdoptionServiceImplTest {
     @Test
     @DisplayName("UpdateStatus must throw AdoptionNotFoundException when not found Adoption")
     void updateStatus_MustThrowAdoptionNotFoundException_WhenNotFoundAdoption() {
-      BDDMockito.when(authenticationFacadeMock.getCurrentUser()).thenReturn(shelterUser());
-      BDDMockito.when(shelterRepositoryMock.findByUserId(11L)).thenReturn(Optional.of(shelter()));
+      BDDMockito.when(userServiceMock.getCurrentUserAsShelter())
+          .thenReturn(Optional.of(shelter()));
       BDDMockito.when(adoptionRepositoryMock.findByIdAndPetShelter(eq(1_000_000L), any(Shelter.class)))
           .thenReturn(Optional.empty());
 
@@ -279,8 +266,8 @@ class AdoptionServiceImplTest {
           .isThrownBy(() -> adoptionService.updateStatus(1_000_000L, updateStatusRequest))
           .withMessage("Adoption not found");
 
-      BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
-      BDDMockito.verify(shelterRepositoryMock).findByUserId(11L);
+      BDDMockito.verify(userServiceMock).getCurrentUserAsShelter();
+      BDDMockito.verify(adoptionRepositoryMock).findByIdAndPetShelter(eq(1_000_000L), any(Shelter.class));
     }
 
   }
