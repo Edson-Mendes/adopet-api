@@ -42,4 +42,10 @@ public class AdoptionController {
     return ResponseEntity.ok(adoptionService.updateStatus(id, updateStatusRequest));
   }
 
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> delete(@PathVariable(name = "id") Long id) {
+    adoptionService.deleteById(id);
+    return ResponseEntity.noContent().build();
+  }
+
 }

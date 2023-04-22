@@ -80,20 +80,28 @@ os novos dados do guardian devem ser enviados no corpo da requisição.
   os novos dados do pet devem ser enviados no corpo da requisição.
   - Apenas o Shelter que cadastrou o Pet pode atualiza-lo.<br>
 
-- `Deletar`: Deletar Pet através de um **DELETE /api/pets/{ID}**, onde *{ID}* é o identificador do Pet.</br>
+- `Deletar`: Deletar Pet através de um **DELETE /api/pets/{ID}**, onde *{ID}* é o identificador do Pet.
   - Apenas o Shelter que cadastrou o Pet pode deleta-lo.
   - Pet relacionado a uma Adoption não pode ser deletado.
 
 #### :heart_eyes_cat: Adoption
 - `Adotar`: Solicitar uma adoção de um Pet através de um **POST /api/adoptions** com as informações *petId* 
   em um JSON no corpo da requisição. É necessário estar autenticado. Apenas *Guardians* podem solicitar uma adoção.
+  - Apenas usuários do tipo guardian podem solicitar uma adoção.
+  - Apenas Pets não adotados podem receber uma solicitação de adoção.<br>
 
 - `Buscar todos`: Busca paginada de adoções através de um **GET /api/adoptions**, retorna todas as adoções relacionadas 
   com o usuário logado.
+  - É necessário estar autenticado.
+  - Busca somente adoções relacionadas ao usuário autenticado (Shelter ou Guardian).<br>
 
 - `Atualizar status`: Atualização de status através de um **PUT /api/adoptions/{ID}/status** com a informação *status* 
   em um JSON no corpor da requisição. Os status possíveis são *ANALYSING*, *CONCLUDED* e *CANCELED*. Apenas usuários do tipo 
   Shelter atualizar status.
+  - Uma adoção só pode ter o status atualizado pelo Shelter relacionado na adoção.<br>
+
+- `Deletar`: Deletar uma adoção através de um **DELETE /api/adoptions/{ID}**, onde *{ID}* é o identificador da Adoção.
+  - Uma adoção só pode ser deletada pelo Shelter relacionado na adoção.<br>
 
 
 ## :gear: Atualizações semana 2

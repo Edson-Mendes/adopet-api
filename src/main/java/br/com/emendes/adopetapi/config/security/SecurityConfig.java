@@ -34,6 +34,7 @@ public class SecurityConfig {
         .authorizeHttpRequests().requestMatchers(HttpMethod.POST, POST_WHITELISTING).permitAll()
         .requestMatchers(HttpMethod.POST, "/api/adoptions").hasRole(GUARDIAN)
         .requestMatchers(HttpMethod.PUT, "/api/adoptions/*/status").hasRole(SHELTER)
+        .requestMatchers(HttpMethod.DELETE, "/api/adoptions/*").hasRole(SHELTER)
 
         .requestMatchers(HttpMethod.DELETE, "/api/guardians/*").hasRole(GUARDIAN)
         .requestMatchers(HttpMethod.PUT, "/api/guardians/*").hasRole(GUARDIAN)

@@ -11,12 +11,9 @@ import br.com.emendes.adopetapi.mapper.AdoptionMapper;
 import br.com.emendes.adopetapi.model.AdoptionStatus;
 import br.com.emendes.adopetapi.model.entity.*;
 import br.com.emendes.adopetapi.repository.AdoptionRepository;
-import br.com.emendes.adopetapi.repository.GuardianRepository;
 import br.com.emendes.adopetapi.repository.PetRepository;
-import br.com.emendes.adopetapi.repository.ShelterRepository;
 import br.com.emendes.adopetapi.service.AdoptionService;
 import br.com.emendes.adopetapi.service.UserService;
-import br.com.emendes.adopetapi.util.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -48,8 +45,6 @@ public class AdoptionServiceImpl implements AdoptionService {
     Guardian guardian = userService.getCurrentUserAsGuardian()
         .orElseThrow(() -> new InvalidArgumentException("Current user not found"));
 
-    log.info("found guardian with id : {}", guardian.getId());
-
     Adoption adoption = adoptionMapper.adoptionRequestToAdoption(adoptionRequest);
     adoption.setGuardian(guardian);
     adoption.setDate(LocalDateTime.now());
@@ -78,10 +73,7 @@ public class AdoptionServiceImpl implements AdoptionService {
 
   @Override
   public AdoptionResponse updateStatus(Long id, UpdateStatusRequest updateStatusRequest) {
-    Shelter shelter = userService.getCurrentUserAsShelter()
-        .orElseThrow(() -> new ShelterNotFoundException("Shelter not found"));
-
-    Adoption adoption = findAdoptionByIdAndShelter(id, shelter);
+    Adoption adoption = findAdoptionByIdAndShelter(id);
     adoption.setStatus(AdoptionStatus.valueOf(updateStatusRequest.getStatus()));
 
     adoptionRepository.save(adoption);
@@ -94,15 +86,23 @@ public class AdoptionServiceImpl implements AdoptionService {
     return adoptionMapper.adoptionToAdoptionResponse(adoption);
   }
 
-  private Adoption findAdoptionByIdAndShelter(Long id, Shelter shelter) {
-    log.info("Searching for Adoption with id: {}", id);
+  @Override
+  public void deleteById(Long id) {
+    Adoption adoption = findAdoptionByIdAndShelter(id);
+
+    adoptionRepository.delete(adoption);
+    log.info("Deleting Adoption with id: {}", id);
+  }
+
+  private Adoption findAdoptionByIdAndShelter(Long id) {
+    Shelter shelter = getCurrentShelter();
+    log.info("Searching for Adoption with id: {} and Shelter.id : {}", id, shelter.getId());
     return adoptionRepository.findByIdAndPetShelter(id, shelter)
         .orElseThrow(() -> new AdoptionNotFoundException("Adoption not found"));
   }
 
   private Page<AdoptionResponse> fetchAllForShelter(Pageable pageable) {
-    Shelter shelter = userService.getCurrentUserAsShelter()
-        .orElseThrow(() -> new ShelterNotFoundException("Shelter not found"));
+    Shelter shelter = getCurrentShelter();
 
     Page<Adoption> adoptionsPage = adoptionRepository.findAllByPetShelter(shelter, pageable);
     log.info("Fetching {} elements for Shelter with id : {}", adoptionsPage.getNumberOfElements(), shelter.getId());
@@ -118,6 +118,11 @@ public class AdoptionServiceImpl implements AdoptionService {
     log.info("Fetching {} elements for Guardian with id : {}", adoptionsPage.getNumberOfElements(), guardian.getId());
 
     return adoptionsPage.map(adoptionMapper::adoptionToAdoptionResponse);
+  }
+
+  private Shelter getCurrentShelter() {
+    return userService.getCurrentUserAsShelter()
+        .orElseThrow(() -> new ShelterNotFoundException("Shelter not found"));
   }
 
 }

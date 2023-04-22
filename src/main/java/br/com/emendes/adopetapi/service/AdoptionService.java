@@ -14,4 +14,6 @@ public interface AdoptionService {
 
   AdoptionResponse updateStatus(Long id, UpdateStatusRequest updateStatusRequest);
 
+  void deleteById(Long id);
+
 }

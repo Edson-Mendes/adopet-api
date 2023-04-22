@@ -81,3 +81,7 @@
   - [x] Apenas usuários Shelter podem atualizar status.
   - [x] Quando o status é alterado para *CONCLUDED* a flag Pet.adopted é alterado para *true*.
   - [x] Quando o status é alterado para *ANALYSING* ou *CANCELED*. a flag Pet.adopted é alterado para *false*.<br>
+
+- Deletar Adoção - DELETE /api/adoptions/ID
+  - [x] É necessário estar autenticado.
+  - [x] Apenas o Shelter relacionado a Adoption pode deleta-la.

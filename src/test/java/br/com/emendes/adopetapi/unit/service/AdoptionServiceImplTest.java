@@ -272,4 +272,40 @@ class AdoptionServiceImplTest {
 
   }
 
+  @Nested
+  @DisplayName("Tests for deleteById method")
+  class DeleteByIdMethod {
+
+    @Test
+    @DisplayName("DeleteById must call AdoptionRepository$delete when delete successfully")
+    void deleteById_MustCallAdoptionRepositoryDelete_WhenDeleteSuccessfully() {
+      BDDMockito.when(userServiceMock.getCurrentUserAsShelter()).thenReturn(Optional.of(shelter()));
+      BDDMockito.when(adoptionRepositoryMock.findByIdAndPetShelter(eq(1_000_000L), any(Shelter.class)))
+          .thenReturn(Optional.of(adoption()));
+      BDDMockito.doNothing().when(adoptionRepositoryMock).delete(any(Adoption.class));
+
+      adoptionService.deleteById(1_000_000L);
+
+      BDDMockito.verify(userServiceMock).getCurrentUserAsShelter();
+      BDDMockito.verify(adoptionRepositoryMock).findByIdAndPetShelter(eq(1_000_000L), any(Shelter.class));
+      BDDMockito.verify(adoptionRepositoryMock).delete(any(Adoption.class));
+    }
+
+    @Test
+    @DisplayName("DeleteById must throw AdoptionNotFoundException when adoption not found")
+    void deleteById_MustThrowAdoptionNotFoundException_WhenAdoptionNotFound() {
+      BDDMockito.when(userServiceMock.getCurrentUserAsShelter()).thenReturn(Optional.of(shelter()));
+      BDDMockito.when(adoptionRepositoryMock.findByIdAndPetShelter(eq(1_000_000L), any(Shelter.class)))
+          .thenReturn(Optional.empty());
+
+      Assertions.assertThatExceptionOfType(AdoptionNotFoundException.class)
+          .isThrownBy(() -> adoptionService.deleteById(1_000_000L))
+          .withMessage("Adoption not found");
+
+      BDDMockito.verify(userServiceMock).getCurrentUserAsShelter();
+      BDDMockito.verify(adoptionRepositoryMock).findByIdAndPetShelter(eq(1_000_000L), any(Shelter.class));
+    }
+
+  }
+
 }
