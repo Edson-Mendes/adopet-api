@@ -4,19 +4,21 @@ import br.com.emendes.adopetapi.dto.request.AdoptionRequest;
 import br.com.emendes.adopetapi.dto.response.AdoptionResponse;
 import br.com.emendes.adopetapi.mapper.AdoptionMapper;
 import br.com.emendes.adopetapi.model.entity.Adoption;
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
+import br.com.emendes.adopetapi.model.entity.Pet;
 import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
 @Component
 public class AdoptionMapperImpl implements AdoptionMapper {
 
-  private final ModelMapper mapper;
-
   @Override
   public Adoption adoptionRequestToAdoption(AdoptionRequest adoptionRequest) {
-    return mapper.map(adoptionRequest, Adoption.class);
+    Pet pet = Pet.builder()
+        .id(adoptionRequest.petId())
+        .build();
+
+    return Adoption.builder()
+        .pet(pet)
+        .build();
   }
 
   @Override
@@ -28,8 +30,6 @@ public class AdoptionMapperImpl implements AdoptionMapper {
         .status(adoption.getStatus())
         .date(adoption.getDate())
         .build();
-
-//    return mapper.map(adoption, AdoptionResponse.class);
   }
 
 }

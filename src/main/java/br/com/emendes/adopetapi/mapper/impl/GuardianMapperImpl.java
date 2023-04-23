@@ -4,19 +4,23 @@ import br.com.emendes.adopetapi.dto.request.CreateGuardianRequest;
 import br.com.emendes.adopetapi.dto.response.GuardianResponse;
 import br.com.emendes.adopetapi.mapper.GuardianMapper;
 import br.com.emendes.adopetapi.model.entity.Guardian;
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
+import br.com.emendes.adopetapi.model.entity.User;
 import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
 @Component
 public class GuardianMapperImpl implements GuardianMapper {
 
-  private final ModelMapper modelMapper;
-
   @Override
   public Guardian createGuardianRequestToGuardian(CreateGuardianRequest createGuardianRequest) {
-    return modelMapper.map(createGuardianRequest, Guardian.class);
+    User user = User.builder()
+        .email(createGuardianRequest.email())
+        .password(createGuardianRequest.password())
+        .build();
+
+    return Guardian.builder()
+        .name(createGuardianRequest.name())
+        .user(user)
+        .build();
   }
 
   @Override

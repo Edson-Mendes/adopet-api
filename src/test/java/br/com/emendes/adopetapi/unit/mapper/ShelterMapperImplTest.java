@@ -1,6 +1,5 @@
 package br.com.emendes.adopetapi.unit.mapper;
 
-import br.com.emendes.adopetapi.config.ModelMapperConfig;
 import br.com.emendes.adopetapi.dto.request.CreateShelterRequest;
 import br.com.emendes.adopetapi.dto.response.ShelterResponse;
 import br.com.emendes.adopetapi.mapper.impl.ShelterMapperImpl;
@@ -20,7 +19,7 @@ class ShelterMapperImplTest {
 
   @BeforeEach
   void setUp() {
-    shelterMapper = new ShelterMapperImpl(new ModelMapperConfig().modelMapper());
+    shelterMapper = new ShelterMapperImpl();
   }
 
   @Test

@@ -23,7 +23,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   @Override
   public AuthenticationResponse authenticate(AuthenticationRequest authRequest) {
     Authentication authenticate = authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
+        new UsernamePasswordAuthenticationToken(authRequest.email(), authRequest.password()));
 
     UserDetails userDetails = (UserDetails) authenticate.getPrincipal();
 

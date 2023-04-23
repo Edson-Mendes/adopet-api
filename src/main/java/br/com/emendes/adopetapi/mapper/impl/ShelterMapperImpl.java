@@ -4,19 +4,23 @@ import br.com.emendes.adopetapi.dto.request.CreateShelterRequest;
 import br.com.emendes.adopetapi.dto.response.ShelterResponse;
 import br.com.emendes.adopetapi.mapper.ShelterMapper;
 import br.com.emendes.adopetapi.model.entity.Shelter;
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
+import br.com.emendes.adopetapi.model.entity.User;
 import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
 @Component
 public class ShelterMapperImpl implements ShelterMapper {
 
-  private final ModelMapper mapper;
-
   @Override
   public Shelter createShelterRequestToShelter(CreateShelterRequest createShelterRequest) {
-    return mapper.map(createShelterRequest, Shelter.class);
+    User user = User.builder()
+        .email(createShelterRequest.email())
+        .password(createShelterRequest.password())
+        .build();
+
+    return Shelter.builder()
+        .name(createShelterRequest.name())
+        .user(user)
+        .build();
   }
 
   @Override

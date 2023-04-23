@@ -36,7 +36,7 @@ public class GuardianServiceImpl implements GuardianService {
 
   @Override
   public GuardianResponse create(CreateGuardianRequest createGuardianRequest) {
-    if (!createGuardianRequest.getPassword().equals(createGuardianRequest.getConfirmPassword())) {
+    if (!createGuardianRequest.password().equals(createGuardianRequest.confirmPassword())) {
       log.info("Passwords do not match at GuardianServiceImpl#create");
       throw new PasswordsDoNotMatchException("Passwords do not match");
     }
@@ -45,7 +45,7 @@ public class GuardianServiceImpl implements GuardianService {
     guardian.setCreatedAt(LocalDateTime.now());
     guardian.getUser().addRole(ROLE_GUARDIAN);
 
-    guardian.getUser().setPassword(passwordEncoder.encode(createGuardianRequest.getPassword()));
+    guardian.getUser().setPassword(passwordEncoder.encode(createGuardianRequest.password()));
     guardian.getUser().setEnabled(true);
 
     try {
@@ -56,7 +56,7 @@ public class GuardianServiceImpl implements GuardianService {
     } catch (DataIntegrityViolationException exception) {
       log.info("Data Integrity Violation, message : {}", exception.getMessage());
       throw new EmailAlreadyInUseException(String
-          .format("E-mail {%s} is already in use", createGuardianRequest.getEmail()));
+          .format("E-mail {%s} is already in use", createGuardianRequest.email()));
     }
   }
 
@@ -64,8 +64,8 @@ public class GuardianServiceImpl implements GuardianService {
   public GuardianResponse update(Long id, UpdateGuardianRequest updateGuardianRequest) {
     Guardian guardian = findGuardianByIdAndUser(id);
 
-    guardian.setName(updateGuardianRequest.getName());
-    guardian.getUser().setEmail(updateGuardianRequest.getEmail());
+    guardian.setName(updateGuardianRequest.name());
+    guardian.getUser().setEmail(updateGuardianRequest.email());
 
     try {
       Guardian updatedGuardian = guardianRepository.save(guardian);
@@ -73,7 +73,7 @@ public class GuardianServiceImpl implements GuardianService {
       return guardianMapper.guardianToGuardianResponse(updatedGuardian);
     } catch (DataIntegrityViolationException exception) {
       log.info("Data Integrity Violation, message : {}", exception.getMessage());
-      throw new EmailAlreadyInUseException(String.format("E-mail {%s} is already in use", updateGuardianRequest.getEmail()));
+      throw new EmailAlreadyInUseException(String.format("E-mail {%s} is already in use", updateGuardianRequest.email()));
     }
   }
 

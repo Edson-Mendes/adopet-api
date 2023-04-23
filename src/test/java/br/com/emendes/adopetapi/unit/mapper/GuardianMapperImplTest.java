@@ -1,6 +1,5 @@
 package br.com.emendes.adopetapi.unit.mapper;
 
-import br.com.emendes.adopetapi.config.ModelMapperConfig;
 import br.com.emendes.adopetapi.dto.request.CreateGuardianRequest;
 import br.com.emendes.adopetapi.dto.response.GuardianResponse;
 import br.com.emendes.adopetapi.mapper.impl.GuardianMapperImpl;
@@ -20,7 +19,7 @@ class GuardianMapperImplTest {
 
   @BeforeEach
   void setUp() {
-    guardianMapper = new GuardianMapperImpl(new ModelMapperConfig().modelMapper());
+    guardianMapper = new GuardianMapperImpl();
   }
 
   @Test

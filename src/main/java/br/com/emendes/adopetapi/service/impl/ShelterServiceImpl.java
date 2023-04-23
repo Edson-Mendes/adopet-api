@@ -36,7 +36,7 @@ public class ShelterServiceImpl implements ShelterService {
 
   @Override
   public ShelterResponse create(CreateShelterRequest createShelterRequest) {
-    if (!createShelterRequest.getPassword().equals(createShelterRequest.getConfirmPassword())) {
+    if (!createShelterRequest.password().equals(createShelterRequest.confirmPassword())) {
       log.info("Passwords do not match at ShelterServiceImpl#create");
       throw new PasswordsDoNotMatchException("Passwords do not match");
     }
@@ -44,7 +44,7 @@ public class ShelterServiceImpl implements ShelterService {
     shelter.setCreatedAt(LocalDateTime.now());
     shelter.getUser().addRole(ROLE_SHELTER);
 
-    shelter.getUser().setPassword(passwordEncoder.encode(createShelterRequest.getPassword()));
+    shelter.getUser().setPassword(passwordEncoder.encode(createShelterRequest.password()));
     shelter.getUser().setEnabled(true);
 
     try {
@@ -55,7 +55,7 @@ public class ShelterServiceImpl implements ShelterService {
     } catch (DataIntegrityViolationException exception) {
       log.info("Data Integrity Violation, message : {}", exception.getMessage());
       throw new EmailAlreadyInUseException(String
-          .format("E-mail {%s} is already in use", createShelterRequest.getEmail()));
+          .format("E-mail {%s} is already in use", createShelterRequest.email()));
     }
   }
 
@@ -76,8 +76,8 @@ public class ShelterServiceImpl implements ShelterService {
   public ShelterResponse update(Long id, UpdateShelterRequest updateShelterRequest) {
     Shelter shelter = findShelterByIdAndUser(id);
 
-    shelter.setName(updateShelterRequest.getName());
-    shelter.getUser().setEmail(updateShelterRequest.getEmail());
+    shelter.setName(updateShelterRequest.name());
+    shelter.getUser().setEmail(updateShelterRequest.email());
 
     try {
       Shelter updatedShelter = shelterRepository.save(shelter);
@@ -85,7 +85,7 @@ public class ShelterServiceImpl implements ShelterService {
       return shelterMapper.shelterToShelterResponse(updatedShelter);
     } catch (DataIntegrityViolationException exception) {
       log.info("Data Integrity Violation, message : {}", exception.getMessage());
-      throw new EmailAlreadyInUseException(String.format("E-mail {%s} is already in use", updateShelterRequest.getEmail()));
+      throw new EmailAlreadyInUseException(String.format("E-mail {%s} is already in use", updateShelterRequest.email()));
     }
   }
 

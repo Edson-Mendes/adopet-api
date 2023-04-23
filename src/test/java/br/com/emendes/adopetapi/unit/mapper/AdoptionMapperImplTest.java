@@ -1,6 +1,5 @@
 package br.com.emendes.adopetapi.unit.mapper;
 
-import br.com.emendes.adopetapi.config.ModelMapperConfig;
 import br.com.emendes.adopetapi.dto.request.AdoptionRequest;
 import br.com.emendes.adopetapi.dto.response.AdoptionResponse;
 import br.com.emendes.adopetapi.mapper.impl.AdoptionMapperImpl;
@@ -25,7 +24,7 @@ class AdoptionMapperImplTest {
 
   @BeforeEach
   void setUp() {
-    adoptionMapper = new AdoptionMapperImpl(new ModelMapperConfig().modelMapper());
+    adoptionMapper = new AdoptionMapperImpl();
   }
 
   @Test
@@ -40,6 +39,7 @@ class AdoptionMapperImplTest {
     Assertions.assertThat(actualAdoption).isNotNull();
     Assertions.assertThat(actualAdoption.getId()).isNull();
     Assertions.assertThat(actualAdoption.getDate()).isNull();
+    Assertions.assertThat(actualAdoption.getStatus()).isNull();
 
     Assertions.assertThat(actualAdoption.getPet()).isNotNull();
     Assertions.assertThat(actualAdoption.getPet().getId()).isNotNull().isEqualTo(10_000L);

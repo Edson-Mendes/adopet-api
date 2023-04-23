@@ -5,19 +5,18 @@ import br.com.emendes.adopetapi.dto.request.UpdatePetRequest;
 import br.com.emendes.adopetapi.dto.response.PetResponse;
 import br.com.emendes.adopetapi.mapper.PetMapper;
 import br.com.emendes.adopetapi.model.entity.Pet;
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
 @Component
 public class PetMapperImpl implements PetMapper {
 
-  private final ModelMapper mapper;
-
   @Override
   public Pet createPetRequestToPet(CreatePetRequest createPetRequest) {
-    return mapper.map(createPetRequest, Pet.class);
+    return Pet.builder()
+        .name(createPetRequest.name())
+        .description(createPetRequest.description())
+        .age(createPetRequest.age())
+        .build();
   }
 
   @Override
@@ -34,9 +33,9 @@ public class PetMapperImpl implements PetMapper {
 
   @Override
   public void merge(UpdatePetRequest updatePetRequest, Pet pet) {
-    pet.setName(updatePetRequest.getName());
-    pet.setDescription(updatePetRequest.getDescription());
-    pet.setAge(updatePetRequest.getAge());
+    pet.setName(updatePetRequest.name());
+    pet.setDescription(updatePetRequest.description());
+    pet.setAge(updatePetRequest.age());
   }
 
 }

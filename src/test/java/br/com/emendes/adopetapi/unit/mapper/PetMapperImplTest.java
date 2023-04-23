@@ -1,6 +1,5 @@
 package br.com.emendes.adopetapi.unit.mapper;
 
-import br.com.emendes.adopetapi.config.ModelMapperConfig;
 import br.com.emendes.adopetapi.dto.request.CreatePetRequest;
 import br.com.emendes.adopetapi.dto.request.UpdatePetRequest;
 import br.com.emendes.adopetapi.dto.response.PetResponse;
@@ -21,7 +20,7 @@ class PetMapperImplTest {
 
   @BeforeEach
   void setUp() {
-    petMapper = new PetMapperImpl(new ModelMapperConfig().modelMapper());
+    petMapper = new PetMapperImpl();
   }
 
   @Test

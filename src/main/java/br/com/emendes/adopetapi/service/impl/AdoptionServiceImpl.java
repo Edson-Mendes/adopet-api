@@ -37,8 +37,8 @@ public class AdoptionServiceImpl implements AdoptionService {
 
   @Override
   public AdoptionResponse adopt(AdoptionRequest adoptionRequest) {
-    if (!petRepository.existsByIdAndAdoptedFalseAndShelterDeletedFalse(adoptionRequest.getPetId())) {
-      log.info("Not found non adopted pet with id : {}", adoptionRequest.getPetId());
+    if (!petRepository.existsByIdAndAdoptedFalseAndShelterDeletedFalse(adoptionRequest.petId())) {
+      log.info("Not found non adopted pet with id : {}", adoptionRequest.petId());
       throw new InvalidArgumentException("Invalid pet id");
     }
 
@@ -74,7 +74,7 @@ public class AdoptionServiceImpl implements AdoptionService {
   @Override
   public AdoptionResponse updateStatus(Long id, UpdateStatusRequest updateStatusRequest) {
     Adoption adoption = findAdoptionByIdAndShelter(id);
-    adoption.setStatus(AdoptionStatus.valueOf(updateStatusRequest.getStatus()));
+    adoption.setStatus(AdoptionStatus.valueOf(updateStatusRequest.status()));
 
     adoptionRepository.save(adoption);
 
@@ -82,7 +82,7 @@ public class AdoptionServiceImpl implements AdoptionService {
     pet.setAdopted(adoption.getStatus().equals(AdoptionStatus.CONCLUDED));
     petRepository.save(pet);
 
-    log.info("Status update to {} for Adoption with id : {}", updateStatusRequest.getStatus(), adoption.getId());
+    log.info("Status update to {} for Adoption with id : {}", updateStatusRequest.status(), adoption.getId());
     return adoptionMapper.adoptionToAdoptionResponse(adoption);
   }
 
