@@ -2,6 +2,7 @@ package br.com.emendes.adopetapi.config.security.service.impl;
 
 import br.com.emendes.adopetapi.config.security.service.JwtService;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -43,7 +44,6 @@ public class JwtServiceImpl implements JwtService {
   }
 
   private Claims extractAllClaims(String token) {
-
     return Jwts.parserBuilder()
         .setSigningKey(getKey())
         .build()

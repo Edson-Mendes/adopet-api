@@ -5,7 +5,6 @@ import br.com.emendes.adopetapi.dto.request.UpdatePetRequest;
 import br.com.emendes.adopetapi.dto.response.PetResponse;
 import br.com.emendes.adopetapi.mapper.PetMapper;
 import br.com.emendes.adopetapi.model.entity.Pet;
-import br.com.emendes.adopetapi.model.entity.Shelter;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -23,7 +22,14 @@ public class PetMapperImpl implements PetMapper {
 
   @Override
   public PetResponse petToPetResponse(Pet pet) {
-    return mapper.map(pet, PetResponse.class);
+    return PetResponse.builder()
+        .id(pet.getId())
+        .name(pet.getName())
+        .description(pet.getDescription())
+        .age(pet.getAge())
+        .adopted(pet.isAdopted())
+        .shelterId(pet.getShelter().getId())
+        .build();
   }
 
   @Override

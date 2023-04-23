@@ -83,10 +83,10 @@ class AdoptionServiceImplTest {
       BDDMockito.verify(adoptionMapperMock).adoptionToAdoptionResponse(any());
 
       Assertions.assertThat(actualAdoptionResponse).isNotNull();
-      Assertions.assertThat(actualAdoptionResponse.getId()).isNotNull().isEqualTo(1_000_000L);
-      Assertions.assertThat(actualAdoptionResponse.getPetId()).isNotNull().isEqualTo(10_000L);
-      Assertions.assertThat(actualAdoptionResponse.getGuardianId()).isNotNull().isEqualTo(100L);
-      Assertions.assertThat(actualAdoptionResponse.getStatus()).isNotNull().isEqualTo(AdoptionStatus.ANALYSING);
+      Assertions.assertThat(actualAdoptionResponse.id()).isNotNull().isEqualTo(1_000_000L);
+      Assertions.assertThat(actualAdoptionResponse.petId()).isNotNull().isEqualTo(10_000L);
+      Assertions.assertThat(actualAdoptionResponse.guardianId()).isNotNull().isEqualTo(100L);
+      Assertions.assertThat(actualAdoptionResponse.status()).isNotNull().isEqualTo(AdoptionStatus.ANALYSING);
     }
 
     @Test
@@ -245,8 +245,8 @@ class AdoptionServiceImplTest {
       BDDMockito.verify(petRepositoryMock).save(any());
 
       Assertions.assertThat(actualAdoptionResponse).isNotNull();
-      Assertions.assertThat(actualAdoptionResponse.getId()).isNotNull().isEqualTo(1_000_000L);
-      Assertions.assertThat(actualAdoptionResponse.getStatus()).isNotNull()
+      Assertions.assertThat(actualAdoptionResponse.id()).isNotNull().isEqualTo(1_000_000L);
+      Assertions.assertThat(actualAdoptionResponse.status()).isNotNull()
           .isEqualByComparingTo(AdoptionStatus.CANCELED);
     }
 

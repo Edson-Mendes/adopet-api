@@ -85,9 +85,9 @@ class ShelterServiceImplTest {
       Shelter actualShelter = shelterCaptor.getValue();
 
       Assertions.assertThat(actualShelterResponse).isNotNull();
-      Assertions.assertThat(actualShelterResponse.getId()).isNotNull().isEqualTo(1_000L);
-      Assertions.assertThat(actualShelterResponse.getName()).isNotNull().isEqualTo("Animal Shelter");
-      Assertions.assertThat(actualShelterResponse.getEmail()).isNotNull().isEqualTo("animal.shelter@email.com");
+      Assertions.assertThat(actualShelterResponse.id()).isNotNull().isEqualTo(1_000L);
+      Assertions.assertThat(actualShelterResponse.name()).isNotNull().isEqualTo("Animal Shelter");
+      Assertions.assertThat(actualShelterResponse.email()).isNotNull().isEqualTo("animal.shelter@email.com");
       Assertions.assertThat(actualShelter).isNotNull();
       Assertions.assertThat(actualShelter.getUser()).isNotNull();
       Assertions.assertThat(actualShelter.getUser().getRoles()).isNotNull().contains(ROLE_SHELTER);
@@ -170,8 +170,8 @@ class ShelterServiceImplTest {
       BDDMockito.verify(shelterMapperMock).shelterToShelterResponse(any(Shelter.class));
 
       Assertions.assertThat(actualShelterResponse).isNotNull();
-      Assertions.assertThat(actualShelterResponse.getId()).isNotNull().isEqualTo(1000L);
-      Assertions.assertThat(actualShelterResponse.getName()).isNotNull().isEqualTo("Animal Shelter");
+      Assertions.assertThat(actualShelterResponse.id()).isNotNull().isEqualTo(1000L);
+      Assertions.assertThat(actualShelterResponse.name()).isNotNull().isEqualTo("Animal Shelter");
     }
 
     @Test
@@ -217,8 +217,8 @@ class ShelterServiceImplTest {
       BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
 
       Assertions.assertThat(actualShelterResponse).isNotNull();
-      Assertions.assertThat(actualShelterResponse.getId()).isNotNull().isEqualTo(1000L);
-      Assertions.assertThat(actualShelterResponse.getName()).isNotNull().isEqualTo("Animal Shelter ABC");
+      Assertions.assertThat(actualShelterResponse.id()).isNotNull().isEqualTo(1000L);
+      Assertions.assertThat(actualShelterResponse.name()).isNotNull().isEqualTo("Animal Shelter ABC");
     }
 
     @Test

@@ -64,12 +64,12 @@ class PetMapperImplTest {
     PetResponse actualPetResponse = petMapper.petToPetResponse(pet);
 
     Assertions.assertThat(actualPetResponse).isNotNull();
-    Assertions.assertThat(actualPetResponse.getId()).isNotNull().isEqualTo(10_000L);
-    Assertions.assertThat(actualPetResponse.getName()).isNotNull().isEqualTo("Dark");
-    Assertions.assertThat(actualPetResponse.getDescription()).isNotNull().isEqualTo("A very calm and cute cat");
-    Assertions.assertThat(actualPetResponse.getAge()).isNotNull().isEqualTo("2 years old");
-    Assertions.assertThat(actualPetResponse.isAdopted()).isFalse();
-    Assertions.assertThat(actualPetResponse.getShelterId()).isNotNull().isEqualTo(1_000L);
+    Assertions.assertThat(actualPetResponse.id()).isNotNull().isEqualTo(10_000L);
+    Assertions.assertThat(actualPetResponse.name()).isNotNull().isEqualTo("Dark");
+    Assertions.assertThat(actualPetResponse.description()).isNotNull().isEqualTo("A very calm and cute cat");
+    Assertions.assertThat(actualPetResponse.age()).isNotNull().isEqualTo("2 years old");
+    Assertions.assertThat(actualPetResponse.adopted()).isFalse();
+    Assertions.assertThat(actualPetResponse.shelterId()).isNotNull().isEqualTo(1_000L);
   }
 
   @Test

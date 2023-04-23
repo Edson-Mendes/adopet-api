@@ -76,11 +76,11 @@ class PetControllerTest {
       PetResponse actualPetResponse = mapper.readValue(actualContent, PetResponse.class);
 
       Assertions.assertThat(actualPetResponse).isNotNull();
-      Assertions.assertThat(actualPetResponse.getId()).isNotNull().isEqualTo(10_000L);
-      Assertions.assertThat(actualPetResponse.getName()).isNotNull().isEqualTo("Dark");
-      Assertions.assertThat(actualPetResponse.getDescription()).isNotNull().isEqualTo("A very calm and cute cat");
-      Assertions.assertThat(actualPetResponse.getAge()).isNotNull().isEqualTo("2 years old");
-      Assertions.assertThat(actualPetResponse.getShelterId()).isNotNull().isEqualTo(1_000L);
+      Assertions.assertThat(actualPetResponse.id()).isNotNull().isEqualTo(10_000L);
+      Assertions.assertThat(actualPetResponse.name()).isNotNull().isEqualTo("Dark");
+      Assertions.assertThat(actualPetResponse.description()).isNotNull().isEqualTo("A very calm and cute cat");
+      Assertions.assertThat(actualPetResponse.age()).isNotNull().isEqualTo("2 years old");
+      Assertions.assertThat(actualPetResponse.shelterId()).isNotNull().isEqualTo(1_000L);
     }
 
     @Test
@@ -158,9 +158,9 @@ class PetControllerTest {
       PetResponse actualPetResponse = mapper.readValue(actualContent, PetResponse.class);
 
       Assertions.assertThat(actualPetResponse).isNotNull();
-      Assertions.assertThat(actualPetResponse.getId()).isNotNull().isEqualTo(10_000L);
-      Assertions.assertThat(actualPetResponse.getName()).isNotNull().isEqualTo("Dark");
-      Assertions.assertThat(actualPetResponse.getDescription()).isNotNull().isEqualTo("A very calm and cute cat");
+      Assertions.assertThat(actualPetResponse.id()).isNotNull().isEqualTo(10_000L);
+      Assertions.assertThat(actualPetResponse.name()).isNotNull().isEqualTo("Dark");
+      Assertions.assertThat(actualPetResponse.description()).isNotNull().isEqualTo("A very calm and cute cat");
     }
 
     @Test
@@ -226,10 +226,10 @@ class PetControllerTest {
       PetResponse actualPetResponse = mapper.readValue(actualContent, PetResponse.class);
 
       Assertions.assertThat(actualPetResponse).isNotNull();
-      Assertions.assertThat(actualPetResponse.getId()).isNotNull().isEqualTo(10_000L);
-      Assertions.assertThat(actualPetResponse.getName()).isNotNull().isEqualTo("Darkness");
-      Assertions.assertThat(actualPetResponse.getDescription()).isNotNull().isEqualTo("A very cute cat");
-      Assertions.assertThat(actualPetResponse.getAge()).isNotNull().isEqualTo("3 years old");
+      Assertions.assertThat(actualPetResponse.id()).isNotNull().isEqualTo(10_000L);
+      Assertions.assertThat(actualPetResponse.name()).isNotNull().isEqualTo("Darkness");
+      Assertions.assertThat(actualPetResponse.description()).isNotNull().isEqualTo("A very cute cat");
+      Assertions.assertThat(actualPetResponse.age()).isNotNull().isEqualTo("3 years old");
     }
 
     @Test

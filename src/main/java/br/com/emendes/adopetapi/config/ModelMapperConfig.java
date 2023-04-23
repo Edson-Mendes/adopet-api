@@ -48,25 +48,9 @@ public class ModelMapperConfig {
       }
     };
 
-    PropertyMap<Guardian, GuardianResponse> guardianResponseMap = new PropertyMap<>() {
-      @Override
-      protected void configure() {
-        map().setEmail(this.source("user.email"));
-      }
-    };
-
-    PropertyMap<Shelter, ShelterResponse> shelterResponseMap = new PropertyMap<>() {
-      @Override
-      protected void configure() {
-        map().setEmail(this.source("user.email"));
-      }
-    };
-
     mapper.addMappings(petMap);
     mapper.addMappings(guardianMap);
-    mapper.addMappings(guardianResponseMap);
     mapper.addMappings(shelterMap);
-    mapper.addMappings(shelterResponseMap);
     mapper.addMappings(adoptionMap());
 
     return mapper;

@@ -104,19 +104,11 @@ os novos dados do guardian devem ser enviados no corpo da requisição.
   - Uma adoção só pode ser deletada pelo Shelter relacionado na adoção.<br>
 
 
-## :gear: Atualizações semana 2
-- [x] Modelagem da entidade Shelter.
-- [x] Modelagem da entidade Pet.
-- [x] Requisição POST para CRIAR Shelter.
-- [x] Requisição PUT para ATUALIZAR Shelter.
-- [x] Requisição GET para BUSCAR todos os Shelters.
-- [x] Requisição GET para BUSCAR Shelter por ID.
-- [x] Requisição DELETE para DELETAR Shelter.
-- [x] Requisição POST para CRIAR Pet.
-- [x] Requisição PUT para ATUALIZAR Pet.
-- [x] Requisição GET para BUSCAR todos os Pets.
-- [x] Requisição GET para BUSCAR Pet por ID.
-- [x] Requisição DELETE para DELETAR Pet.
-- [x] Validações de todos os campos de Shelter e Pet.
-- [x] Regra de negócio para adoção.
-- [x] Testes automatizados (Pelo menos os testes de unidade).
+## :gear: Atualizações semana 3 e 4
+- [x] Autenticação de Tutores.
+- [x] Autenticação de Abrigos.
+- [x] Paginação das buscas.
+- [x] Testes de Unidade.
+- [ ] Testes de Integração.
+- [ ] Deploy da Aplicação.
+- [ ] Integração com Front-End.

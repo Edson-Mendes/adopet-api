@@ -21,7 +21,11 @@ public class GuardianMapperImpl implements GuardianMapper {
 
   @Override
   public GuardianResponse guardianToGuardianResponse(Guardian guardian) {
-    return modelMapper.map(guardian, GuardianResponse.class);
+    return GuardianResponse.builder()
+        .id(guardian.getId())
+        .name(guardian.getName())
+        .email(guardian.getUser().getEmail())
+        .build();
   }
 
 }

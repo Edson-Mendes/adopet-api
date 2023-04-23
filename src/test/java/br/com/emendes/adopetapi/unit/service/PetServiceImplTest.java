@@ -73,12 +73,12 @@ class PetServiceImplTest {
       BDDMockito.verify(userServiceMock).getCurrentUserAsShelter();
 
       Assertions.assertThat(actualPetResponse).isNotNull();
-      Assertions.assertThat(actualPetResponse.getId()).isNotNull().isEqualTo(10_000L);
-      Assertions.assertThat(actualPetResponse.getName()).isNotNull().isEqualTo("Dark");
-      Assertions.assertThat(actualPetResponse.getDescription()).isNotNull().isEqualTo("A very calm and cute cat");
-      Assertions.assertThat(actualPetResponse.getAge()).isNotNull().isEqualTo("2 years old");
-      Assertions.assertThat(actualPetResponse.getShelterId()).isNotNull().isEqualTo(1_000L);
-      Assertions.assertThat(actualPetResponse.isAdopted()).isFalse();
+      Assertions.assertThat(actualPetResponse.id()).isNotNull().isEqualTo(10_000L);
+      Assertions.assertThat(actualPetResponse.name()).isNotNull().isEqualTo("Dark");
+      Assertions.assertThat(actualPetResponse.description()).isNotNull().isEqualTo("A very calm and cute cat");
+      Assertions.assertThat(actualPetResponse.age()).isNotNull().isEqualTo("2 years old");
+      Assertions.assertThat(actualPetResponse.shelterId()).isNotNull().isEqualTo(1_000L);
+      Assertions.assertThat(actualPetResponse.adopted()).isFalse();
     }
 
   }
@@ -123,10 +123,10 @@ class PetServiceImplTest {
       BDDMockito.verify(petMapperMock).petToPetResponse(any(Pet.class));
 
       Assertions.assertThat(actualPetResponse).isNotNull();
-      Assertions.assertThat(actualPetResponse.getId()).isNotNull().isEqualTo(10_000L);
-      Assertions.assertThat(actualPetResponse.getName()).isNotNull().isEqualTo("Dark");
-      Assertions.assertThat(actualPetResponse.getDescription()).isNotNull().isEqualTo("A very calm and cute cat");
-      Assertions.assertThat(actualPetResponse.getAge()).isNotNull().isEqualTo("2 years old");
+      Assertions.assertThat(actualPetResponse.id()).isNotNull().isEqualTo(10_000L);
+      Assertions.assertThat(actualPetResponse.name()).isNotNull().isEqualTo("Dark");
+      Assertions.assertThat(actualPetResponse.description()).isNotNull().isEqualTo("A very calm and cute cat");
+      Assertions.assertThat(actualPetResponse.age()).isNotNull().isEqualTo("2 years old");
     }
 
     @Test
@@ -173,10 +173,10 @@ class PetServiceImplTest {
       BDDMockito.verify(userServiceMock).getCurrentUserAsShelter();
 
       Assertions.assertThat(actualPetResponse).isNotNull();
-      Assertions.assertThat(actualPetResponse.getId()).isNotNull().isEqualTo(10_000L);
-      Assertions.assertThat(actualPetResponse.getName()).isNotNull().isEqualTo("Darkness");
-      Assertions.assertThat(actualPetResponse.getDescription()).isNotNull().isEqualTo("A very cute cat");
-      Assertions.assertThat(actualPetResponse.getAge()).isNotNull().isEqualTo("3 years old");
+      Assertions.assertThat(actualPetResponse.id()).isNotNull().isEqualTo(10_000L);
+      Assertions.assertThat(actualPetResponse.name()).isNotNull().isEqualTo("Darkness");
+      Assertions.assertThat(actualPetResponse.description()).isNotNull().isEqualTo("A very cute cat");
+      Assertions.assertThat(actualPetResponse.age()).isNotNull().isEqualTo("3 years old");
     }
 
     @Test
@@ -243,7 +243,7 @@ class PetServiceImplTest {
       BDDMockito.when(petRepositoryMock.findByIdAndShelter(eq(10_000L), any(Shelter.class)))
           .thenReturn(Optional.of(pet()));
       BDDMockito.willThrow(new DataIntegrityViolationException(""))
-              .given(petRepositoryMock).delete(any(Pet.class));
+          .given(petRepositoryMock).delete(any(Pet.class));
 
       Assertions.assertThatExceptionOfType(InvalidArgumentException.class)
           .isThrownBy(() -> petService.deleteById(10_000L))

@@ -27,7 +27,7 @@ public class ShelterController {
       @RequestBody @Valid CreateShelterRequest createShelterRequest, UriComponentsBuilder uriComponentsBuilder) {
     ShelterResponse shelterResponse = shelterService.create(createShelterRequest);
 
-    URI uri = uriComponentsBuilder.path("/api/shelters/{id}").build(shelterResponse.getId());
+    URI uri = uriComponentsBuilder.path("/api/shelters/{id}").build(shelterResponse.id());
 
     return ResponseEntity.created(uri).body(shelterResponse);
   }

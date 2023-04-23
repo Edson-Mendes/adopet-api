@@ -26,7 +26,7 @@ public class AdoptionController {
   public ResponseEntity<AdoptionResponse> adopt(
       @RequestBody @Valid AdoptionRequest adoptionRequest, UriComponentsBuilder uriComponentsBuilder) {
     AdoptionResponse adoptionResponse = adoptionService.adopt(adoptionRequest);
-    URI uri = uriComponentsBuilder.path("/api/adoptions/{id}").build(adoptionResponse.getId());
+    URI uri = uriComponentsBuilder.path("/api/adoptions/{id}").build(adoptionResponse.id());
 
     return ResponseEntity.created(uri).body(adoptionResponse);
   }

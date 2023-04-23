@@ -27,7 +27,7 @@ public class GuardianController {
       @RequestBody @Valid CreateGuardianRequest createGuardianRequest, UriComponentsBuilder uriComponentsBuilder) {
     GuardianResponse guardianResponse = guardianService.create(createGuardianRequest);
 
-    URI uri = uriComponentsBuilder.path("/api/guardians/{id}").build(guardianResponse.getId());
+    URI uri = uriComponentsBuilder.path("/api/guardians/{id}").build(guardianResponse.id());
 
     return ResponseEntity.created(uri).body(guardianResponse);
   }

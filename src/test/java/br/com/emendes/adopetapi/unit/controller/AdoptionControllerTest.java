@@ -78,10 +78,10 @@ class AdoptionControllerTest {
       AdoptionResponse actualAdoptionResponse = mapper.readValue(actualContent, AdoptionResponse.class);
 
       Assertions.assertThat(actualAdoptionResponse).isNotNull();
-      Assertions.assertThat(actualAdoptionResponse.getId()).isNotNull().isEqualTo(1_000_000L);
-      Assertions.assertThat(actualAdoptionResponse.getPetId()).isNotNull().isEqualTo(10_000L);
-      Assertions.assertThat(actualAdoptionResponse.getGuardianId()).isNotNull().isEqualTo(100L);
-      Assertions.assertThat(actualAdoptionResponse.getStatus()).isNotNull().isEqualTo(AdoptionStatus.ANALYSING);
+      Assertions.assertThat(actualAdoptionResponse.id()).isNotNull().isEqualTo(1_000_000L);
+      Assertions.assertThat(actualAdoptionResponse.petId()).isNotNull().isEqualTo(10_000L);
+      Assertions.assertThat(actualAdoptionResponse.guardianId()).isNotNull().isEqualTo(100L);
+      Assertions.assertThat(actualAdoptionResponse.status()).isNotNull().isEqualTo(AdoptionStatus.ANALYSING);
     }
 
     @Test
@@ -246,7 +246,7 @@ class AdoptionControllerTest {
       AdoptionResponse actualAdoptionResponse = mapper.readValue(actualContent, AdoptionResponse.class);
 
       Assertions.assertThat(actualAdoptionResponse).isNotNull();
-      Assertions.assertThat(actualAdoptionResponse.getStatus()).isNotNull()
+      Assertions.assertThat(actualAdoptionResponse.status()).isNotNull()
           .isEqualByComparingTo(AdoptionStatus.CONCLUDED);
     }
 

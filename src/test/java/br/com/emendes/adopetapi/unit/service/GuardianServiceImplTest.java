@@ -85,9 +85,9 @@ class GuardianServiceImplTest {
       Guardian actualGuardian = guardianCaptor.getValue();
 
       Assertions.assertThat(actualGuardianResponse).isNotNull();
-      Assertions.assertThat(actualGuardianResponse.getId()).isNotNull().isEqualTo(100L);
-      Assertions.assertThat(actualGuardianResponse.getName()).isNotNull().isEqualTo("Lorem Ipsum");
-      Assertions.assertThat(actualGuardianResponse.getEmail()).isNotNull().isEqualTo("lorem@email.com");
+      Assertions.assertThat(actualGuardianResponse.id()).isNotNull().isEqualTo(100L);
+      Assertions.assertThat(actualGuardianResponse.name()).isNotNull().isEqualTo("Lorem Ipsum");
+      Assertions.assertThat(actualGuardianResponse.email()).isNotNull().isEqualTo("lorem@email.com");
       Assertions.assertThat(actualGuardian).isNotNull();
       Assertions.assertThat(actualGuardian.getUser()).isNotNull();
       Assertions.assertThat(actualGuardian.getUser().getRoles()).isNotNull().contains(ROLE_GUARDIAN);
@@ -157,9 +157,9 @@ class GuardianServiceImplTest {
       BDDMockito.verify(authenticationFacadeMock).getCurrentUser();
 
       Assertions.assertThat(actualGuardianResponse).isNotNull();
-      Assertions.assertThat(actualGuardianResponse.getId()).isNotNull().isEqualTo(100L);
-      Assertions.assertThat(actualGuardianResponse.getName()).isNotNull().isEqualTo("Lorem Ipsum Dolor");
-      Assertions.assertThat(actualGuardianResponse.getEmail()).isNotNull().isEqualTo("loremdolor@email.com");
+      Assertions.assertThat(actualGuardianResponse.id()).isNotNull().isEqualTo(100L);
+      Assertions.assertThat(actualGuardianResponse.name()).isNotNull().isEqualTo("Lorem Ipsum Dolor");
+      Assertions.assertThat(actualGuardianResponse.email()).isNotNull().isEqualTo("loremdolor@email.com");
     }
 
     @Test
@@ -227,9 +227,9 @@ class GuardianServiceImplTest {
       BDDMockito.verify(guardianMapperMock).guardianToGuardianResponse(any(Guardian.class));
 
       Assertions.assertThat(actualGuardianResponse).isNotNull();
-      Assertions.assertThat(actualGuardianResponse.getId()).isNotNull().isEqualTo(100L);
-      Assertions.assertThat(actualGuardianResponse.getName()).isNotNull().isEqualTo("Lorem Ipsum");
-      Assertions.assertThat(actualGuardianResponse.getEmail()).isNotNull().isEqualTo("lorem@email.com");
+      Assertions.assertThat(actualGuardianResponse.id()).isNotNull().isEqualTo(100L);
+      Assertions.assertThat(actualGuardianResponse.name()).isNotNull().isEqualTo("Lorem Ipsum");
+      Assertions.assertThat(actualGuardianResponse.email()).isNotNull().isEqualTo("lorem@email.com");
     }
 
     @Test

@@ -46,6 +46,16 @@ public class AdoptionUtils {
   }
 
   public static AdoptionResponse adoptionResponse() {
+//    return new AdoptionResponse(1_000_000L, 10_000L, 100L, AdoptionStatus.ANALYSING, LocalDateTime.parse("2023-04-17T10:00:00"));
+
+//    return AdoptionResponse.builder()
+//        .id(1_000_000L)
+//        .petId(10_000L)
+//        .guardianId(100L)
+//        .status(AdoptionStatus.ANALYSING)
+//        .date(LocalDateTime.parse("2023-04-17T10:00:00"))
+//        .build();
+
     return AdoptionResponse.builder()
         .id(1_000_000L)
         .petId(10_000L)

@@ -63,9 +63,9 @@ class GuardianMapperImplTest {
     GuardianResponse actualGuardianResponse = guardianMapper.guardianToGuardianResponse(guardian);
 
     Assertions.assertThat(actualGuardianResponse).isNotNull();
-    Assertions.assertThat(actualGuardianResponse.getId()).isNotNull().isEqualTo(100L);
-    Assertions.assertThat(actualGuardianResponse.getName()).isNotNull().isEqualTo("Lorem Ipsum");
-    Assertions.assertThat(actualGuardianResponse.getEmail()).isNotNull().isEqualTo("lorem@email.com");
+    Assertions.assertThat(actualGuardianResponse.id()).isNotNull().isEqualTo(100L);
+    Assertions.assertThat(actualGuardianResponse.name()).isNotNull().isEqualTo("Lorem Ipsum");
+    Assertions.assertThat(actualGuardianResponse.email()).isNotNull().isEqualTo("lorem@email.com");
   }
 
 }

@@ -1,6 +1,7 @@
 package br.com.emendes.adopetapi.config.security.filter;
 
 import br.com.emendes.adopetapi.config.security.service.JwtService;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,11 +45,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     //Extrair token
     String token = authHeader.substring(7);
-    String username = jwtService.extractUsername(token);
 
     //Validar token
-    if (!jwtService.isTokenExpired(token)) {
-      try {
+    try {
+      if (!jwtService.isTokenExpired(token)) {
+        String username = jwtService.extractUsername(token);
         //Buscar user
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
@@ -56,9 +57,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         UsernamePasswordAuthenticationToken authenticationToken =
             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-      } catch (UsernameNotFoundException exception) {
-        log.info("User {} not found", username);
       }
+    } catch (UsernameNotFoundException exception) {
+      log.info("User not found : {}", exception.getMessage());
+    } catch (JwtException exception) {
+      log.info("Invalid JWT : {}", exception.getMessage());
     }
 
     // Seguir fluxo de filters

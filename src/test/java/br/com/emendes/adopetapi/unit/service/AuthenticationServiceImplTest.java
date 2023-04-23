@@ -56,8 +56,8 @@ class AuthenticationServiceImplTest {
       AuthenticationResponse actualAuthenticationResponse = authenticationService.authenticate(authRequest);
 
       Assertions.assertThat(actualAuthenticationResponse).isNotNull();
-      Assertions.assertThat(actualAuthenticationResponse.getType()).isNotNull().isEqualTo("Bearer");
-      Assertions.assertThat(actualAuthenticationResponse.getToken()).isNotNull().isEqualTo("jwt1234");
+      Assertions.assertThat(actualAuthenticationResponse.type()).isNotNull().isEqualTo("Bearer");
+      Assertions.assertThat(actualAuthenticationResponse.token()).isNotNull().isEqualTo("jwt1234");
     }
 
     @Test

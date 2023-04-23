@@ -21,7 +21,15 @@ public class AdoptionMapperImpl implements AdoptionMapper {
 
   @Override
   public AdoptionResponse adoptionToAdoptionResponse(Adoption adoption) {
-    return mapper.map(adoption, AdoptionResponse.class);
+    return AdoptionResponse.builder()
+        .id(adoption.getId())
+        .petId(adoption.getPet().getId())
+        .guardianId(adoption.getGuardian().getId())
+        .status(adoption.getStatus())
+        .date(adoption.getDate())
+        .build();
+
+//    return mapper.map(adoption, AdoptionResponse.class);
   }
 
 }

@@ -27,7 +27,7 @@ public class PetController {
       @RequestBody @Valid CreatePetRequest createPetRequest, UriComponentsBuilder uriComponentsBuilder) {
     PetResponse petResponse = petService.create(createPetRequest);
 
-    URI uri = uriComponentsBuilder.path("/api/pets/{id}").build(petResponse.getId());
+    URI uri = uriComponentsBuilder.path("/api/pets/{id}").build(petResponse.id());
 
     return ResponseEntity.created(uri).body(petResponse);
   }
@@ -38,12 +38,12 @@ public class PetController {
   }
 
   @GetMapping("/{id}")
-  public  ResponseEntity<PetResponse> findById(@PathVariable(name = "id") Long id) {
+  public ResponseEntity<PetResponse> findById(@PathVariable(name = "id") Long id) {
     return ResponseEntity.ok(petService.findById(id));
   }
 
   @PutMapping("/{id}")
-  public  ResponseEntity<PetResponse> update(
+  public ResponseEntity<PetResponse> update(
       @PathVariable(name = "id") Long id, @RequestBody @Valid UpdatePetRequest updatePetRequest) {
     return ResponseEntity.ok(petService.update(id, updatePetRequest));
   }
