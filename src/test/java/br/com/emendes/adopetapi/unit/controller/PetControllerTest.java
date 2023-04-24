@@ -217,7 +217,8 @@ class PetControllerTest {
             {
               "name" : "Darkness",
               "description" : "A very cute cat",
-              "age" : "3 years old"
+              "age" : "3 years old",
+              "image" : "http://www.xptopetimages/images/cat123"
             }
           """;
 
@@ -277,7 +278,8 @@ class PetControllerTest {
             {
               "name" : "Darkness",
               "description" : "A very cute cat",
-              "age" : "3 years old"
+              "age" : "3 years old",
+              "image" : "http://www.xptopetimages/images/cat123"
             }
           """;
 

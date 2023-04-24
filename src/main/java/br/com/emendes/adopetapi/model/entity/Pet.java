@@ -29,7 +29,7 @@ public class Pet {
   private boolean adopted;
   @Column(nullable = false)
   private LocalDateTime createdAt;
-  @OneToMany(mappedBy = "pet", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+  @OneToMany(mappedBy = "pet", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
   private Collection<PetImage> images;
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private Shelter shelter;

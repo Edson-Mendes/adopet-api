@@ -66,7 +66,7 @@ os novos dados do guardian devem ser enviados no corpo da requisição.
   - É necessário estar autenticado.<br>
 
 #### :cat: Pet
-- `Cadastrar`: Salvar Pet através de um **POST /api/pets** com as informações de *name*, *description*, *age* e *shelterId*
+- `Cadastrar`: Salvar Pet através de um **POST /api/pets** com as informações *name*, *description*, *age*, *image* e *shelterId*
   em um JSON no corpo da requisição.</br>
   - Apenas Shelters podem cadastrar Pets.
 

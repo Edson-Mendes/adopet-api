@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @DisplayName("Unit tests for PetMapperImpl")
@@ -95,6 +96,12 @@ class PetMapperImplTest {
   @Test
   @DisplayName("Merge must return Pet merged with data from UpdatePetRequest when merge successfully")
   void merge_MustReturnPetMergedWithDataFromUpdatePetRequest_WhenMergeSuccessfully() {
+    PetImage petImage = PetImage.builder()
+        .id(10_000_000L)
+        .url("http://www.xptopetimages/images/cat123")
+        .build();
+    List<PetImage> images = new ArrayList<>(List.of(petImage));
+
     Shelter shelter = Shelter.builder()
         .id(1_000L)
         .build();
@@ -105,6 +112,7 @@ class PetMapperImplTest {
         .age("2 years old")
         .createdAt(LocalDateTime.parse("2023-04-10T12:00:00"))
         .adopted(false)
+        .images(images)
         .shelter(shelter)
         .build();
 
@@ -112,6 +120,7 @@ class PetMapperImplTest {
         .name("Fluffy")
         .description("A cute cat")
         .age("3 years old")
+        .image("http://www.xptopetimages/images/cat123456")
         .build();
 
     petMapper.merge(updatePetRequest, pet);
@@ -125,6 +134,13 @@ class PetMapperImplTest {
     Assertions.assertThat(pet.getName()).isNotNull().isEqualTo("Fluffy");
     Assertions.assertThat(pet.getDescription()).isNotNull().isEqualTo("A cute cat");
     Assertions.assertThat(pet.getAge()).isNotNull().isEqualTo("3 years old");
+
+    Assertions.assertThat(pet.getImages()).isNotNull().hasSize(1);
+
+    List<String> actualUrls = pet.getImages().stream().map(PetImage::getUrl).toList();
+
+    Assertions.assertThat(actualUrls).isNotNull()
+        .contains("http://www.xptopetimages/images/cat123456");
   }
 
 }

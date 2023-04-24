@@ -6,7 +6,7 @@ import br.com.emendes.adopetapi.model.entity.Pet;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static br.com.emendes.adopetapi.util.PetImageUtils.imageResponse;
+import static br.com.emendes.adopetapi.util.PetImageUtils.*;
 
 public abstract class PetUtils {
 
@@ -17,6 +17,7 @@ public abstract class PetUtils {
         .description("A very calm and cute cat")
         .age("2 years old")
         .adopted(false)
+        .images(petImageList())
         .createdAt(LocalDateTime.parse("2022-04-10T12:00:00"))
         .shelter(ShelterUtils.shelter())
         .build();
@@ -29,6 +30,7 @@ public abstract class PetUtils {
         .description("A very cute cat")
         .age("3 years old")
         .adopted(false)
+        .images(petImageList())
         .createdAt(LocalDateTime.parse("2022-04-10T12:00:00"))
         .shelter(ShelterUtils.shelter())
         .build();
@@ -41,6 +43,7 @@ public abstract class PetUtils {
         .description("A very calm and cute cat")
         .age("2 years old")
         .adopted(false)
+        .images(petImageWithoutIdList())
         .createdAt(LocalDateTime.parse("2022-04-10T12:00:00"))
         .build();
   }
@@ -64,6 +67,7 @@ public abstract class PetUtils {
         .description("A very cute cat")
         .age("3 years old")
         .adopted(false)
+        .images(List.of(imageResponse()))
         .shelterId(1_000L)
         .build();
   }

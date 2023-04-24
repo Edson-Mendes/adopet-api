@@ -7,10 +7,13 @@ import br.com.emendes.adopetapi.dto.response.PetResponse;
 import br.com.emendes.adopetapi.mapper.PetMapper;
 import br.com.emendes.adopetapi.model.entity.Pet;
 import br.com.emendes.adopetapi.model.entity.PetImage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
+@Slf4j
 @Component
 public class PetMapperImpl implements PetMapper {
 
@@ -55,6 +58,19 @@ public class PetMapperImpl implements PetMapper {
     pet.setName(updatePetRequest.name());
     pet.setDescription(updatePetRequest.description());
     pet.setAge(updatePetRequest.age());
+
+    if (pet.getImages().isEmpty()) {
+      PetImage petImage = PetImage.builder()
+          .url(updatePetRequest.image())
+          .pet(pet)
+          .build();
+
+      pet.getImages().add(petImage);
+      return;
+    }
+
+    Optional<PetImage> petImageOptional = pet.getImages().stream().findFirst();
+    petImageOptional.ifPresent(petImage -> petImage.setUrl(updatePetRequest.image()));
   }
 
 }
