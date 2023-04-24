@@ -18,7 +18,7 @@ public record CreatePetRequest(
     String age,
     @NotBlank(message = "image must not be blank")
     @URL(message = "image must be a well-formed url")
-        @Size(max = 255, message = "image must contain max {max} characters")
+    @Size(max = 255, message = "image must contain max {max} characters")
     String image
 ) {
 

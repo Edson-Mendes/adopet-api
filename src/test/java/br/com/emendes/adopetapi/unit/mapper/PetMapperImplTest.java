@@ -5,6 +5,7 @@ import br.com.emendes.adopetapi.dto.request.UpdatePetRequest;
 import br.com.emendes.adopetapi.dto.response.PetResponse;
 import br.com.emendes.adopetapi.mapper.impl.PetMapperImpl;
 import br.com.emendes.adopetapi.model.entity.Pet;
+import br.com.emendes.adopetapi.model.entity.PetImage;
 import br.com.emendes.adopetapi.model.entity.Shelter;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @DisplayName("Unit tests for PetMapperImpl")
 class PetMapperImplTest {
@@ -30,6 +32,7 @@ class PetMapperImplTest {
         .name("Dark")
         .description("A very calm and cute cat")
         .age("3 months old")
+        .image("http://www.xptopetimages/images/cat123")
         .build();
 
     Pet actualPet = petMapper.createPetRequestToPet(createPetRequest);
@@ -41,15 +44,31 @@ class PetMapperImplTest {
     Assertions.assertThat(actualPet.getDescription()).isNotNull().isEqualTo("A very calm and cute cat");
     Assertions.assertThat(actualPet.getAge()).isNotNull().isEqualTo("3 months old");
     Assertions.assertThat(actualPet.isAdopted()).isFalse();
+
+    Assertions.assertThat(actualPet.getImages()).isNotNull().hasSize(1);
+
+    List<String> actualUrls = actualPet.getImages().stream().map(PetImage::getUrl).toList();
+
+    Assertions.assertThat(actualUrls).isNotNull()
+        .contains("http://www.xptopetimages/images/cat123");
+
     Assertions.assertThat(actualPet.getShelter()).isNull();
   }
 
   @Test
   @DisplayName("PetToPetResponse must return PetResponse when map successfully")
   void petToPetResponse_MustReturnPetResponse_WhenMapSuccessfully() {
+    PetImage petImage = PetImage.builder()
+        .id(10_000_000L)
+        .url("http://www.xptopetimages/images/cat123")
+        .build();
+
+    List<PetImage> petImageList = List.of(petImage);
+
     Shelter shelter = Shelter.builder()
         .id(1_000L)
         .build();
+
     Pet pet = Pet.builder()
         .id(10_000L)
         .name("Dark")
@@ -57,6 +76,7 @@ class PetMapperImplTest {
         .age("2 years old")
         .adopted(false)
         .shelter(shelter)
+        .images(petImageList)
         .createdAt(LocalDateTime.parse("2023-04-10T12:00:00"))
         .build();
 
@@ -69,6 +89,7 @@ class PetMapperImplTest {
     Assertions.assertThat(actualPetResponse.age()).isNotNull().isEqualTo("2 years old");
     Assertions.assertThat(actualPetResponse.adopted()).isFalse();
     Assertions.assertThat(actualPetResponse.shelterId()).isNotNull().isEqualTo(1_000L);
+    Assertions.assertThat(actualPetResponse.images()).isNotNull().hasSize(1);
   }
 
   @Test

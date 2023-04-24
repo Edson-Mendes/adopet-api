@@ -4,6 +4,9 @@ import br.com.emendes.adopetapi.dto.response.PetResponse;
 import br.com.emendes.adopetapi.model.entity.Pet;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
+import static br.com.emendes.adopetapi.util.PetImageUtils.imageResponse;
 
 public abstract class PetUtils {
 
@@ -50,6 +53,7 @@ public abstract class PetUtils {
         .age("2 years old")
         .adopted(false)
         .shelterId(1_000L)
+        .images(List.of(imageResponse()))
         .build();
   }
 

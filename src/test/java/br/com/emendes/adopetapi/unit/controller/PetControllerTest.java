@@ -66,7 +66,7 @@ class PetControllerTest {
               "description" : "A very calm and cute cat",
               "age" : "2 years old",
               "shelterId" : 1000,
-              "image" : "http://www.xptoppetimages/images/127884618780hsacnaf487fgasd"
+              "image" : "http://www.xptopetimages/images/cat123"
             }
           """;
 
@@ -82,6 +82,7 @@ class PetControllerTest {
       Assertions.assertThat(actualPetResponse.description()).isNotNull().isEqualTo("A very calm and cute cat");
       Assertions.assertThat(actualPetResponse.age()).isNotNull().isEqualTo("2 years old");
       Assertions.assertThat(actualPetResponse.shelterId()).isNotNull().isEqualTo(1_000L);
+      Assertions.assertThat(actualPetResponse.images()).isNotNull().hasSize(1);
     }
 
     @Test
@@ -92,7 +93,8 @@ class PetControllerTest {
               "name" : "",
               "description" : "A very calm and cute cat",
               "age" : "2 years old",
-              "shelterId" : 1000
+              "shelterId" : 1000,
+              "image" : "http://www.xptopetimages/images/cat123"
             }
           """;
 
