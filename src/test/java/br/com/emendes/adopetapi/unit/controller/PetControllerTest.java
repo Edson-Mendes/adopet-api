@@ -65,7 +65,8 @@ class PetControllerTest {
               "name" : "Dark",
               "description" : "A very calm and cute cat",
               "age" : "2 years old",
-              "shelterId" : 1000
+              "shelterId" : 1000,
+              "image" : "http://www.xptoppetimages/images/127884618780hsacnaf487fgasd"
             }
           """;
 

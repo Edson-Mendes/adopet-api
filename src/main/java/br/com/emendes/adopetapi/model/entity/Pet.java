@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 @AllArgsConstructor
@@ -28,6 +29,8 @@ public class Pet {
   private boolean adopted;
   @Column(nullable = false)
   private LocalDateTime createdAt;
+  @OneToMany(mappedBy = "pet", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+  private Collection<PetImage> images;
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private Shelter shelter;
   @OneToMany(mappedBy = "pet", fetch = FetchType.LAZY)

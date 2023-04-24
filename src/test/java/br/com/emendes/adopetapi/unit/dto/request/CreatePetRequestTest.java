@@ -218,4 +218,77 @@ class CreatePetRequestTest {
 
   }
 
+  @Nested
+  @DisplayName("Tests for image validation")
+  class ImageValidation {
+
+    @Test
+    @DisplayName("Validate image must not return violations when image is valid")
+    void validateImage_MustNotReturnViolations_WhenImageIsValid() {
+      CreatePetRequest createPetRequest = CreatePetRequest.builder()
+          .image("http://www.xptopetsimages.com/images/d823hd9h0h08dhahcpcqpok019k84773dbsab")
+          .build();
+
+      Set<ConstraintViolation<CreatePetRequest>> actualViolations = validator.validateProperty(
+          createPetRequest, "image");
+
+      Assertions.assertThat(actualViolations).isEmpty();
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"   ", "\t", "\n"})
+    @DisplayName("Validate image must return violations when image is blank")
+    void validateImage_MustReturnViolations_WhenImageIsBlank(String blankImage) {
+      CreatePetRequest createPetRequest = CreatePetRequest.builder()
+          .image(blankImage)
+          .build();
+
+      Set<ConstraintViolation<CreatePetRequest>> actualViolations = validator
+          .validateProperty(createPetRequest, "image");
+
+      List<String> actualMessages = actualViolations.stream().map(ConstraintViolation::getMessage).toList();
+
+      Assertions.assertThat(actualViolations).isNotEmpty();
+      Assertions.assertThat(actualMessages).contains("image must not be blank");
+    }
+
+    @Test
+    @DisplayName("Validate image must return violations when image size is bigger than 255 image")
+    void validateImage_MustReturnViolations_WhenImageSizeIsBiggerThan100Characters() {
+      String imageWith256Characters = "http://www.xptopetimages.com/images/76t768w67ge8a9hc" +
+          "hhf976gds76g97sahgf98ncijcn2843729hfdbncinasnlkasf6dft87a6tds5asg8c76h87h029310u4foadncjanxkam9fawe43i" +
+          "hhf976gds76g97sahgf98ncijcn2843729hfdbncinasnlkasf6dft87a6tds5asg8c76h87h029310u4foadncjanxkam9fawe43i";
+
+      CreatePetRequest createPetRequest = CreatePetRequest.builder()
+          .image(imageWith256Characters)
+          .build();
+
+      Set<ConstraintViolation<CreatePetRequest>> actualViolations = validator.validateProperty(
+          createPetRequest, "image");
+
+      Assertions.assertThat(imageWith256Characters).hasSize(256);
+      Assertions.assertThat(actualViolations).isNotEmpty().hasSize(1);
+      Assertions.assertThat(actualViolations.stream().findFirst().get().getMessage())
+          .isEqualTo("image must contain max 255 characters");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"http", "://www.xptocreatePets.com"})
+    @DisplayName("Validate image must return violations when image not is a well-formed image")
+    void validateImage_MustReturnViolations_WhenImageNotIsAWellFormedImage(String invalidImage) {
+      CreatePetRequest createPetRequest = CreatePetRequest.builder()
+          .image(invalidImage)
+          .build();
+
+      Set<ConstraintViolation<CreatePetRequest>> actualViolations = validator.validateProperty(
+          createPetRequest, "image");
+
+      Assertions.assertThat(actualViolations).isNotEmpty().hasSize(1);
+      Assertions.assertThat(actualViolations.stream().findFirst().get().getMessage())
+          .isEqualTo("image must be a well-formed url");
+    }
+
+  }
+
 }
