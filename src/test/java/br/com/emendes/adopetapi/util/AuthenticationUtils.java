@@ -19,4 +19,11 @@ public class AuthenticationUtils {
         .build();
   }
 
+  public static AuthenticationRequest guardianAuthenticationRequest() {
+    return AuthenticationRequest.builder()
+        .email("lorem@email.com")
+        .password("1234567890")
+        .build();
+  }
+
 }

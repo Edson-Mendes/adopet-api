@@ -17,10 +17,10 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import static br.com.emendes.adopetapi.util.AuthenticationUtils.guardianAuthenticationRequest;
 import static br.com.emendes.adopetapi.util.AuthenticationUtils.shelterAuthenticationRequest;
 import static br.com.emendes.adopetapi.util.ConstantUtils.CONTENT_TYPE;
-import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_MANY_SHELTERS_SQL_PATH;
-import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_SHELTER_SQL_PATH;
+import static br.com.emendes.adopetapi.util.sql.SqlPath.*;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -167,7 +167,7 @@ class UpdateShelterIT {
   @Test
   @Sql(scripts = {INSERT_MANY_SHELTERS_SQL_PATH})
   @DisplayName("PUT /api/shelters/{id} must return status 404 and ProblemDetail when a shelter tries to update another shelter")
-  void putApiSheltersId_MustReturnStatus404AndProblemDetail_WhenAShelterTriesTOUpdateAnotherShelter() {
+  void putApiSheltersId_MustReturnStatus404AndProblemDetail_WhenAShelterTriesToUpdateAnotherShelter() {
     // Realizar Login antes de buscar shelters.
     String authorizationHeaderValue = signIn.run(shelterAuthenticationRequest());
     UpdateShelterRequest requestBody = UpdateShelterRequest.builder()
@@ -238,6 +238,26 @@ class UpdateShelterIT {
         .body(Mono.just(requestBody), UpdateShelterRequest.class)
         .exchange()
         .expectStatus().isUnauthorized();
+  }
+
+  @Test
+  @Sql(scripts = {INSERT_GUARDIAN_SQL_PATH})
+  @DisplayName("PUT /api/shelters/{id} must return status 403 when user not is a SHELTER")
+  void putApiSheltersId_MustReturnStatus403_WhenUserNotIsAShelter() {
+    String authorizationHeaderValue = signIn.run(guardianAuthenticationRequest());
+
+    UpdateShelterRequest requestBody = UpdateShelterRequest.builder()
+        .name("ONG Animal Shelter")
+        .email("animal.shelter@email.com")
+        .build();
+
+    webTestClient.put()
+        .uri(generateUri("1"))
+        .header("Authorization", authorizationHeaderValue)
+        .header("Content-Type", CONTENT_TYPE)
+        .body(Mono.just(requestBody), UpdateShelterRequest.class)
+        .exchange()
+        .expectStatus().isForbidden();
   }
 
   private String generateUri(String resourceId) {
