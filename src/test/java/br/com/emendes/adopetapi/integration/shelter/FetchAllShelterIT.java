@@ -42,13 +42,13 @@ class FetchAllShelterIT {
   @Test
   @Sql(scripts = {INSERT_SHELTER_SQL_PATH})
   @DisplayName("GET /api/shelters must return status 200 and Page<ShelterResponse> when fetch all successfully")
-  void getApiShelters_MustReturnStatus200AndPageShelterResponse_WhenFetchAllSuccessfully() throws Exception {
+  void getApiShelters_MustReturnStatus200AndPageShelterResponse_WhenFetchAllSuccessfully() {
     // Realizar Login antes de buscar shelters.
-    String AuthorizationHeaderValue = signIn.run(shelterAuthenticationRequest());
+    String authorizationHeaderValue = signIn.run(shelterAuthenticationRequest());
 
     Page<ShelterResponse> actualResponseBody = webTestClient.get()
         .uri(SHELTER_URI)
-        .header("Authorization", AuthorizationHeaderValue)
+        .header("Authorization", authorizationHeaderValue)
         .exchange()
         .expectStatus().isOk()
         .expectBody(new ParameterizedTypeReference<PageableResponse<ShelterResponse>>() {
@@ -66,7 +66,7 @@ class FetchAllShelterIT {
 
   @Test
   @DisplayName("GET /api/shelters must return status 401 when client do not send JWT")
-  void getApiShelters_MustReturnStatus401_WhenClientDoNotSendJWT() throws Exception {
+  void getApiShelters_MustReturnStatus401_WhenClientDoNotSendJWT() {
     webTestClient.get()
         .uri(SHELTER_URI)
         .exchange()
