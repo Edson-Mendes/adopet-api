@@ -50,7 +50,7 @@ class DeleteShelterIT {
   @Sql(scripts = {INSERT_SHELTER_SQL_PATH})
   @DisplayName("DELETE /api/shelters/{id} must return status 204 when delete successfully")
   void DeleteApiSheltersId_MustReturnStatus204_WhenDeleteSuccessfully() {
-    // Realizar Login antes de buscar shelters.
+    // Realizar Login
     String authorizationHeaderValue = signIn.run(shelterAuthenticationRequest());
 
     webTestClient.delete()
@@ -72,7 +72,7 @@ class DeleteShelterIT {
   @Sql(scripts = {INSERT_SHELTER_SQL_PATH})
   @DisplayName("DELETE /api/shelters/{id} must return status 400 and ProblemDetail when id is invalid")
   void deleteApiSheltersId_MustReturnStatus400AndProblemDetail_WhenIdIsInvalid() {
-    // Realizar Login antes de buscar shelters.
+    // Realizar Login
     String authorizationHeaderValue = signIn.run(shelterAuthenticationRequest());
 
 
@@ -97,7 +97,7 @@ class DeleteShelterIT {
   @Sql(scripts = {INSERT_MANY_SHELTERS_SQL_PATH})
   @DisplayName("DELETE /api/shelters/{id} must return status 404 and ProblemDetail when a shelter tries to delete another shelter")
   void deleteApiSheltersId_MustReturnStatus404AndProblemDetail_WhenAShelterTriesToDeleteAnotherShelter() {
-    // Realizar Login antes de buscar shelters.
+    // Realizar Login
     String authorizationHeaderValue = signIn.run(shelterAuthenticationRequest());
 
     ProblemDetail actualResponseBody = webTestClient.delete()
@@ -121,7 +121,7 @@ class DeleteShelterIT {
   @Sql(scripts = {INSERT_SHELTER_SQL_PATH})
   @DisplayName("DELETE /api/shelters/{id} must return status 404 and ProblemDetail when shelter not found")
   void deleteApiSheltersId_MustReturnStatus404AndProblemDetail_WhenShelterNotFound() {
-    // Realizar Login antes de buscar shelters.
+    // Realizar Login
     String authorizationHeaderValue = signIn.run(shelterAuthenticationRequest());
 
     ProblemDetail actualResponseBody = webTestClient.delete()

@@ -41,7 +41,7 @@ class FindByIdShelterIT {
   @Sql(scripts = {INSERT_SHELTER_SQL_PATH})
   @DisplayName("GET /api/shelters/{id} must return status 200 and ShelterResponse when find by id successfully")
   void getApiSheltersId_MustReturnStatus200AndShelterResponse_WhenFindByIdSuccessfully() {
-    // Realizar Login antes de buscar shelters.
+    // Realizar Login
     String authorizationHeaderValue = signIn.run(shelterAuthenticationRequest());
 
     ShelterResponse actualResponseBody = webTestClient.get()
@@ -62,7 +62,7 @@ class FindByIdShelterIT {
   @Sql(scripts = {INSERT_SHELTER_SQL_PATH})
   @DisplayName("GET /api/shelters/{id} must return status 400 and ProblemDetail when id is invalid")
   void getApiSheltersId_MustReturnStatus400AndProblemDetail_WhenIdIsInvalid() {
-    // Realizar Login antes de buscar shelters.
+    // Realizar Login
     String authorizationHeaderValue = signIn.run(shelterAuthenticationRequest());
 
     ProblemDetail actualResponseBody = webTestClient.get()
@@ -86,7 +86,7 @@ class FindByIdShelterIT {
   @Sql(scripts = {INSERT_SHELTER_SQL_PATH})
   @DisplayName("GET /api/shelters/{id} must return status 400 and ProblemDetail when shelter not found")
   void getApiSheltersId_MustReturnStatus400AndProblemDetail_WhenShelterNotFound() {
-    // Realizar Login antes de buscar shelters.
+    // Realizar Login
     String authorizationHeaderValue = signIn.run(shelterAuthenticationRequest());
 
     ProblemDetail actualResponseBody = webTestClient.get()

@@ -43,7 +43,7 @@ class FetchAllShelterIT {
   @Sql(scripts = {INSERT_SHELTER_SQL_PATH})
   @DisplayName("GET /api/shelters must return status 200 and Page<ShelterResponse> when fetch all successfully")
   void getApiShelters_MustReturnStatus200AndPageShelterResponse_WhenFetchAllSuccessfully() {
-    // Realizar Login antes de buscar shelters.
+    // Realizar Login.
     String authorizationHeaderValue = signIn.run(shelterAuthenticationRequest());
 
     Page<ShelterResponse> actualResponseBody = webTestClient.get()

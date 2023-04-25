@@ -7,4 +7,5 @@ public class SqlPath {
   public static final String INSERT_SHELTER_SQL_PATH = "/sql/user/shelter/insert-shelter.sql";
   public static final String INSERT_MANY_SHELTERS_SQL_PATH = "/sql/user/shelter/insert-many-shelters.sql";
   public static final String INSERT_GUARDIAN_SQL_PATH = "/sql/user/guardian/insert-guardian.sql";
+  public static final String INSERT_MANY_GUARDIANS_SQL_PATH = "/sql/user/guardian/insert-many-guardians.sql";
 }
