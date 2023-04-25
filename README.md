@@ -23,7 +23,9 @@ Projeto proposto pela Alura no Challenge Backend 6ª Edição.
 - `Lombok`
 - `Mockito`
 - `JUnit5`
+- `TestContainers`
 - `Unit tests`
+- `Integration tests`
 
 ## :bulb: Funcionalidades
 
