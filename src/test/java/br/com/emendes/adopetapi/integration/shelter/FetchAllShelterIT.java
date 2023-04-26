@@ -1,6 +1,5 @@
 package br.com.emendes.adopetapi.integration.shelter;
 
-import br.com.emendes.adopetapi.dto.response.GuardianResponse;
 import br.com.emendes.adopetapi.dto.response.ShelterResponse;
 import br.com.emendes.adopetapi.util.PageableResponse;
 import br.com.emendes.adopetapi.util.component.SignIn;
@@ -20,6 +19,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static br.com.emendes.adopetapi.util.AuthenticationUtils.guardianAuthenticationRequest;
 import static br.com.emendes.adopetapi.util.AuthenticationUtils.shelterAuthenticationRequest;
+import static br.com.emendes.adopetapi.util.ConstantUtils.AUTHORIZATION_HEADER_NAME;
 import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_GUARDIAN_AND_SHELTER_SQL_PATH;
 import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_SHELTER_SQL_PATH;
 
@@ -51,7 +51,7 @@ class FetchAllShelterIT {
 
     Page<ShelterResponse> actualResponseBody = webTestClient.get()
         .uri(SHELTER_URI)
-        .header("Authorization", authorizationHeaderValue)
+        .header(AUTHORIZATION_HEADER_NAME, authorizationHeaderValue)
         .exchange()
         .expectStatus().isOk()
         .expectBody(new ParameterizedTypeReference<PageableResponse<ShelterResponse>>() {
@@ -76,7 +76,7 @@ class FetchAllShelterIT {
 
     Page<ShelterResponse> actualResponseBody = webTestClient.get()
         .uri(SHELTER_URI)
-        .header("Authorization", authorizationHeaderValue)
+        .header(AUTHORIZATION_HEADER_NAME, authorizationHeaderValue)
         .exchange()
         .expectStatus().isOk()
         .expectBody(new ParameterizedTypeReference<PageableResponse<ShelterResponse>>() {

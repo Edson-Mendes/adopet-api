@@ -17,6 +17,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static br.com.emendes.adopetapi.util.AuthenticationUtils.guardianAuthenticationRequest;
 import static br.com.emendes.adopetapi.util.AuthenticationUtils.shelterAuthenticationRequest;
+import static br.com.emendes.adopetapi.util.ConstantUtils.AUTHORIZATION_HEADER_NAME;
 import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_GUARDIAN_AND_SHELTER_SQL_PATH;
 import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_GUARDIAN_SQL_PATH;
 
@@ -48,7 +49,7 @@ class FindByIdGuardianIT {
 
     GuardianResponse actualResponseBody = webTestClient.get()
         .uri(generateUri("1"))
-        .header("Authorization", authorizationHeaderValue)
+        .header(AUTHORIZATION_HEADER_NAME, authorizationHeaderValue)
         .exchange()
         .expectStatus().isOk()
         .expectBody(GuardianResponse.class)
@@ -69,7 +70,7 @@ class FindByIdGuardianIT {
 
     GuardianResponse actualResponseBody = webTestClient.get()
         .uri(generateUri("1"))
-        .header("Authorization", authorizationHeaderValue)
+        .header(AUTHORIZATION_HEADER_NAME, authorizationHeaderValue)
         .exchange()
         .expectStatus().isOk()
         .expectBody(GuardianResponse.class)
@@ -90,7 +91,7 @@ class FindByIdGuardianIT {
 
     ProblemDetail actualResponseBody = webTestClient.get()
         .uri(generateUri("1o0"))
-        .header("Authorization", authorizationHeaderValue)
+        .header(AUTHORIZATION_HEADER_NAME, authorizationHeaderValue)
         .exchange()
         .expectStatus().isBadRequest()
         .expectBody(ProblemDetail.class)
@@ -114,7 +115,7 @@ class FindByIdGuardianIT {
 
     ProblemDetail actualResponseBody = webTestClient.get()
         .uri(generateUri("100"))
-        .header("Authorization", authorizationHeaderValue)
+        .header(AUTHORIZATION_HEADER_NAME, authorizationHeaderValue)
         .exchange()
         .expectStatus().isNotFound()
         .expectBody(ProblemDetail.class)

@@ -19,6 +19,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static br.com.emendes.adopetapi.util.AuthenticationUtils.guardianAuthenticationRequest;
 import static br.com.emendes.adopetapi.util.AuthenticationUtils.shelterAuthenticationRequest;
+import static br.com.emendes.adopetapi.util.ConstantUtils.AUTHORIZATION_HEADER_NAME;
 import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_GUARDIAN_AND_SHELTER_SQL_PATH;
 import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_GUARDIAN_SQL_PATH;
 
@@ -50,7 +51,7 @@ class FetchAllGuardianIT {
 
     Page<GuardianResponse> actualResponseBody = webTestClient.get()
         .uri(GUARDIAN_URI)
-        .header("Authorization", authorizationHeaderValue)
+        .header(AUTHORIZATION_HEADER_NAME, authorizationHeaderValue)
         .exchange()
         .expectStatus().isOk()
         .expectBody(new ParameterizedTypeReference<PageableResponse<GuardianResponse>>() {
@@ -75,7 +76,7 @@ class FetchAllGuardianIT {
 
     Page<GuardianResponse> actualResponseBody = webTestClient.get()
         .uri(GUARDIAN_URI)
-        .header("Authorization", authorizationHeaderValue)
+        .header(AUTHORIZATION_HEADER_NAME, authorizationHeaderValue)
         .exchange()
         .expectStatus().isOk()
         .expectBody(new ParameterizedTypeReference<PageableResponse<GuardianResponse>>() {

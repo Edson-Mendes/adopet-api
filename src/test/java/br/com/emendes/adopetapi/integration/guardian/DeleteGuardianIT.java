@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import static br.com.emendes.adopetapi.util.AuthenticationUtils.guardianAuthenticationRequest;
 import static br.com.emendes.adopetapi.util.AuthenticationUtils.shelterAuthenticationRequest;
+import static br.com.emendes.adopetapi.util.ConstantUtils.AUTHORIZATION_HEADER_NAME;
 import static br.com.emendes.adopetapi.util.ConstantUtils.CONTENT_TYPE;
 import static br.com.emendes.adopetapi.util.sql.SqlPath.*;
 
@@ -53,7 +54,7 @@ class DeleteGuardianIT {
 
     webTestClient.delete()
         .uri(generateUri("1"))
-        .header("Authorization", authorizationHeaderValue)
+        .header(AUTHORIZATION_HEADER_NAME, authorizationHeaderValue)
         .exchange()
         .expectStatus().isNoContent();
 
@@ -76,7 +77,7 @@ class DeleteGuardianIT {
 
     ProblemDetail actualResponseBody = webTestClient.delete()
         .uri(generateUri("1o0"))
-        .header("Authorization", authorizationHeaderValue)
+        .header(AUTHORIZATION_HEADER_NAME, authorizationHeaderValue)
         .exchange()
         .expectStatus().isBadRequest()
         .expectBody(ProblemDetail.class)
@@ -100,7 +101,7 @@ class DeleteGuardianIT {
 
     ProblemDetail actualResponseBody = webTestClient.delete()
         .uri(generateUri("2"))
-        .header("Authorization", authorizationHeaderValue)
+        .header(AUTHORIZATION_HEADER_NAME, authorizationHeaderValue)
         .exchange()
         .expectStatus().isNotFound()
         .expectBody(ProblemDetail.class)
@@ -124,7 +125,7 @@ class DeleteGuardianIT {
 
     ProblemDetail actualResponseBody = webTestClient.delete()
         .uri(generateUri("100"))
-        .header("Authorization", authorizationHeaderValue)
+        .header(AUTHORIZATION_HEADER_NAME, authorizationHeaderValue)
         .exchange()
         .expectStatus().isNotFound()
         .expectBody(ProblemDetail.class)
@@ -157,7 +158,7 @@ class DeleteGuardianIT {
 
     webTestClient.delete()
         .uri(generateUri("1"))
-        .header("Authorization", authorizationHeaderValue)
+        .header(AUTHORIZATION_HEADER_NAME, authorizationHeaderValue)
         .exchange()
         .expectStatus().isForbidden();
   }

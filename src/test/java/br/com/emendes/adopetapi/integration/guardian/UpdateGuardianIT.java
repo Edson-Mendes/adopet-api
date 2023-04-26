@@ -20,6 +20,7 @@ import reactor.core.publisher.Mono;
 import static br.com.emendes.adopetapi.util.AuthenticationUtils.guardianAuthenticationRequest;
 import static br.com.emendes.adopetapi.util.AuthenticationUtils.shelterAuthenticationRequest;
 import static br.com.emendes.adopetapi.util.ConstantUtils.CONTENT_TYPE;
+import static br.com.emendes.adopetapi.util.ConstantUtils.CONTENT_TYPE_HEADER_NAME;
 import static br.com.emendes.adopetapi.util.sql.SqlPath.*;
 
 @Slf4j
@@ -55,7 +56,7 @@ class UpdateGuardianIT {
     GuardianResponse actualResponseBody = webTestClient.put()
         .uri(generateUri("1"))
         .header("Authorization", authorizationHeaderValue)
-        .header("Content-Type", CONTENT_TYPE)
+        .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE)
         .body(Mono.just(requestBody), UpdateGuardianRequest.class)
         .exchange()
         .expectStatus().isOk()
@@ -82,7 +83,7 @@ class UpdateGuardianIT {
     ProblemDetail actualResponseBody = webTestClient.put()
         .uri(generateUri("1o0"))
         .header("Authorization", authorizationHeaderValue)
-        .header("Content-Type", CONTENT_TYPE)
+        .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE)
         .body(Mono.just(requestBody), UpdateGuardianRequest.class)
         .exchange()
         .expectStatus().isBadRequest()
@@ -112,7 +113,7 @@ class UpdateGuardianIT {
     ProblemDetail actualResponseBody = webTestClient.put()
         .uri(generateUri("1"))
         .header("Authorization", authorizationHeaderValue)
-        .header("Content-Type", CONTENT_TYPE)
+        .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE)
         .body(Mono.just(requestBody), UpdateGuardianRequest.class)
         .exchange()
         .expectStatus().isBadRequest()
@@ -148,7 +149,7 @@ class UpdateGuardianIT {
     ProblemDetail actualResponseBody = webTestClient.put()
         .uri(generateUri("1"))
         .header("Authorization", authorizationHeaderValue)
-        .header("Content-Type", CONTENT_TYPE)
+        .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE)
         .body(Mono.just(requestBody), UpdateGuardianRequest.class)
         .exchange()
         .expectStatus().isBadRequest()
@@ -178,7 +179,7 @@ class UpdateGuardianIT {
     ProblemDetail actualResponseBody = webTestClient.put()
         .uri(generateUri("2"))
         .header("Authorization", authorizationHeaderValue)
-        .header("Content-Type", CONTENT_TYPE)
+        .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE)
         .body(Mono.just(requestBody), UpdateGuardianRequest.class)
         .exchange()
         .expectStatus().isNotFound()
@@ -208,7 +209,7 @@ class UpdateGuardianIT {
     ProblemDetail actualResponseBody = webTestClient.put()
         .uri(generateUri("100"))
         .header("Authorization", authorizationHeaderValue)
-        .header("Content-Type", CONTENT_TYPE)
+        .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE)
         .body(Mono.just(requestBody), UpdateGuardianRequest.class)
         .exchange()
         .expectStatus().isNotFound()
@@ -234,7 +235,7 @@ class UpdateGuardianIT {
 
     webTestClient.put()
         .uri(generateUri("1"))
-        .header("Content-Type", CONTENT_TYPE)
+        .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE)
         .body(Mono.just(requestBody), UpdateGuardianRequest.class)
         .exchange()
         .expectStatus().isUnauthorized();
@@ -254,7 +255,7 @@ class UpdateGuardianIT {
     webTestClient.put()
         .uri(generateUri("1"))
         .header("Authorization", authorizationHeaderValue)
-        .header("Content-Type", CONTENT_TYPE)
+        .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE)
         .body(Mono.just(requestBody), UpdateGuardianRequest.class)
         .exchange()
         .expectStatus().isForbidden();

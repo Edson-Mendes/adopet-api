@@ -16,6 +16,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 import static br.com.emendes.adopetapi.util.ConstantUtils.CONTENT_TYPE;
+import static br.com.emendes.adopetapi.util.ConstantUtils.CONTENT_TYPE_HEADER_NAME;
 import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_SHELTER_SQL_PATH;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -28,7 +29,6 @@ class CreateShelterIT {
   private WebTestClient webTestClient;
 
   private static final String SHELTER_URI = "/api/shelters";
-  public static final String CONTENT_TYPE_HEADER_NAME = "Content-Type";
 
   @Test
   @DisplayName("POST /api/shelters must return status 201 and ShelterResponse when create successfully")

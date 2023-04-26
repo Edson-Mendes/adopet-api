@@ -16,6 +16,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 import static br.com.emendes.adopetapi.util.ConstantUtils.CONTENT_TYPE;
+import static br.com.emendes.adopetapi.util.ConstantUtils.CONTENT_TYPE_HEADER_NAME;
 import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_GUARDIAN_SQL_PATH;
 import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_SHELTER_SQL_PATH;
 
@@ -29,7 +30,6 @@ class AuthenticationIT {
   private WebTestClient webTestClient;
 
   private static final String AUTH_URI = "/api/auth";
-  public static final String CONTENT_TYPE_HEADER_NAME = "Content-Type";
 
   @Test
   @Sql(scripts = {INSERT_GUARDIAN_SQL_PATH})

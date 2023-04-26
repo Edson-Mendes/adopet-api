@@ -20,10 +20,8 @@ import java.util.Optional;
 
 import static br.com.emendes.adopetapi.util.AuthenticationUtils.guardianAuthenticationRequest;
 import static br.com.emendes.adopetapi.util.AuthenticationUtils.shelterAuthenticationRequest;
-import static br.com.emendes.adopetapi.util.ConstantUtils.CONTENT_TYPE;
-import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_MANY_SHELTERS_SQL_PATH;
-import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_SHELTER_SQL_PATH;
-import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_GUARDIAN_SQL_PATH;
+import static br.com.emendes.adopetapi.util.ConstantUtils.AUTHORIZATION_HEADER_NAME;
+import static br.com.emendes.adopetapi.util.sql.SqlPath.*;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -55,7 +53,7 @@ class DeleteShelterIT {
 
     webTestClient.delete()
         .uri(generateUri("1"))
-        .header("Authorization", authorizationHeaderValue)
+        .header(AUTHORIZATION_HEADER_NAME, authorizationHeaderValue)
         .exchange()
         .expectStatus().isNoContent();
 
@@ -78,7 +76,7 @@ class DeleteShelterIT {
 
     ProblemDetail actualResponseBody = webTestClient.delete()
         .uri(generateUri("1o0"))
-        .header("Authorization", authorizationHeaderValue)
+        .header(AUTHORIZATION_HEADER_NAME, authorizationHeaderValue)
         .exchange()
         .expectStatus().isBadRequest()
         .expectBody(ProblemDetail.class)
@@ -102,7 +100,7 @@ class DeleteShelterIT {
 
     ProblemDetail actualResponseBody = webTestClient.delete()
         .uri(generateUri("2"))
-        .header("Authorization", authorizationHeaderValue)
+        .header(AUTHORIZATION_HEADER_NAME, authorizationHeaderValue)
         .exchange()
         .expectStatus().isNotFound()
         .expectBody(ProblemDetail.class)
@@ -126,7 +124,7 @@ class DeleteShelterIT {
 
     ProblemDetail actualResponseBody = webTestClient.delete()
         .uri(generateUri("100"))
-        .header("Authorization", authorizationHeaderValue)
+        .header(AUTHORIZATION_HEADER_NAME, authorizationHeaderValue)
         .exchange()
         .expectStatus().isNotFound()
         .expectBody(ProblemDetail.class)
@@ -146,7 +144,6 @@ class DeleteShelterIT {
   void deleteApiSheltersId_MustReturnStatus401_WhenClientDoNotSendJWT() {
     webTestClient.delete()
         .uri(generateUri("1"))
-        .header("Content-Type", CONTENT_TYPE)
         .exchange()
         .expectStatus().isUnauthorized();
   }
@@ -159,7 +156,7 @@ class DeleteShelterIT {
 
     webTestClient.delete()
         .uri(generateUri("1"))
-        .header("Authorization", authorizationHeaderValue)
+        .header(AUTHORIZATION_HEADER_NAME, authorizationHeaderValue)
         .exchange()
         .expectStatus().isForbidden();
   }

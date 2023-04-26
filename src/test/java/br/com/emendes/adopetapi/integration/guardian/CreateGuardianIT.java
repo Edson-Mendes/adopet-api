@@ -15,6 +15,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 import static br.com.emendes.adopetapi.util.ConstantUtils.CONTENT_TYPE;
+import static br.com.emendes.adopetapi.util.ConstantUtils.CONTENT_TYPE_HEADER_NAME;
 import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_GUARDIAN_SQL_PATH;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -27,7 +28,6 @@ class CreateGuardianIT {
   private WebTestClient webTestClient;
 
   private static final String GUARDIAN_URI = "/api/guardians";
-  public static final String CONTENT_TYPE_HEADER_NAME = "Content-Type";
 
   @Test
   @DisplayName("POST /api/guardians must return status 201 and GuardianResponse when create successfully")
