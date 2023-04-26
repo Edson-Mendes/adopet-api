@@ -1,5 +1,6 @@
 package br.com.emendes.adopetapi.integration.shelter;
 
+import br.com.emendes.adopetapi.dto.response.GuardianResponse;
 import br.com.emendes.adopetapi.dto.response.ShelterResponse;
 import br.com.emendes.adopetapi.util.PageableResponse;
 import br.com.emendes.adopetapi.util.component.SignIn;
@@ -17,7 +18,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import static br.com.emendes.adopetapi.util.AuthenticationUtils.guardianAuthenticationRequest;
 import static br.com.emendes.adopetapi.util.AuthenticationUtils.shelterAuthenticationRequest;
+import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_GUARDIAN_AND_SHELTER_SQL_PATH;
 import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_SHELTER_SQL_PATH;
 
 @Slf4j
@@ -45,6 +48,31 @@ class FetchAllShelterIT {
   void getApiShelters_MustReturnStatus200AndPageShelterResponse_WhenFetchAllSuccessfully() {
     // Realizar Login.
     String authorizationHeaderValue = signIn.run(shelterAuthenticationRequest());
+
+    Page<ShelterResponse> actualResponseBody = webTestClient.get()
+        .uri(SHELTER_URI)
+        .header("Authorization", authorizationHeaderValue)
+        .exchange()
+        .expectStatus().isOk()
+        .expectBody(new ParameterizedTypeReference<PageableResponse<ShelterResponse>>() {
+        })
+        .returnResult().getResponseBody();
+
+    Assertions.assertThat(actualResponseBody).isNotNull().hasSize(1);
+
+    ShelterResponse actualShelterResponse = actualResponseBody.stream().toList().get(0);
+
+    Assertions.assertThat(actualShelterResponse.id()).isNotNull();
+    Assertions.assertThat(actualShelterResponse.name()).isNotNull().isEqualTo("Animal Shelter");
+    Assertions.assertThat(actualShelterResponse.email()).isNotNull().isEqualTo("animal.shelter@email.com");
+  }
+
+  @Test
+  @Sql(scripts = {INSERT_GUARDIAN_AND_SHELTER_SQL_PATH})
+  @DisplayName("GET /api/shelters must return status 200 and Page<GuardianResponse> when guardian user fetch all successfully")
+  void getApiShelters_MustReturnStatus200AndPageGuardianResponse_WhenGuardianUserFetchAllSuccessfully() {
+    // Realizar Login.
+    String authorizationHeaderValue = signIn.run(guardianAuthenticationRequest());
 
     Page<ShelterResponse> actualResponseBody = webTestClient.get()
         .uri(SHELTER_URI)

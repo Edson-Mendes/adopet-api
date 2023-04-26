@@ -17,12 +17,14 @@ Projeto proposto pela Alura no Challenge Backend 6ª Edição.
 - `Maven`
 - `Spring Boot`
 - `Spring Data JPA`
+- `Spring Security`
 - `Docker`
 - `PostgreSQL`
 - `Flyway`
 - `Lombok`
 - `Mockito`
 - `JUnit5`
+- `WebTestClient`
 - `TestContainers`
 - `Unit tests`
 - `Integration tests`

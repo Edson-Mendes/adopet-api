@@ -16,6 +16,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static br.com.emendes.adopetapi.util.AuthenticationUtils.guardianAuthenticationRequest;
+import static br.com.emendes.adopetapi.util.AuthenticationUtils.shelterAuthenticationRequest;
+import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_GUARDIAN_AND_SHELTER_SQL_PATH;
 import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_GUARDIAN_SQL_PATH;
 
 @Slf4j
@@ -43,6 +45,27 @@ class FindByIdGuardianIT {
   void getApiGuardiansId_MustReturnStatus200AndGuardianResponse_WhenFindByIdSuccessfully() {
     // Realizar Login
     String authorizationHeaderValue = signIn.run(guardianAuthenticationRequest());
+
+    GuardianResponse actualResponseBody = webTestClient.get()
+        .uri(generateUri("1"))
+        .header("Authorization", authorizationHeaderValue)
+        .exchange()
+        .expectStatus().isOk()
+        .expectBody(GuardianResponse.class)
+        .returnResult().getResponseBody();
+
+    Assertions.assertThat(actualResponseBody).isNotNull();
+    Assertions.assertThat(actualResponseBody.id()).isNotNull().isEqualTo(1L);
+    Assertions.assertThat(actualResponseBody.name()).isNotNull().isEqualTo("Lorem Ipsum");
+    Assertions.assertThat(actualResponseBody.email()).isNotNull().isEqualTo("lorem@email.com");
+  }
+
+  @Test
+  @Sql(scripts = {INSERT_GUARDIAN_AND_SHELTER_SQL_PATH})
+  @DisplayName("GET /api/guardians/{id} must return status 200 and GuardianResponse when shelter user find by id successfully")
+  void getApiGuardiansId_MustReturnStatus200AndGuardianResponse_WhenShelterUserFindByIdSuccessfully() {
+    // Realizar Login
+    String authorizationHeaderValue = signIn.run(shelterAuthenticationRequest());
 
     GuardianResponse actualResponseBody = webTestClient.get()
         .uri(generateUri("1"))

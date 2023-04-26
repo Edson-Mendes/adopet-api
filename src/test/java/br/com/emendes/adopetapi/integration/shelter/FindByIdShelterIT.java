@@ -15,7 +15,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import static br.com.emendes.adopetapi.util.AuthenticationUtils.guardianAuthenticationRequest;
 import static br.com.emendes.adopetapi.util.AuthenticationUtils.shelterAuthenticationRequest;
+import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_GUARDIAN_AND_SHELTER_SQL_PATH;
 import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_SHELTER_SQL_PATH;
 
 @Slf4j
@@ -43,6 +45,27 @@ class FindByIdShelterIT {
   void getApiSheltersId_MustReturnStatus200AndShelterResponse_WhenFindByIdSuccessfully() {
     // Realizar Login
     String authorizationHeaderValue = signIn.run(shelterAuthenticationRequest());
+
+    ShelterResponse actualResponseBody = webTestClient.get()
+        .uri(generateUri("1"))
+        .header("Authorization", authorizationHeaderValue)
+        .exchange()
+        .expectStatus().isOk()
+        .expectBody(ShelterResponse.class)
+        .returnResult().getResponseBody();
+
+    Assertions.assertThat(actualResponseBody).isNotNull();
+    Assertions.assertThat(actualResponseBody.id()).isNotNull().isEqualTo(1L);
+    Assertions.assertThat(actualResponseBody.name()).isNotNull().isEqualTo("Animal Shelter");
+    Assertions.assertThat(actualResponseBody.email()).isNotNull().isEqualTo("animal.shelter@email.com");
+  }
+
+  @Test
+  @Sql(scripts = {INSERT_GUARDIAN_AND_SHELTER_SQL_PATH})
+  @DisplayName("GET /api/shelters/{id} must return status 200 and GuardianResponse when guardian user find by id successfully")
+  void getApiSheltersId_MustReturnStatus200AndGuardianResponse_WhenGuardianUserFindByIdSuccessfully() {
+    // Realizar Login
+    String authorizationHeaderValue = signIn.run(guardianAuthenticationRequest());
 
     ShelterResponse actualResponseBody = webTestClient.get()
         .uri(generateUri("1"))
