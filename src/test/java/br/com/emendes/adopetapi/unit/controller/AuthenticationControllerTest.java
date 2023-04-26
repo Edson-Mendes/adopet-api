@@ -91,7 +91,7 @@ class AuthenticationControllerTest {
 
       Assertions.assertThat(actualProblemDetail).isNotNull();
       Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Bad Credentials");
-      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull().isEqualTo("Bad Credentials");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull().isEqualTo("Incorrect email or password");
       Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(400);
     }
 
