@@ -18,8 +18,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static br.com.emendes.adopetapi.util.AuthenticationUtils.shelterAuthenticationRequest;
 import static br.com.emendes.adopetapi.util.ConstantUtils.AUTHORIZATION_HEADER_NAME;
-import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_SHELTER_PET_GUARDIAN_SQL_PATH;
-import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_SHELTER_PET_SQL_PATH;
+import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_PET_SHELTER_GUARDIAN_SQL_PATH;
+import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_PET_SHELTER_SQL_PATH;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -40,7 +40,7 @@ class FetchAllPetIT {
   }
 
   @Test
-  @Sql(scripts = {INSERT_SHELTER_PET_SQL_PATH})
+  @Sql(scripts = {INSERT_PET_SHELTER_SQL_PATH})
   @DisplayName("GET /api/pets must return status 200 and Page<PetResponse> when guardian user fetch all successfully")
   void getApiPets_MustReturnStatus200AndPagePetResponse_WhenGuardianUserFetchAllSuccessfully() {
     // Realizar Login.
@@ -69,7 +69,7 @@ class FetchAllPetIT {
   }
 
   @Test
-  @Sql(scripts = {INSERT_SHELTER_PET_GUARDIAN_SQL_PATH})
+  @Sql(scripts = {INSERT_PET_SHELTER_GUARDIAN_SQL_PATH})
   @DisplayName("GET /api/pets must return status 200 and Page<PetResponse> when shelter user fetch all successfully")
   void getApiPets_MustReturnStatus200AndPagePetResponse_WhenShelterUserFetchAllSuccessfully() {
     // Realizar Login.

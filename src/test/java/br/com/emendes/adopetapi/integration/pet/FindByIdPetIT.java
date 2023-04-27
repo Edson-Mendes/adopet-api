@@ -40,7 +40,7 @@ class FindByIdPetIT {
   }
 
   @Test
-  @Sql(scripts = {INSERT_SHELTER_PET_GUARDIAN_SQL_PATH})
+  @Sql(scripts = {INSERT_PET_SHELTER_GUARDIAN_SQL_PATH})
   @DisplayName("GET /api/pets/{id} must return status 200 and PetResponse when guardian user find by id successfully")
   void getApiPetsId_MustReturnStatus200AndPetResponse_WhenGuardianUserFindByIdSuccessfully() {
     // Realizar Login
@@ -65,7 +65,7 @@ class FindByIdPetIT {
   }
 
   @Test
-  @Sql(scripts = {INSERT_SHELTER_PET_GUARDIAN_SQL_PATH})
+  @Sql(scripts = {INSERT_PET_SHELTER_GUARDIAN_SQL_PATH})
   @DisplayName("GET /api/pets/{id} must return status 200 and PetResponse when shelter user find by id successfully")
   void getApiPetsId_MustReturnStatus200AndPetResponse_WhenShelterUserFindByIdSuccessfully() {
     // Realizar Login
@@ -91,7 +91,7 @@ class FindByIdPetIT {
 
 
   @Test
-  @Sql(scripts = {INSERT_SHELTER_PET_GUARDIAN_SQL_PATH})
+  @Sql(scripts = {INSERT_PET_SHELTER_GUARDIAN_SQL_PATH})
   @DisplayName("GET /api/pets/{id} must return status 400 and ProblemDetail when id is invalid")
   void getApiPetsId_MustReturnStatus400AndProblemDetail_WhenIdIsInvalid() {
     // Realizar Login
@@ -115,7 +115,7 @@ class FindByIdPetIT {
   }
 
   @Test
-  @Sql(scripts = {INSERT_SHELTER_PET_GUARDIAN_SQL_PATH})
+  @Sql(scripts = {INSERT_PET_SHELTER_GUARDIAN_SQL_PATH})
   @DisplayName("GET /api/pets/{id} must return status 400 and ProblemDetail when pet not found")
   void getApiPetsId_MustReturnStatus400AndProblemDetail_WhenGuardianNotFound() {
     // Realizar Login

@@ -45,7 +45,7 @@ class DeletePetIT {
   }
 
   @Test
-  @Sql(scripts = {INSERT_SHELTER_PET_SQL_PATH})
+  @Sql(scripts = {INSERT_PET_SHELTER_SQL_PATH})
   @DisplayName("DELETE /api/pets/{id} must return status 204 when delete successfully")
   void DeleteApiPetsId_MustReturnStatus204_WhenDeleteSuccessfully() {
     // Realizar Login
@@ -63,7 +63,7 @@ class DeletePetIT {
   }
 
   @Test
-  @Sql(scripts = {INSERT_SHELTER_PET_SQL_PATH})
+  @Sql(scripts = {INSERT_PET_SHELTER_SQL_PATH})
   @DisplayName("DELETE /api/pets/{id} must return status 400 and ProblemDetail when id is invalid")
   void deleteApiPetsId_MustReturnStatus400AndProblemDetail_WhenIdIsInvalid() {
     // Realizar Login
@@ -137,7 +137,7 @@ class DeletePetIT {
   }
 
   @Test
-  @Sql(scripts = {INSERT_SHELTER_PET_SQL_PATH})
+  @Sql(scripts = {INSERT_PET_SHELTER_SQL_PATH})
   @DisplayName("DELETE /api/pets/{id} must return status 404 and ProblemDetail when pet not found")
   void deleteApiPetsId_MustReturnStatus404AndProblemDetail_WhenPetNotFound() {
     // Realizar Login
@@ -171,8 +171,8 @@ class DeletePetIT {
 
   @Test
   @Sql(scripts = {INSERT_GUARDIAN_SQL_PATH})
-  @DisplayName("DELETE /api/pets/{id} must return status 403 when user not is a SHELTER")
-  void deleteApiPetsId_MustReturnStatus403_WhenUserNotIsAShelter() {
+  @DisplayName("DELETE /api/pets/{id} must return status 403 when user is not a SHELTER")
+  void deleteApiPetsId_MustReturnStatus403_WhenUserIsNotAShelter() {
     String authorizationHeaderValue = signIn.run(guardianAuthenticationRequest());
 
     webTestClient.delete()

@@ -152,8 +152,8 @@ class DeleteGuardianIT {
 
   @Test
   @Sql(scripts = {INSERT_SHELTER_SQL_PATH})
-  @DisplayName("DELETE /api/guardians/{id} must return status 403 when user not is a GUARDIAN")
-  void deleteApiGuardiansId_MustReturnStatus403_WhenUserNotIsAGuardian() {
+  @DisplayName("DELETE /api/guardians/{id} must return status 403 when user is not a GUARDIAN")
+  void deleteApiGuardiansId_MustReturnStatus403_WhenUserIsNotAGuardian() {
     String authorizationHeaderValue = signIn.run(shelterAuthenticationRequest());
 
     webTestClient.delete()

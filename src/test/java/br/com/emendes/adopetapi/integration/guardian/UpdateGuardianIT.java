@@ -243,8 +243,8 @@ class UpdateGuardianIT {
 
   @Test
   @Sql(scripts = {INSERT_SHELTER_SQL_PATH})
-  @DisplayName("PUT /api/guardians/{id} must return status 403 when user not is a GUARDIAN")
-  void putApiGuardiansId_MustReturnStatus403_WhenUserNotIsAGuardian() {
+  @DisplayName("PUT /api/guardians/{id} must return status 403 when user is not a GUARDIAN")
+  void putApiGuardiansId_MustReturnStatus403_WhenUserIsNotAGuardian() {
     String authorizationHeaderValue = signIn.run(shelterAuthenticationRequest());
 
     UpdateGuardianRequest requestBody = UpdateGuardianRequest.builder()

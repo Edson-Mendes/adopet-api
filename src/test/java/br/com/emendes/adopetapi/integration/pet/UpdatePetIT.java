@@ -40,7 +40,7 @@ class UpdatePetIT {
   }
 
   @Test
-  @Sql(scripts = {INSERT_SHELTER_PET_SQL_PATH})
+  @Sql(scripts = {INSERT_PET_SHELTER_SQL_PATH})
   @DisplayName("PUT /api/pets/{id} must return status 200 and PetResponse when update successfully")
   void putApiPetsId_MustReturnStatus200AndPetResponse_WhenUpdateSuccessfully() {
     // Realizar Login antes da requisição.
@@ -73,7 +73,7 @@ class UpdatePetIT {
   }
 
   @Test
-  @Sql(scripts = {INSERT_SHELTER_PET_SQL_PATH})
+  @Sql(scripts = {INSERT_PET_SHELTER_SQL_PATH})
   @DisplayName("PUT /api/pets/{id} must return status 400 and ProblemDetail when id is invalid")
   void putApiPetsId_MustReturnStatus400AndProblemDetail_WhenIdIsInvalid() {
     // Realizar Login antes da requisição.
@@ -105,7 +105,7 @@ class UpdatePetIT {
   }
 
   @Test
-  @Sql(scripts = {INSERT_SHELTER_PET_SQL_PATH})
+  @Sql(scripts = {INSERT_PET_SHELTER_SQL_PATH})
   @DisplayName("PUT /api/pets/{id} must return status 400 and ProblemDetail when request body has invalid fields")
   void putApiPetsId_MustReturnStatus400AndProblemDetail_WhenRequestBodyHasInvalidFields() {
     // Realizar Login antes da requisição.
@@ -175,7 +175,7 @@ class UpdatePetIT {
   }
 
   @Test
-  @Sql(scripts = {INSERT_SHELTER_PET_SQL_PATH})
+  @Sql(scripts = {INSERT_PET_SHELTER_SQL_PATH})
   @DisplayName("PUT /api/pets/{id} must return status 404 and ProblemDetail when pet not found")
   void putApiPetsId_MustReturnStatus404AndProblemDetail_WhenPetNotFound() {
     // Realizar Login antes da requisição.
@@ -225,9 +225,9 @@ class UpdatePetIT {
   }
 
   @Test
-  @Sql(scripts = {INSERT_SHELTER_PET_GUARDIAN_SQL_PATH})
-  @DisplayName("PUT /api/pets/{id} must return status 403 when user not is a SHELTER")
-  void putApiPetsId_MustReturnStatus403_WhenUserNotIsASHELTER() {
+  @Sql(scripts = {INSERT_PET_SHELTER_GUARDIAN_SQL_PATH})
+  @DisplayName("PUT /api/pets/{id} must return status 403 when user is not a SHELTER")
+  void putApiPetsId_MustReturnStatus403_WhenUserIsNotASHELTER() {
     String authorizationHeaderValue = signIn.run(guardianAuthenticationRequest());
 
     UpdatePetRequest requestBody = UpdatePetRequest.builder()
