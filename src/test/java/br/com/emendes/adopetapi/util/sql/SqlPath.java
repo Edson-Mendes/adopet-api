@@ -20,4 +20,6 @@ public class SqlPath {
 
   // Relacionados com adoption
   public static final String INSERT_PET_SHELTER_GUARDIAN_ADOPTION_SQL_PATH = "/sql/adoption/insert-pet-shelter-guardian-adoption.sql";
+  public static final String INSERT_ADOPTIONS_MANY_SHELTERS_SQL_PATH = "/sql/adoption/insert-adoptions-many-shelters.sql";
+  public static final String INSERT_ADOPTIONS_MANY_GUARDIANS_SQL_PATH = "/sql/adoption/insert-adoptions-many-guardians.sql";
 }

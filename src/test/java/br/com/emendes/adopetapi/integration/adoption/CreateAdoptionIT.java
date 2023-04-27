@@ -1,7 +1,6 @@
 package br.com.emendes.adopetapi.integration.adoption;
 
 import br.com.emendes.adopetapi.dto.request.AdoptionRequest;
-import br.com.emendes.adopetapi.dto.request.UpdateGuardianRequest;
 import br.com.emendes.adopetapi.dto.response.AdoptionResponse;
 import br.com.emendes.adopetapi.model.AdoptionStatus;
 import br.com.emendes.adopetapi.util.component.SignIn;
