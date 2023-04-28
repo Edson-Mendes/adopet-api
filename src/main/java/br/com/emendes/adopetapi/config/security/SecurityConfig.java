@@ -25,13 +25,18 @@ public class SecurityConfig {
   private final JwtAuthenticationFilter jwtAuthFilter;
 
   private static final String[] POST_WHITELISTING = {"/api/auth", "/api/shelters", "/api/guardians"};
+  private static final String[] SWAGGER_WHITELIST = {
+      "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/favicon.ico"};
   private static final String GUARDIAN = "GUARDIAN";
   private static final String SHELTER = "SHELTER";
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf().disable()
-        .authorizeHttpRequests().requestMatchers(HttpMethod.POST, POST_WHITELISTING).permitAll()
+        .authorizeHttpRequests()
+        .requestMatchers(HttpMethod.POST, POST_WHITELISTING).permitAll()
+        .requestMatchers(HttpMethod.GET, SWAGGER_WHITELIST).permitAll()
+
         .requestMatchers(HttpMethod.POST, "/api/adoptions").hasRole(GUARDIAN)
         .requestMatchers(HttpMethod.PUT, "/api/adoptions/*/status").hasRole(SHELTER)
         .requestMatchers(HttpMethod.DELETE, "/api/adoptions/*").hasRole(SHELTER)
@@ -47,6 +52,8 @@ public class SecurityConfig {
         .requestMatchers(HttpMethod.PUT, "/api/shelters/*").hasRole(SHELTER)
 
         .anyRequest().authenticated()
+
+        .and().headers().frameOptions().disable()
         .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and().authenticationProvider(authenticationProvider)
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

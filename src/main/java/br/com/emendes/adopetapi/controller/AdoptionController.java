@@ -1,5 +1,6 @@
 package br.com.emendes.adopetapi.controller;
 
+import br.com.emendes.adopetapi.controller.swagger.AdoptionControllerSwagger;
 import br.com.emendes.adopetapi.dto.request.AdoptionRequest;
 import br.com.emendes.adopetapi.dto.request.UpdateStatusRequest;
 import br.com.emendes.adopetapi.dto.response.AdoptionResponse;
@@ -18,7 +19,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/adoptions")
-public class AdoptionController {
+public class AdoptionController implements AdoptionControllerSwagger {
 
   private final AdoptionService adoptionService;
 
