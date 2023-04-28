@@ -87,6 +87,20 @@ public class AdoptionServiceImpl implements AdoptionService {
   }
 
   @Override
+  public AdoptionResponse findById(Long id) {
+    User currentUser = userService.getCurrentUser();
+
+    Role role = currentUser.getRoles().stream().findFirst()
+        .orElseThrow(() -> new InvalidArgumentException("Not found authorities"));
+
+    return switch (role.getName()) {
+      case ROLE_SHELTER_NAME -> findByIdForShelter(id);
+      case ROLE_GUARDIAN_NAME -> findByIdForGuardian(id);
+      default -> throw new InvalidArgumentException("Unexpected value: " + role.getName());
+    };
+  }
+
+  @Override
   public void deleteById(Long id) {
     Adoption adoption = findAdoptionByIdAndShelter(id);
 
@@ -118,6 +132,20 @@ public class AdoptionServiceImpl implements AdoptionService {
     log.info("Fetching {} elements for Guardian with id : {}", adoptionsPage.getNumberOfElements(), guardian.getId());
 
     return adoptionsPage.map(adoptionMapper::adoptionToAdoptionResponse);
+  }
+
+  private AdoptionResponse findByIdForShelter(Long id) {
+    return adoptionMapper.adoptionToAdoptionResponse(findAdoptionByIdAndShelter(id));
+  }
+
+  private AdoptionResponse findByIdForGuardian(Long id) {
+    Guardian guardian = userService.getCurrentUserAsGuardian()
+        .orElseThrow(() -> new GuardianNotFoundException("Guardian not found"));
+    log.info("Searching for Adoption with id: {} and Guardian.id : {}", id, guardian.getId());
+
+    Adoption adoption = adoptionRepository.findByIdAndGuardian(id, guardian)
+        .orElseThrow(() -> new AdoptionNotFoundException("Adoption not found"));
+    return adoptionMapper.adoptionToAdoptionResponse(adoption);
   }
 
   private Shelter getCurrentShelter() {

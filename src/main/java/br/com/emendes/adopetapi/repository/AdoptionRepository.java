@@ -16,4 +16,7 @@ public interface AdoptionRepository extends JpaRepository<Adoption, Long> {
   Page<Adoption> findAllByGuardian(Guardian guardian, Pageable pageable);
 
   Optional<Adoption> findByIdAndPetShelter(Long id, Shelter shelter);
+
+  Optional<Adoption> findByIdAndGuardian(Long id, Guardian guardian);
+
 }

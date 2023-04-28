@@ -36,6 +36,11 @@ public class AdoptionController {
     return ResponseEntity.ok(adoptionService.fetchAll(pageable));
   }
 
+  @GetMapping("/{id}")
+  public ResponseEntity<AdoptionResponse> findById(@PathVariable(name = "id") Long id) {
+    return ResponseEntity.ok(adoptionService.findById(id));
+  }
+
   @PutMapping("/{id}/status")
   public ResponseEntity<AdoptionResponse> updateStatus(
       @PathVariable(name = "id") Long id, @RequestBody @Valid UpdateStatusRequest updateStatusRequest) {

@@ -224,6 +224,67 @@ class AdoptionControllerTest {
   }
 
   @Nested
+  @DisplayName("Tests for find by id endpoint")
+  class FindByIdEndpoint {
+
+    @Test
+    @DisplayName("FindById must return status 200 and AdoptionResponse when found successfully")
+    void findById_MustReturnStatus200AndAdoptionResponse_WhenFoundSuccessfully() throws Exception {
+      BDDMockito.when(adoptionServiceMock.findById(1_000_000L))
+          .thenReturn(adoptionResponse());
+
+      String actualContent = mockMvc.perform(get(ADOPTION_URI + "/1000000"))
+          .andExpect(status().isOk())
+          .andReturn().getResponse().getContentAsString();
+
+      AdoptionResponse actualAdoptionResponse = mapper.readValue(actualContent, AdoptionResponse.class);
+
+      Assertions.assertThat(actualAdoptionResponse).isNotNull();
+      Assertions.assertThat(actualAdoptionResponse.id()).isNotNull().isEqualTo(1_000_000L);
+      Assertions.assertThat(actualAdoptionResponse.petId()).isNotNull().isEqualTo(10_000L);
+      Assertions.assertThat(actualAdoptionResponse.guardianId()).isNotNull().isEqualTo(100L);
+      Assertions.assertThat(actualAdoptionResponse.status()).isNotNull().isEqualTo(AdoptionStatus.ANALYSING);
+    }
+
+    @Test
+    @DisplayName("FindById must return status 400 and ProblemDetail when id is invalid")
+    void findById_MustReturnStatus400AndProblemDetail_WhenIdIsInvalid() throws Exception {
+      String actualContent = mockMvc.perform(get(ADOPTION_URI + "/1o0"))
+          .andExpect(status().isBadRequest())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Type mismatch");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("An error occurred trying to cast String to Number");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(400);
+    }
+
+    @Test
+    @DisplayName("FindById must return status 404 and ProblemDetail when adoption not found")
+    void findById_MustReturnStatus404AndProblemDetail_WhenPetNotFound() throws Exception {
+      BDDMockito.when(adoptionServiceMock.findById(1_000_000L))
+          .thenThrow(new AdoptionNotFoundException("Adoption not found"));
+
+      String actualContent = mockMvc
+          .perform(get(ADOPTION_URI + "/1000000"))
+          .andExpect(status().isNotFound())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Adoption not found");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("Adoption not found");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(404);
+    }
+
+  }
+
+  @Nested
   @DisplayName("Tests for update status endpoint")
   class UpdateStatusEndpoint {
 
