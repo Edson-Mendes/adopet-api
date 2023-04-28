@@ -117,7 +117,7 @@ class AdoptionServiceImplTest {
 
       Assertions.assertThatExceptionOfType(InvalidArgumentException.class)
           .isThrownBy(() -> adoptionService.adopt(adoptionRequest))
-          .withMessage("Current user not found");
+          .withMessage("Current guardian user not found");
 
       BDDMockito.verify(petRepositoryMock).existsByIdAndAdoptedFalseAndShelterDeletedFalse(10_000L);
       BDDMockito.verify(userServiceMock).getCurrentUserAsGuardian();
@@ -189,9 +189,9 @@ class AdoptionServiceImplTest {
       BDDMockito.when(userServiceMock.getCurrentUserAsShelter())
           .thenReturn(Optional.empty());
 
-      Assertions.assertThatExceptionOfType(ShelterNotFoundException.class)
+      Assertions.assertThatExceptionOfType(InvalidArgumentException.class)
           .isThrownBy(() -> adoptionService.fetchAll(PAGEABLE))
-          .withMessage("Shelter not found");
+          .withMessage("Current shelter user not found");
 
       BDDMockito.verify(userServiceMock).getCurrentUser();
       BDDMockito.verify(userServiceMock).getCurrentUserAsShelter();
@@ -204,9 +204,9 @@ class AdoptionServiceImplTest {
       BDDMockito.when(userServiceMock.getCurrentUserAsGuardian())
           .thenReturn(Optional.empty());
 
-      Assertions.assertThatExceptionOfType(GuardianNotFoundException.class)
+      Assertions.assertThatExceptionOfType(InvalidArgumentException.class)
           .isThrownBy(() -> adoptionService.fetchAll(PAGEABLE))
-          .withMessage("Guardian not found");
+          .withMessage("Current guardian user not found");
 
       BDDMockito.verify(userServiceMock).getCurrentUser();
       BDDMockito.verify(userServiceMock).getCurrentUserAsGuardian();

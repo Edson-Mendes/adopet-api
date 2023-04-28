@@ -4,9 +4,7 @@ import br.com.emendes.adopetapi.dto.request.AdoptionRequest;
 import br.com.emendes.adopetapi.dto.request.UpdateStatusRequest;
 import br.com.emendes.adopetapi.dto.response.AdoptionResponse;
 import br.com.emendes.adopetapi.exception.AdoptionNotFoundException;
-import br.com.emendes.adopetapi.exception.GuardianNotFoundException;
 import br.com.emendes.adopetapi.exception.InvalidArgumentException;
-import br.com.emendes.adopetapi.exception.ShelterNotFoundException;
 import br.com.emendes.adopetapi.mapper.AdoptionMapper;
 import br.com.emendes.adopetapi.model.AdoptionStatus;
 import br.com.emendes.adopetapi.model.entity.*;
@@ -42,8 +40,7 @@ public class AdoptionServiceImpl implements AdoptionService {
       throw new InvalidArgumentException("Invalid pet id");
     }
 
-    Guardian guardian = userService.getCurrentUserAsGuardian()
-        .orElseThrow(() -> new InvalidArgumentException("Current user not found"));
+    Guardian guardian = getCurrentGuardian();
 
     Adoption adoption = adoptionMapper.adoptionRequestToAdoption(adoptionRequest);
     adoption.setGuardian(guardian);
@@ -58,11 +55,9 @@ public class AdoptionServiceImpl implements AdoptionService {
 
   @Override
   public Page<AdoptionResponse> fetchAll(Pageable pageable) {
-    User currentUser = userService.getCurrentUser();
     log.info("Fetching page: {}, size: {} of Adoptions", pageable.getPageNumber(), pageable.getPageSize());
 
-    Role role = currentUser.getRoles().stream().findFirst()
-        .orElseThrow(() -> new InvalidArgumentException("Not found authorities"));
+    Role role = getRoleFromCurrentUser();
 
     return switch (role.getName()) {
       case ROLE_SHELTER_NAME -> fetchAllForShelter(pageable);
@@ -88,10 +83,7 @@ public class AdoptionServiceImpl implements AdoptionService {
 
   @Override
   public AdoptionResponse findById(Long id) {
-    User currentUser = userService.getCurrentUser();
-
-    Role role = currentUser.getRoles().stream().findFirst()
-        .orElseThrow(() -> new InvalidArgumentException("Not found authorities"));
+    Role role = getRoleFromCurrentUser();
 
     return switch (role.getName()) {
       case ROLE_SHELTER_NAME -> findByIdForShelter(id);
@@ -125,8 +117,7 @@ public class AdoptionServiceImpl implements AdoptionService {
   }
 
   private Page<AdoptionResponse> fetchAllForGuardian(Pageable pageable) {
-    Guardian guardian = userService.getCurrentUserAsGuardian()
-        .orElseThrow(() -> new GuardianNotFoundException("Guardian not found"));
+    Guardian guardian = getCurrentGuardian();
 
     Page<Adoption> adoptionsPage = adoptionRepository.findAllByGuardian(guardian, pageable);
     log.info("Fetching {} elements for Guardian with id : {}", adoptionsPage.getNumberOfElements(), guardian.getId());
@@ -139,8 +130,7 @@ public class AdoptionServiceImpl implements AdoptionService {
   }
 
   private AdoptionResponse findByIdForGuardian(Long id) {
-    Guardian guardian = userService.getCurrentUserAsGuardian()
-        .orElseThrow(() -> new GuardianNotFoundException("Guardian not found"));
+    Guardian guardian = getCurrentGuardian();
     log.info("Searching for Adoption with id: {} and Guardian.id : {}", id, guardian.getId());
 
     Adoption adoption = adoptionRepository.findByIdAndGuardian(id, guardian)
@@ -148,9 +138,21 @@ public class AdoptionServiceImpl implements AdoptionService {
     return adoptionMapper.adoptionToAdoptionResponse(adoption);
   }
 
+  private Guardian getCurrentGuardian() {
+    return userService.getCurrentUserAsGuardian()
+        .orElseThrow(() -> new InvalidArgumentException("Current guardian user not found"));
+  }
+
   private Shelter getCurrentShelter() {
     return userService.getCurrentUserAsShelter()
-        .orElseThrow(() -> new ShelterNotFoundException("Shelter not found"));
+        .orElseThrow(() -> new InvalidArgumentException("Current shelter user not found"));
+  }
+
+  private Role getRoleFromCurrentUser() {
+    User currentUser = userService.getCurrentUser();
+
+    return currentUser.getRoles().stream().findFirst()
+        .orElseThrow(() -> new InvalidArgumentException("Not found authorities"));
   }
 
 }
