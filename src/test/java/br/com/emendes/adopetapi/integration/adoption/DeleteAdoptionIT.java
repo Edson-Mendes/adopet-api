@@ -142,7 +142,6 @@ class DeleteAdoptionIT {
   void deleteApiAdoptionsId_MustReturnStatus401_WhenClientDoNotSendJWT() {
     webTestClient.delete()
         .uri(generateUri("1"))
-        .header("Content-Type", CONTENT_TYPE)
         .exchange()
         .expectStatus().isUnauthorized();
   }

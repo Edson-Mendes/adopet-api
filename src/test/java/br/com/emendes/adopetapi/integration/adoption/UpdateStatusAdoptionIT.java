@@ -30,7 +30,7 @@ import static br.com.emendes.adopetapi.util.sql.SqlPath.*;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @ActiveProfiles("integration")
 @DisplayName("Integration tests for PUT /api/adoptions/{id}/status")
-class UpdateAdoptionIT {
+class UpdateStatusAdoptionIT {
 
   @Autowired
   private WebTestClient webTestClient;
