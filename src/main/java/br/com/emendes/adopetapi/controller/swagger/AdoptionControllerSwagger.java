@@ -3,7 +3,6 @@ package br.com.emendes.adopetapi.controller.swagger;
 import br.com.emendes.adopetapi.dto.request.AdoptionRequest;
 import br.com.emendes.adopetapi.dto.request.UpdateStatusRequest;
 import br.com.emendes.adopetapi.dto.response.AdoptionResponse;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,15 +17,15 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
 
-@OpenAPIDefinition(
-    tags = @Tag(name = "Adoption", description = "Adoption management APIs"),
-    security = {@SecurityRequirement(name = "bearer-key")})
+@Tag(name = "Adoption", description = "Adoption management APIs")
+@SecurityRequirement(name = "bearer-key")
 public interface AdoptionControllerSwagger {
 
   @Operation(
       summary = "Request an adoption",
-      description = "Request an adoption by specifying a petId on request body. The response, if successful, is a DTO object with information about requested adoption.",
-      tags = {"Adoption"})
+      description = "Request an adoption by specifying a petId on request body. The response, if successful, is a JSON with information about requested adoption.",
+      tags = {"Adoption"}
+  )
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Successful adoption request",
           content = @Content(mediaType = "application/json", schema = @Schema(implementation = AdoptionResponse.class))),
@@ -116,4 +115,5 @@ public interface AdoptionControllerSwagger {
           content = @Content)
   })
   ResponseEntity<Void> delete(Long id);
+
 }

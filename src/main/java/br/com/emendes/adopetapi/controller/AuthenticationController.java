@@ -1,5 +1,6 @@
 package br.com.emendes.adopetapi.controller;
 
+import br.com.emendes.adopetapi.controller.swagger.AuthenticationControllerSwagger;
 import br.com.emendes.adopetapi.dto.request.AuthenticationRequest;
 import br.com.emendes.adopetapi.dto.response.AuthenticationResponse;
 import br.com.emendes.adopetapi.service.AuthenticationService;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/auth")
-public class AuthenticationController {
+public class AuthenticationController implements AuthenticationControllerSwagger {
 
   private final AuthenticationService authenticationService;
 
