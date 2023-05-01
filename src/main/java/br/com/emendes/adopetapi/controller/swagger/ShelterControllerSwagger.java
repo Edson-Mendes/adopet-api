@@ -37,7 +37,8 @@ public interface ShelterControllerSwagger {
 
   @Operation(
       summary = "Update shelter",
-      description = "Update shelter information by specifying its id on path and new data on request body.",
+      description = "Update shelter information by specifying its id on path and new data on request body. " +
+          "A shelter can only update themself.",
       tags = {"Shelter"},
       security = {@SecurityRequirement(name = SECURITY_SCHEME_KEY)})
   @ApiResponses(value = {
@@ -84,7 +85,7 @@ public interface ShelterControllerSwagger {
 
   @Operation(
       summary = "Fetch Page of shelter",
-      description = "Fetch paged shelter",
+      description = "Fetch paged shelter.",
       tags = {"Shelter"},
       security = {@SecurityRequirement(name = SECURITY_SCHEME_KEY)})
   @ApiResponses(value = {
@@ -99,7 +100,7 @@ public interface ShelterControllerSwagger {
 
   @Operation(
       summary = "Delete shelter by id",
-      description = "A shelter user can only delete themself",
+      description = "Delete shelter by specifying its id. A shelter user can only delete themself.",
       tags = {"Shelter"},
       security = {@SecurityRequirement(name = SECURITY_SCHEME_KEY)})
   @ApiResponses(value = {

@@ -1,5 +1,6 @@
 package br.com.emendes.adopetapi.controller;
 
+import br.com.emendes.adopetapi.controller.swagger.PetControllerSwagger;
 import br.com.emendes.adopetapi.dto.request.CreatePetRequest;
 import br.com.emendes.adopetapi.dto.request.UpdatePetRequest;
 import br.com.emendes.adopetapi.dto.response.PetResponse;
@@ -18,7 +19,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/pets")
-public class PetController {
+public class PetController implements PetControllerSwagger {
 
   private final PetService petService;
 

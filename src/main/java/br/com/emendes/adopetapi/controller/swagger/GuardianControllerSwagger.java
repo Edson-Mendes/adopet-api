@@ -37,7 +37,8 @@ public interface GuardianControllerSwagger {
 
   @Operation(
       summary = "Update guardian",
-      description = "Update guardian information by specifying its id on path and new data on request body.",
+      description = "Update guardian information by specifying its id on path and new data on request body. " +
+          "A guardian can only update themself.",
       tags = {"Guardian"},
       security = {@SecurityRequirement(name = SECURITY_SCHEME_KEY)})
   @ApiResponses(value = {
@@ -82,7 +83,7 @@ public interface GuardianControllerSwagger {
 
   @Operation(
       summary = "Fetch Page of guardian",
-      description = "Fetch paged guardian",
+      description = "Fetch paged guardian.",
       tags = {"Guardian"},
       security = {@SecurityRequirement(name = SECURITY_SCHEME_KEY)})
   @ApiResponses(value = {
@@ -97,7 +98,7 @@ public interface GuardianControllerSwagger {
 
   @Operation(
       summary = "Delete guardian by id",
-      description = "A guardian user can only delete themself",
+      description = "Delete guardian by specifying its id. A guardian user can only delete themself.",
       tags = {"Guardian"},
       security = {@SecurityRequirement(name = SECURITY_SCHEME_KEY)})
   @ApiResponses(value = {
