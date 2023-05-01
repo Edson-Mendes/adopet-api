@@ -1,7 +1,7 @@
-package br.com.emendes.adopetapi.integration.pet;
+package br.com.emendes.adopetapi.integration.endpoint.adoption;
 
-import br.com.emendes.adopetapi.model.entity.Pet;
-import br.com.emendes.adopetapi.repository.PetRepository;
+import br.com.emendes.adopetapi.model.entity.Adoption;
+import br.com.emendes.adopetapi.repository.AdoptionRepository;
 import br.com.emendes.adopetapi.util.component.SignIn;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -21,23 +21,25 @@ import java.util.Optional;
 import static br.com.emendes.adopetapi.util.AuthenticationUtils.guardianAuthenticationRequest;
 import static br.com.emendes.adopetapi.util.AuthenticationUtils.shelterAuthenticationRequest;
 import static br.com.emendes.adopetapi.util.ConstantUtils.AUTHORIZATION_HEADER_NAME;
-import static br.com.emendes.adopetapi.util.sql.SqlPath.*;
+import static br.com.emendes.adopetapi.util.ConstantUtils.CONTENT_TYPE;
+import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_ADOPTIONS_MANY_SHELTERS_SQL_PATH;
+import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_PET_SHELTER_GUARDIAN_ADOPTION_SQL_PATH;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @ActiveProfiles("integration")
-@DisplayName("Integration tests for DELETE /api/pets/{id}")
-class DeletePetIT {
+@DisplayName("Integration tests for DELETE /api/adoptions/{id}")
+class DeleteAdoptionIT {
 
   @Autowired
   private WebTestClient webTestClient;
   @Autowired
-  private PetRepository petRepository;
+  private AdoptionRepository adoptionRepository;
 
   private SignIn signIn;
 
-  private static final String PET_URI_TEMPLATE = "/api/pets/%s";
+  private static final String GUARDIAN_URI_TEMPLATE = "/api/adoptions/%s";
 
   @BeforeEach
   void setUp() {
@@ -45,9 +47,9 @@ class DeletePetIT {
   }
 
   @Test
-  @Sql(scripts = {INSERT_PET_SHELTER_SQL_PATH})
-  @DisplayName("DELETE /api/pets/{id} must return status 204 when delete successfully")
-  void DeleteApiPetsId_MustReturnStatus204_WhenDeleteSuccessfully() {
+  @Sql(scripts = {INSERT_PET_SHELTER_GUARDIAN_ADOPTION_SQL_PATH})
+  @DisplayName("DELETE /api/adoptions/{id} must return status 204 when delete successfully")
+  void DeleteApiAdoptionsId_MustReturnStatus204_WhenDeleteSuccessfully() {
     // Realizar Login
     String authorizationHeaderValue = signIn.run(shelterAuthenticationRequest());
 
@@ -57,15 +59,15 @@ class DeletePetIT {
         .exchange()
         .expectStatus().isNoContent();
 
-    Optional<Pet> actualPetOptional = petRepository.findById(1L);
+    Optional<Adoption> actualAdoptionOptional = adoptionRepository.findById(1L);
 
-    Assertions.assertThat(actualPetOptional).isNotPresent();
+    Assertions.assertThat(actualAdoptionOptional).isNotPresent();
   }
 
   @Test
-  @Sql(scripts = {INSERT_PET_SHELTER_SQL_PATH})
-  @DisplayName("DELETE /api/pets/{id} must return status 400 and ProblemDetail when id is invalid")
-  void deleteApiPetsId_MustReturnStatus400AndProblemDetail_WhenIdIsInvalid() {
+  @Sql(scripts = {INSERT_PET_SHELTER_GUARDIAN_ADOPTION_SQL_PATH})
+  @DisplayName("DELETE /api/adoptions/{id} must return status 400 and ProblemDetail when id is invalid")
+  void deleteApiAdoptionsId_MustReturnStatus400AndProblemDetail_WhenIdIsInvalid() {
     // Realizar Login
     String authorizationHeaderValue = signIn.run(shelterAuthenticationRequest());
 
@@ -83,44 +85,19 @@ class DeletePetIT {
     Assertions.assertThat(actualResponseBody.getDetail()).isNotNull()
         .isEqualTo("An error occurred trying to cast String to Number");
     Assertions.assertThat(actualResponseBody.getInstance()).isNotNull();
-    Assertions.assertThat(actualResponseBody.getInstance().getPath()).isNotNull().isEqualTo("/api/pets/1o0");
+    Assertions.assertThat(actualResponseBody.getInstance().getPath()).isNotNull().isEqualTo("/api/adoptions/1o0");
     Assertions.assertThat(actualResponseBody.getStatus()).isEqualTo(400);
   }
 
   @Test
-  @Sql(scripts = {INSERT_PET_SHELTER_GUARDIAN_ADOPTION_SQL_PATH})
-  @DisplayName("DELETE /api/pets/{id} must return status 400 and ProblemDetail when pet is on adoption process")
-  void deleteApiPetsId_MustReturnStatus400AndProblemDetail_WhenPetIsOnAdoptionPrecess() {
-    // Realizar Login
-    String authorizationHeaderValue = signIn.run(shelterAuthenticationRequest());
-
-
-    ProblemDetail actualResponseBody = webTestClient.delete()
-        .uri(generateUri("1"))
-        .header(AUTHORIZATION_HEADER_NAME, authorizationHeaderValue)
-        .exchange()
-        .expectStatus().isBadRequest()
-        .expectBody(ProblemDetail.class)
-        .returnResult().getResponseBody();
-
-    Assertions.assertThat(actualResponseBody).isNotNull();
-    Assertions.assertThat(actualResponseBody.getTitle()).isNotNull().isEqualTo("Something went wrong");
-    Assertions.assertThat(actualResponseBody.getDetail()).isNotNull()
-        .isEqualTo("This pet cannot be deleted because it is in process of being adopted.");
-    Assertions.assertThat(actualResponseBody.getInstance()).isNotNull();
-    Assertions.assertThat(actualResponseBody.getInstance().getPath()).isNotNull().isEqualTo("/api/pets/1");
-    Assertions.assertThat(actualResponseBody.getStatus()).isEqualTo(400);
-  }
-
-  @Test
-  @Sql(scripts = {INSERT_MANY_SHELTERS_AND_PETS_SQL_PATH})
-  @DisplayName("DELETE /api/pets/{id} must return status 404 and ProblemDetail when a shelter tries to delete a pet that does not belong to him")
-  void deleteApiPetsId_MustReturnStatus404AndProblemDetail_WhenAShelterTriesToDeleteAPetThatDoesNotBelongToHim() {
+  @Sql(scripts = {INSERT_ADOPTIONS_MANY_SHELTERS_SQL_PATH})
+  @DisplayName("DELETE /api/adoptions/{id} must return status 404 and ProblemDetail when adoption does not belong to current shelter")
+  void deleteApiAdoptionsId_MustReturnStatus404AndProblemDetail_WhenAdoptionDoesNotBelongToCurrentShelter() {
     // Realizar Login
     String authorizationHeaderValue = signIn.run(shelterAuthenticationRequest());
 
     ProblemDetail actualResponseBody = webTestClient.delete()
-        .uri(generateUri("1"))
+        .uri(generateUri("2"))
         .header(AUTHORIZATION_HEADER_NAME, authorizationHeaderValue)
         .exchange()
         .expectStatus().isNotFound()
@@ -128,18 +105,18 @@ class DeletePetIT {
         .returnResult().getResponseBody();
 
     Assertions.assertThat(actualResponseBody).isNotNull();
-    Assertions.assertThat(actualResponseBody.getTitle()).isNotNull().isEqualTo("Pet not found");
+    Assertions.assertThat(actualResponseBody.getTitle()).isNotNull().isEqualTo("Adoption not found");
     Assertions.assertThat(actualResponseBody.getDetail()).isNotNull()
-        .isEqualTo("Pet not found");
+        .isEqualTo("Adoption not found");
     Assertions.assertThat(actualResponseBody.getInstance()).isNotNull();
-    Assertions.assertThat(actualResponseBody.getInstance().getPath()).isNotNull().isEqualTo("/api/pets/1");
+    Assertions.assertThat(actualResponseBody.getInstance().getPath()).isNotNull().isEqualTo("/api/adoptions/2");
     Assertions.assertThat(actualResponseBody.getStatus()).isEqualTo(404);
   }
 
   @Test
-  @Sql(scripts = {INSERT_PET_SHELTER_SQL_PATH})
-  @DisplayName("DELETE /api/pets/{id} must return status 404 and ProblemDetail when pet not found")
-  void deleteApiPetsId_MustReturnStatus404AndProblemDetail_WhenPetNotFound() {
+  @Sql(scripts = {INSERT_PET_SHELTER_GUARDIAN_ADOPTION_SQL_PATH})
+  @DisplayName("DELETE /api/adoptions/{id} must return status 404 and ProblemDetail when adoption not found")
+  void deleteApiAdoptionsId_MustReturnStatus404AndProblemDetail_WhenAdoptionNotFound() {
     // Realizar Login
     String authorizationHeaderValue = signIn.run(shelterAuthenticationRequest());
 
@@ -152,17 +129,17 @@ class DeletePetIT {
         .returnResult().getResponseBody();
 
     Assertions.assertThat(actualResponseBody).isNotNull();
-    Assertions.assertThat(actualResponseBody.getTitle()).isNotNull().isEqualTo("Pet not found");
+    Assertions.assertThat(actualResponseBody.getTitle()).isNotNull().isEqualTo("Adoption not found");
     Assertions.assertThat(actualResponseBody.getDetail()).isNotNull()
-        .isEqualTo("Pet not found");
+        .isEqualTo("Adoption not found");
     Assertions.assertThat(actualResponseBody.getInstance()).isNotNull();
-    Assertions.assertThat(actualResponseBody.getInstance().getPath()).isNotNull().isEqualTo("/api/pets/100");
+    Assertions.assertThat(actualResponseBody.getInstance().getPath()).isNotNull().isEqualTo("/api/adoptions/100");
     Assertions.assertThat(actualResponseBody.getStatus()).isEqualTo(404);
   }
 
   @Test
-  @DisplayName("DELETE /api/pets/{id} must return status 401 when client do not send JWT")
-  void deleteApiPetsId_MustReturnStatus401_WhenClientDoNotSendJWT() {
+  @DisplayName("DELETE /api/adoptions/{id} must return status 401 when client do not send JWT")
+  void deleteApiAdoptionsId_MustReturnStatus401_WhenClientDoNotSendJWT() {
     webTestClient.delete()
         .uri(generateUri("1"))
         .exchange()
@@ -170,9 +147,9 @@ class DeletePetIT {
   }
 
   @Test
-  @Sql(scripts = {INSERT_GUARDIAN_SQL_PATH})
-  @DisplayName("DELETE /api/pets/{id} must return status 403 when user is not a SHELTER")
-  void deleteApiPetsId_MustReturnStatus403_WhenUserIsNotAShelter() {
+  @Sql(scripts = {INSERT_ADOPTIONS_MANY_SHELTERS_SQL_PATH})
+  @DisplayName("DELETE /api/adoptions/{id} must return status 403 when user is not a SHELTER")
+  void deleteApiAdoptionsId_MustReturnStatus403_WhenUserIsNotAShelter() {
     String authorizationHeaderValue = signIn.run(guardianAuthenticationRequest());
 
     webTestClient.delete()
@@ -183,7 +160,7 @@ class DeletePetIT {
   }
 
   private String generateUri(String resourceId) {
-    return String.format(PET_URI_TEMPLATE, resourceId);
+    return String.format(GUARDIAN_URI_TEMPLATE, resourceId);
   }
 
 }

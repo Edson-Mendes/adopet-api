@@ -17,6 +17,7 @@ public class SqlPath {
   public static final String INSERT_ADOPTED_PET_SHELTER_GUARDIAN_SQL_PATH = "/sql/pet/insert-adopted-pet-shelter-guardian.sql";
   public static final String INSERT_PET_DELETED_SHELTER_GUARDIAN_SQL_PATH = "/sql/pet/insert-pet-deleted-shelter-guardian.sql";
   public static final String INSERT_MANY_SHELTERS_AND_PETS_SQL_PATH = "/sql/pet/insert-many-shelters-and-pets.sql";
+  public static final String INSERT_MANY_SHELTERS_AND_MANY_PETS_SQL_PATH = "/sql/pet/insert-many-shelters-and-many-pets.sql";
 
   // Relacionados com adoption
   public static final String INSERT_PET_SHELTER_GUARDIAN_ADOPTION_SQL_PATH = "/sql/adoption/insert-pet-shelter-guardian-adoption.sql";

@@ -1,4 +1,4 @@
-package br.com.emendes.adopetapi.integration.authentication;
+package br.com.emendes.adopetapi.integration.endpoint.authentication;
 
 import br.com.emendes.adopetapi.dto.request.AuthenticationRequest;
 import br.com.emendes.adopetapi.dto.request.CreateGuardianRequest;

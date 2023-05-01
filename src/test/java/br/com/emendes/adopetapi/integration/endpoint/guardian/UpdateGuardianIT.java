@@ -1,4 +1,4 @@
-package br.com.emendes.adopetapi.integration.guardian;
+package br.com.emendes.adopetapi.integration.endpoint.guardian;
 
 import br.com.emendes.adopetapi.dto.request.UpdateGuardianRequest;
 import br.com.emendes.adopetapi.dto.response.GuardianResponse;

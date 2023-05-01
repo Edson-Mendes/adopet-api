@@ -1,4 +1,4 @@
-package br.com.emendes.adopetapi.integration.shelter;
+package br.com.emendes.adopetapi.integration.endpoint.shelter;
 
 import br.com.emendes.adopetapi.model.entity.Shelter;
 import br.com.emendes.adopetapi.repository.ShelterRepository;

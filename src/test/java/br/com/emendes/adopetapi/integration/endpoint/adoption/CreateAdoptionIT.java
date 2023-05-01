@@ -1,4 +1,4 @@
-package br.com.emendes.adopetapi.integration.adoption;
+package br.com.emendes.adopetapi.integration.endpoint.adoption;
 
 import br.com.emendes.adopetapi.dto.request.AdoptionRequest;
 import br.com.emendes.adopetapi.dto.response.AdoptionResponse;

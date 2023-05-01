@@ -1,4 +1,4 @@
-package br.com.emendes.adopetapi.integration.shelter;
+package br.com.emendes.adopetapi.integration.endpoint.shelter;
 
 import br.com.emendes.adopetapi.dto.request.UpdateShelterRequest;
 import br.com.emendes.adopetapi.dto.response.ShelterResponse;

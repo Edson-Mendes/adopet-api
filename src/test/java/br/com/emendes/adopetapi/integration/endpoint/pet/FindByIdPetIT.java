@@ -1,4 +1,4 @@
-package br.com.emendes.adopetapi.integration.pet;
+package br.com.emendes.adopetapi.integration.endpoint.pet;
 
 import br.com.emendes.adopetapi.dto.response.PetResponse;
 import br.com.emendes.adopetapi.util.component.SignIn;
