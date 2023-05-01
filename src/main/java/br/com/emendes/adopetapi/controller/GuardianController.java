@@ -1,5 +1,6 @@
 package br.com.emendes.adopetapi.controller;
 
+import br.com.emendes.adopetapi.controller.swagger.GuardianControllerSwagger;
 import br.com.emendes.adopetapi.dto.request.CreateGuardianRequest;
 import br.com.emendes.adopetapi.dto.request.UpdateGuardianRequest;
 import br.com.emendes.adopetapi.dto.response.GuardianResponse;
@@ -18,7 +19,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/guardians")
-public class GuardianController {
+public class GuardianController implements GuardianControllerSwagger {
 
   private final GuardianService guardianService;
 

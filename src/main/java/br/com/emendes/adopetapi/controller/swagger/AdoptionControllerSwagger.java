@@ -52,7 +52,7 @@ public interface AdoptionControllerSwagger {
 
   @Operation(
       summary = "Retrieve details about a adoption by id",
-      description = "Get Adoption related to current user by specifying its id. The response is AdoptionResponse with id, petId, guardianId, status and date.",
+      description = "Get Adoption related to current user by specifying its id. The response is a JSON with id, petId, guardianId, status and date.",
       tags = {"Adoption"})
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successful retrieve",
@@ -95,12 +95,12 @@ public interface AdoptionControllerSwagger {
 
   @Operation(
       summary = "Delete adoption by id",
-      description = "Delete Adoption related to current user by specifying its id.",
+      description = "Delete Adoption related to current shelter user by specifying its id.",
       tags = {"Adoption"})
   @ApiResponses(value = {
       @ApiResponse(
           responseCode = "200", description = "Successful delete",
-          content = @Content(mediaType = "application/json", schema = @Schema(implementation = AdoptionResponse.class))),
+          content = @Content),
       @ApiResponse(
           responseCode = "400", description = "Something is wrong with the request",
           content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))),
