@@ -17,8 +17,10 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import static br.com.emendes.adopetapi.config.OpenApiConfig.SECURITY_SCHEME_KEY;
+
 @Tag(name = "Adoption", description = "Adoption management APIs")
-@SecurityRequirement(name = "bearer-key")
+@SecurityRequirement(name = SECURITY_SCHEME_KEY)
 public interface AdoptionControllerSwagger {
 
   @Operation(

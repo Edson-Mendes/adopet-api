@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenApiConfig {
 
+  public static final String SECURITY_SCHEME_KEY = "bearer-key";
+
   @Bean
   public OpenAPI openAPI() {
     Contact contact = new Contact();
@@ -24,7 +26,7 @@ public class OpenApiConfig {
             .description("REST API to connect animal shelters with people who want to adopt a pet.")
             .version("v0.3").contact(contact))
         .components(new Components()
-            .addSecuritySchemes("bearer-key", securityScheme));
+            .addSecuritySchemes(SECURITY_SCHEME_KEY, securityScheme));
   }
 
 }

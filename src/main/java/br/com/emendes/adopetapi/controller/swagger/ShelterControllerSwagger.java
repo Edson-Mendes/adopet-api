@@ -1,8 +1,8 @@
 package br.com.emendes.adopetapi.controller.swagger;
 
-import br.com.emendes.adopetapi.dto.request.CreateGuardianRequest;
-import br.com.emendes.adopetapi.dto.request.UpdateGuardianRequest;
-import br.com.emendes.adopetapi.dto.response.GuardianResponse;
+import br.com.emendes.adopetapi.dto.request.CreateShelterRequest;
+import br.com.emendes.adopetapi.dto.request.UpdateShelterRequest;
+import br.com.emendes.adopetapi.dto.response.ShelterResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,31 +19,31 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import static br.com.emendes.adopetapi.config.OpenApiConfig.SECURITY_SCHEME_KEY;
 
-@Tag(name = "Guardian", description = "Guardian management APIs")
-public interface GuardianControllerSwagger {
+@Tag(name = "Shelter", description = "Shelter management APIs")
+public interface ShelterControllerSwagger {
 
   @Operation(
-      summary = "Create guardian user",
-      description = "Create a guardian user. The response, if successful, is a JSON with information about created user.",
-      tags = {"Guardian"}
+      summary = "Create shelter user",
+      description = "Create a shelter user. The response, if successful, is a JSON with information about created user.",
+      tags = {"Shelter"}
   )
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Successful create guardian user",
-          content = @Content(mediaType = "application/json", schema = @Schema(implementation = GuardianResponse.class))),
+      @ApiResponse(responseCode = "201", description = "Successful create shelter user",
+          content = @Content(mediaType = "application/json", schema = @Schema(implementation = ShelterResponse.class))),
       @ApiResponse(responseCode = "400", description = "Something is wrong with the request",
           content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class)))
   })
-  ResponseEntity<GuardianResponse> create(CreateGuardianRequest createGuardianRequest, UriComponentsBuilder uriComponentsBuilder);
+  ResponseEntity<ShelterResponse> create(CreateShelterRequest createShelterRequest, UriComponentsBuilder uriComponentsBuilder);
 
   @Operation(
-      summary = "Update guardian",
-      description = "Update guardian information by specifying its id on path and new data on request body.",
-      tags = {"Guardian"},
+      summary = "Update shelter",
+      description = "Update shelter information by specifying its id on path and new data on request body.",
+      tags = {"Shelter"},
       security = {@SecurityRequirement(name = SECURITY_SCHEME_KEY)})
   @ApiResponses(value = {
       @ApiResponse(
           responseCode = "200", description = "Successful update",
-          content = @Content(mediaType = "application/json", schema = @Schema(implementation = GuardianResponse.class))),
+          content = @Content(mediaType = "application/json", schema = @Schema(implementation = ShelterResponse.class))),
       @ApiResponse(
           responseCode = "400", description = "Something is wrong with the request",
           content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))),
@@ -51,22 +51,24 @@ public interface GuardianControllerSwagger {
           responseCode = "401",
           description = "Unauthorized, client did not send authorization header or sent an invalid one",
           content = @Content),
-      @ApiResponse(responseCode = "403", description = "Forbidden, User does not have access permission", content = @Content),
+      @ApiResponse(
+          responseCode = "403",
+          description = "Forbidden, User does not have access permission", content = @Content),
       @ApiResponse(
           responseCode = "404",
-          description = "Guardian not found for current user",
+          description = "Shelter not found for current user",
           content = @Content)
   })
-  ResponseEntity<GuardianResponse> update(Long id, UpdateGuardianRequest updateGuardianRequest);
+  ResponseEntity<ShelterResponse> update(Long id, UpdateShelterRequest updateShelterRequest);
 
   @Operation(
-      summary = "Retrieve details about a guardian by id",
-      description = "Get guardian by specifying its id. The response is a JSON with id, name and email.",
-      tags = {"Guardian"},
+      summary = "Retrieve details about a shelter by id",
+      description = "Get shelter by specifying its id. The response is a JSON with id, name and email.",
+      tags = {"Shelter"},
       security = {@SecurityRequirement(name = SECURITY_SCHEME_KEY)})
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successful retrieve",
-          content = @Content(mediaType = "application/json", schema = @Schema(implementation = GuardianResponse.class))),
+          content = @Content(mediaType = "application/json", schema = @Schema(implementation = ShelterResponse.class))),
       @ApiResponse(responseCode = "400", description = "Something is wrong with the request",
           content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))),
       @ApiResponse(
@@ -75,15 +77,15 @@ public interface GuardianControllerSwagger {
           content = @Content),
       @ApiResponse(
           responseCode = "404",
-          description = "Guardian not found",
+          description = "Shelter not found",
           content = @Content)
   })
-  ResponseEntity<GuardianResponse> findById(Long id);
+  ResponseEntity<ShelterResponse> findById(Long id);
 
   @Operation(
-      summary = "Fetch Page of guardian",
-      description = "Fetch paged guardian",
-      tags = {"Guardian"},
+      summary = "Fetch Page of shelter",
+      description = "Fetch paged shelter",
+      tags = {"Shelter"},
       security = {@SecurityRequirement(name = SECURITY_SCHEME_KEY)})
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successful fetch",
@@ -93,12 +95,12 @@ public interface GuardianControllerSwagger {
           description = "Unauthorized, client did not send authorization header or sent an invalid one",
           content = @Content)
   })
-  ResponseEntity<Page<GuardianResponse>> fetchAll(@ParameterObject Pageable pageable);
+  ResponseEntity<Page<ShelterResponse>> fetchAll(@ParameterObject Pageable pageable);
 
   @Operation(
-      summary = "Delete guardian by id",
-      description = "A guardian user can only delete themself",
-      tags = {"Guardian"},
+      summary = "Delete shelter by id",
+      description = "A shelter user can only delete themself",
+      tags = {"Shelter"},
       security = {@SecurityRequirement(name = SECURITY_SCHEME_KEY)})
   @ApiResponses(value = {
       @ApiResponse(
@@ -114,7 +116,7 @@ public interface GuardianControllerSwagger {
       @ApiResponse(responseCode = "403", description = "Forbidden, User does not have access permission", content = @Content),
       @ApiResponse(
           responseCode = "404",
-          description = "Guardian not found for current user",
+          description = "Shelter not found for current user",
           content = @Content)
   })
   ResponseEntity<Void> delete(Long id);

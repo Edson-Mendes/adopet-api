@@ -1,5 +1,6 @@
 package br.com.emendes.adopetapi.controller;
 
+import br.com.emendes.adopetapi.controller.swagger.ShelterControllerSwagger;
 import br.com.emendes.adopetapi.dto.request.CreateShelterRequest;
 import br.com.emendes.adopetapi.dto.request.UpdateShelterRequest;
 import br.com.emendes.adopetapi.dto.response.ShelterResponse;
@@ -18,7 +19,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/shelters")
-public class ShelterController {
+public class ShelterController implements ShelterControllerSwagger {
 
   private final ShelterService shelterService;
 
