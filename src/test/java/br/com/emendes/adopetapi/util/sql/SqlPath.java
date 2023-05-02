@@ -7,6 +7,9 @@ public class SqlPath {
   // Relacionados com user
   public static final String INSERT_SHELTER_SQL_PATH = "/sql/user/shelter/insert-shelter.sql";
   public static final String INSERT_MANY_SHELTERS_SQL_PATH = "/sql/user/shelter/insert-many-shelters.sql";
+  public static final String INSERT_DELETED_SHELTER_SQL_PATH = "/sql/user/shelter/insert-deleted-shelter.sql";
+  public static final String INSERT_MANY_DELETED_SHELTER_SQL_PATH = "/sql/user/shelter/insert-many-deleted-shelters.sql";
+
   public static final String INSERT_GUARDIAN_SQL_PATH = "/sql/user/guardian/insert-guardian.sql";
   public static final String INSERT_DELETED_GUARDIAN_SQL_PATH = "/sql/user/guardian/insert-deleted-guardian.sql";
   public static final String INSERT_MANY_DELETED_GUARDIAN_SQL_PATH = "/sql/user/guardian/insert-many-deleted-guardians.sql";

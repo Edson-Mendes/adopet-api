@@ -10,8 +10,6 @@ import java.util.Optional;
 
 public interface ShelterRepository extends JpaRepository<Shelter, Long> {
 
-  Optional<Shelter> findByUserId(Long id);
-
   Optional<Shelter> findByIdAndDeletedFalse(Long id);
 
   Optional<Shelter> findByIdAndUserAndDeletedFalse(Long id, User user);

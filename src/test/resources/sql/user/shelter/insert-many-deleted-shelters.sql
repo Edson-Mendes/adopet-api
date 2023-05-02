@@ -1,0 +1,17 @@
+-- insert user
+INSERT INTO t_user (email, password, enabled) VALUES
+('animal.shelter@email.com', '{bcrypt}$2a$10$M3YOIcS1JhPLJYT0hHD42u71Zv52bx3ySVJVOavrkbzqarGimp/TC', true),
+('shelterpoa@email.com', '{bcrypt}$2a$10$M3YOIcS1JhPLJYT0hHD42u71Zv52bx3ySVJVOavrkbzqarGimp/TC', true),
+('shelterbr@email.com', '{bcrypt}$2a$10$M3YOIcS1JhPLJYT0hHD42u71Zv52bx3ySVJVOavrkbzqarGimp/TC', false),
+('shelter.rj@email.com', '{bcrypt}$2a$10$M3YOIcS1JhPLJYT0hHD42u71Zv52bx3ySVJVOavrkbzqarGimp/TC', false);
+
+-- insert user roles
+INSERT INTO t_user_roles (user_id, role_id) VALUES (1, 2), (2, 2), (3, 2), (4, 2);
+
+-- insert shelter
+INSERT INTO t_shelter (name, deleted, created_at, user_id) VALUES
+('Animal Shelter', false, '2023-04-24T10:00:00', 1),
+('Shelter POA', false, '2023-04-25T10:00:00', 2),
+('Shelter BR', true, '2023-04-25T10:00:00', 3),
+('Shelter RJ', true, '2023-04-25T10:00:00', 4);
+
