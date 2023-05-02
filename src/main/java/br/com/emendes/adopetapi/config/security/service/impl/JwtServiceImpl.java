@@ -2,7 +2,6 @@ package br.com.emendes.adopetapi.config.security.service.impl;
 
 import br.com.emendes.adopetapi.config.security.service.JwtService;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -16,10 +15,10 @@ import java.util.Date;
 @Service
 public class JwtServiceImpl implements JwtService {
 
-  @Value("${adopetapi.jwt.expiration:86400000}")
+  @Value("${adopetapi.jwt.expiration}")
   private String expiration;
 
-  @Value("${adopetapi.jwt.secret:12341234123412341234123412341234}")
+  @Value("${adopetapi.jwt.secret}")
   private String secret;
 
   @Override

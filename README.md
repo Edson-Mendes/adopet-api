@@ -113,6 +113,6 @@ os novos dados do guardian devem ser enviados no corpo da requisição.
 - [x] Autenticação de Abrigos.
 - [x] Paginação das buscas.
 - [x] Testes de Unidade.
-- [ ] Testes de Integração.
+- [x] Testes de Integração.
 - [ ] Deploy da Aplicação.
 - [ ] Integração com Front-End.

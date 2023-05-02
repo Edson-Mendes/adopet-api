@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ProblemDetail;
@@ -50,7 +51,7 @@ public interface PetControllerSwagger {
           description = "Unauthorized, client did not send authorization header or sent an invalid one",
           content = @Content)
   })
-  ResponseEntity<Page<PetResponse>> fetchAll(Pageable pageable);
+  ResponseEntity<Page<PetResponse>> fetchAll(@ParameterObject Pageable pageable);
 
   @Operation(
       summary = "Retrieve details about a pet by id",
