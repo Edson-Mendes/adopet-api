@@ -1,12 +1,9 @@
-server:
-  port: 8080
-
 spring:
   # Datasource
   datasource:
-    url: jdbc:postgresql://localhost:5432/adopet-db
-    username: user
-    password: 1234
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   # JPA

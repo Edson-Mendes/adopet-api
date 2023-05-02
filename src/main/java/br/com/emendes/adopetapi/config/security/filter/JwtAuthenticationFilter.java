@@ -20,7 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@Profile(value = {"dev", "integration"})
+@Profile(value = {"dev", "prod","integration"})
 @Slf4j
 @RequiredArgsConstructor
 @Component

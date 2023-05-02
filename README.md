@@ -107,6 +107,25 @@ os novos dados do guardian devem ser enviados no corpo da requisição.
 - `Deletar`: Deletar uma adoção através de um **DELETE /api/adoptions/{ID}**, onde *{ID}* é o identificador da Adoção.
   - Uma adoção só pode ser deletada pelo Shelter relacionado na adoção.<br>
 
+## :computer: Como executar a aplicação?
+
+#### :whale: Docker
+
+  Clone o projeto:
+  ```bash
+  git clone https://github.com/Edson-Mendes/adopet-api.git
+  ```
+
+  Execute o comando:
+  ```bash
+  docker compose -f adopet-api.yml up -d
+  ```
+
+O comando acima executará o arquivo [adopet-api.yml](https://github.com/Edson-Mendes/adopet-api/blob/main/adopet-api.yml),
+que irá subir um container PostgreSQL e um container da aplicação.<br>
+Após subir os containers, acesse <http://localhost:8888/swagger-ui.html>.<br>
+É necessário ter o Docker Compose instalado em sua máquina.
+
 
 ## :gear: Atualizações semana 3 e 4
 - [x] Autenticação de Tutores.
