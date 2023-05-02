@@ -22,7 +22,7 @@ import static br.com.emendes.adopetapi.util.sql.SqlPath.INSERT_PET_SHELTER_SQL_P
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@ActiveProfiles("integration")
+@ActiveProfiles("repository")
 @DisplayName("Tests for PetRepository")
 class PetRepositoryTest {
 

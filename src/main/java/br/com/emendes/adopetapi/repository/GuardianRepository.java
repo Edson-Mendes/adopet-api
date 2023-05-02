@@ -10,8 +10,6 @@ import java.util.Optional;
 
 public interface GuardianRepository extends JpaRepository<Guardian, Long> {
 
-  Optional<Guardian> findByUserId(Long id);
-
   Optional<Guardian> findByIdAndUserAndDeletedFalse(Long id, User user);
 
   Optional<Guardian> findByIdAndDeletedFalse(Long id);
@@ -19,4 +17,5 @@ public interface GuardianRepository extends JpaRepository<Guardian, Long> {
   Page<Guardian> findByDeletedFalse(Pageable pageable);
 
   Optional<Guardian> findByUser(User user);
+
 }
