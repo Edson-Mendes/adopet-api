@@ -24,7 +24,7 @@ public class OpenApiConfig {
     return new OpenAPI()
         .info(new Info().title("Adopet API")
             .description("REST API to connect animal shelters with people who want to adopt a pet.")
-            .version("v1.0").contact(contact))
+            .version("v1.2").contact(contact))
         .components(new Components()
             .addSecuritySchemes(SECURITY_SCHEME_KEY, securityScheme));
   }

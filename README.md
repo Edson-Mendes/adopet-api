@@ -1,9 +1,10 @@
 <h1 align="center"> Adopet API </h1>
 
-![Badge Em Desenvolvimento](https://img.shields.io/static/v1?label=Status&message=Em+Desenvolvimento&color=yellow&style=for-the-badge)
+![Badge Concluído](https://img.shields.io/static/v1?label=Status&message=Concluído&color=success&style=for-the-badge)
 ![Badge Java](https://img.shields.io/static/v1?label=Java&message=17&color=orange&style=for-the-badge&logo=java)
 ![Badge Springboot](https://img.shields.io/static/v1?label=Springboot&message=v3.0.5&color=brightgreen&style=for-the-badge&logo=spring)
 ![Badge Postgresql](https://img.shields.io/static/v1?label=PostgreSQL&message=v15.2&color=blue&style=for-the-badge&logo=PostgreSQL)
+![Badge Heroku](https://img.shields.io/static/v1?label=Heroku&message=Deploy&color=4f3074&style=for-the-badge&logo=Heroku)
 
 ## :book: Resumo do projeto
 Adopet API é uma REST API de uma plataforma para conectar pessoas que desejam adotar animais de estimação e abrigos.
@@ -28,6 +29,7 @@ Projeto proposto pela Alura no Challenge Backend 6ª Edição.
 - `TestContainers`
 - `Unit tests`
 - `Integration tests`
+- `Heroku`
 
 ## :bulb: Funcionalidades
 
@@ -126,6 +128,12 @@ que irá subir um container PostgreSQL e um container da aplicação.<br>
 Após subir os containers, acesse <http://localhost:8888/swagger-ui.html>.<br>
 É necessário ter o Docker Compose instalado em sua máquina.
 
+## :hammer_and_wrench: Deploy
+Realizei o deploy da aplicação no **Heroku**, você pode testar/brincar/usar [aqui](https://apiadopet.herokuapp.com/swagger-ui.html)<br>
+Caso encontre alguma falha/bug me avise, se possível :grin:.
+
+OBS: O plano que eu uso do Heroku **adormece** a aplicação depois de certo tempo inativo, 
+então pode ser que a primeira requisição demore um pouco (até uns 60 segundos), apenas seja paciente :wink:.
 
 ## :gear: Atualizações semana 3 e 4
 - [x] Autenticação de Tutores.
@@ -133,5 +141,5 @@ Após subir os containers, acesse <http://localhost:8888/swagger-ui.html>.<br>
 - [x] Paginação das buscas.
 - [x] Testes de Unidade.
 - [x] Testes de Integração.
-- [ ] Deploy da Aplicação.
+- [x] Deploy da Aplicação.
 - [ ] Integração com Front-End.
