@@ -103,7 +103,7 @@ public interface GuardianControllerSwagger {
       security = {@SecurityRequirement(name = SECURITY_SCHEME_KEY)})
   @ApiResponses(value = {
       @ApiResponse(
-          responseCode = "200", description = "Successful delete",
+          responseCode = "204", description = "Successful delete",
           content = @Content),
       @ApiResponse(
           responseCode = "400", description = "Something is wrong with the request",

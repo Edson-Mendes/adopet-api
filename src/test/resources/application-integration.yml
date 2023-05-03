@@ -22,3 +22,9 @@ spring:
   # Flyway
   flyway:
     enabled: true
+
+# Application
+adopetapi:
+  jwt:
+    expiration: ${JWT_EXPIRATION:86400000}
+    secret: ${JWT_SECRET:12341234123412341234123412341234}

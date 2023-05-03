@@ -358,6 +358,26 @@ class AdoptionServiceImplTest {
       BDDMockito.verify(adoptionRepositoryMock).findByIdAndPetShelter(eq(1_000_000L), any(Shelter.class));
     }
 
+    @Test
+    @DisplayName("UpdateStatus must throw IllegalOperationException when update status to concluded for a adopted pet")
+    void updateStatus_MustThrowIllegalOperationException_WhenUpdateStatusToConcludedForAAdoptedPet() {
+      BDDMockito.when(userServiceMock.getCurrentUserAsShelter())
+          .thenReturn(Optional.of(shelter()));
+      BDDMockito.when(adoptionRepositoryMock.findByIdAndPetShelter(eq(1_000_000L), any(Shelter.class)))
+          .thenReturn(Optional.of(analysingAdoptionWithAdoptedPet()));
+
+      UpdateStatusRequest updateStatusRequest = UpdateStatusRequest.builder()
+          .status("CONCLUDED")
+          .build();
+
+      Assertions.assertThatExceptionOfType(IllegalOperationException.class)
+          .isThrownBy(() -> adoptionService.updateStatus(1_000_000L, updateStatusRequest))
+          .withMessage("Pet already adopted");
+
+      BDDMockito.verify(userServiceMock).getCurrentUserAsShelter();
+      BDDMockito.verify(adoptionRepositoryMock).findByIdAndPetShelter(eq(1_000_000L), any(Shelter.class));
+    }
+
   }
 
   @Nested

@@ -23,6 +23,19 @@ public abstract class PetUtils {
         .build();
   }
 
+  public static Pet adoptedPet() {
+    return Pet.builder()
+        .id(10_000L)
+        .name("Dark")
+        .description("A very calm and cute cat")
+        .age("2 years old")
+        .adopted(true)
+        .images(petImageList())
+        .createdAt(LocalDateTime.parse("2022-04-10T12:00:00"))
+        .shelter(ShelterUtils.shelter())
+        .build();
+  }
+
   public static Pet updatedPet() {
     return Pet.builder()
         .id(10_000L)

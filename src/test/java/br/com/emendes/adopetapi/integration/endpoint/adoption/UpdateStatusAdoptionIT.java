@@ -170,6 +170,35 @@ class UpdateStatusAdoptionIT {
   }
 
   @Test
+  @Sql(scripts = {INSERT_MANY_ADOPTIONS_SQL_PATH})
+  @DisplayName("PUT /api/adoptions/{id}/status must return status 400 and ProblemDetail when update status to concluded for a adopted pet")
+  void putApiAdoptionsIdStatus_MustReturnStatus400AndProblemDetail_WhenUpdateStatusToConcludedForAAdoptedPet() {
+    // Realizar Login antes da requisição.
+    String authorizationHeaderValue = signIn.run(shelterAuthenticationRequest());
+    UpdateStatusRequest requestBody = UpdateStatusRequest.builder()
+        .status("CONCLUDED")
+        .build();
+
+    ProblemDetail actualResponseBody = webTestClient.put()
+        .uri(generateUri("4"))
+        .header(AUTHORIZATION_HEADER_NAME, authorizationHeaderValue)
+        .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE)
+        .body(Mono.just(requestBody), UpdateStatusRequest.class)
+        .exchange()
+        .expectStatus().isBadRequest()
+        .expectBody(ProblemDetail.class)
+        .returnResult().getResponseBody();
+
+    Assertions.assertThat(actualResponseBody).isNotNull();
+    Assertions.assertThat(actualResponseBody.getTitle()).isNotNull().isEqualTo("Illegal operation");
+    Assertions.assertThat(actualResponseBody.getDetail()).isNotNull()
+        .isEqualTo("Pet already adopted");
+    Assertions.assertThat(actualResponseBody.getInstance()).isNotNull();
+    Assertions.assertThat(actualResponseBody.getInstance().getPath()).isNotNull().isEqualTo("/api/adoptions/4/status");
+    Assertions.assertThat(actualResponseBody.getStatus()).isEqualTo(400);
+  }
+
+  @Test
   @Sql(scripts = {INSERT_PET_SHELTER_GUARDIAN_ADOPTION_SQL_PATH})
   @DisplayName("PUT /api/adoptions/{id}/status must return status 400 and ProblemDetail when request body has invalid fields")
   void putApiAdoptionsIdStatus_MustReturnStatus400AndProblemDetail_WhenRequestBodyHasInvalidFields() {
@@ -201,7 +230,7 @@ class UpdateStatusAdoptionIT {
     String actualMessages = (String) actualResponseBody.getProperties().get("messages");
 
     Assertions.assertThat(actualFields).isNotNull().contains("status");
-    Assertions.assertThat(actualMessages).isNotNull().contains("must be a valid status");
+    Assertions.assertThat(actualMessages).isNotNull().contains("must be a valid status (ANALYSING, CANCELED and CONCLUDED)");
   }
 
   @Test

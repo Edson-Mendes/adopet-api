@@ -109,7 +109,7 @@ os novos dados do guardian devem ser enviados no corpo da requisição.
 
 ## :computer: Como executar a aplicação?
 
-#### :whale: Docker
+### :whale: Docker
 
   Clone o projeto:
   ```bash

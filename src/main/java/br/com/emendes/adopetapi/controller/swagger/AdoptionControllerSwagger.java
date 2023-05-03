@@ -77,7 +77,8 @@ public interface AdoptionControllerSwagger {
   @Operation(
       summary = "Update status of an adoption",
       description = "Update status of an Adoption by specifying its id on path and new status on request body. " +
-          "Only the shelter related to the adoption can update it.",
+          "Only the shelter related to the adoption can update it. " +
+          "Are valid status: ANALYSING, CANCELED and CONCLUDED",
       tags = {"Adoption"})
   @ApiResponses(value = {
       @ApiResponse(
@@ -104,7 +105,7 @@ public interface AdoptionControllerSwagger {
       tags = {"Adoption"})
   @ApiResponses(value = {
       @ApiResponse(
-          responseCode = "200", description = "Successful delete",
+          responseCode = "204", description = "Successful delete",
           content = @Content),
       @ApiResponse(
           responseCode = "400", description = "Something is wrong with the request",

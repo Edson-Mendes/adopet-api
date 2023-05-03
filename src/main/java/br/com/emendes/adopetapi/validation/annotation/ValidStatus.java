@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = StatusValidator.class)
 public @interface ValidStatus {
 
-  String message() default "must be a valid status";
+  String message() default "must be a valid status (ANALYSING, CANCELED and CONCLUDED)";
 
   Class<?>[] groups() default { };
 

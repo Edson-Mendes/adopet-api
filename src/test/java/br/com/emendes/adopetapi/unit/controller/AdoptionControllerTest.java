@@ -5,10 +5,7 @@ import br.com.emendes.adopetapi.dto.request.AdoptionRequest;
 import br.com.emendes.adopetapi.dto.request.UpdateStatusRequest;
 import br.com.emendes.adopetapi.dto.response.AdoptionResponse;
 import br.com.emendes.adopetapi.dto.response.GuardianResponse;
-import br.com.emendes.adopetapi.exception.AdoptionNotFoundException;
-import br.com.emendes.adopetapi.exception.GuardianNotFoundException;
-import br.com.emendes.adopetapi.exception.InvalidArgumentException;
-import br.com.emendes.adopetapi.exception.ShelterNotFoundException;
+import br.com.emendes.adopetapi.exception.*;
 import br.com.emendes.adopetapi.model.AdoptionStatus;
 import br.com.emendes.adopetapi.service.AdoptionService;
 import br.com.emendes.adopetapi.util.PageableResponse;
@@ -337,8 +334,8 @@ class AdoptionControllerTest {
     }
 
     @Test
-    @DisplayName("UpdateStatus must return status 404 and ProblemDetail when request body is invalid")
-    void updateStatus_MustReturnStatus404AndProblemDetail_WhenRequestBodyIsInvalid() throws Exception {
+    @DisplayName("UpdateStatus must return status 400 and ProblemDetail when request body is invalid")
+    void updateStatus_MustReturnStatus400AndProblemDetail_WhenRequestBodyIsInvalid() throws Exception {
       BDDMockito.when(adoptionServiceMock.updateStatus(eq(1_000_000L), any(UpdateStatusRequest.class)))
           .thenThrow(new AdoptionNotFoundException("Adoption not found"));
 
@@ -367,6 +364,31 @@ class AdoptionControllerTest {
 
       Assertions.assertThat(actualFields).isNotNull().contains("status");
       Assertions.assertThat(actualMessages).isNotNull().contains("status must not be blank");
+    }
+
+    @Test
+    @DisplayName("UpdateStatus must return status 400 and ProblemDetail when update status to concluded for a adopted pet")
+    void updateStatus_MustReturnStatus400AndProblemDetail_WhenUpdateStatusToConcludedForAAdoptedPet() throws Exception {
+      BDDMockito.when(adoptionServiceMock.updateStatus(eq(1_000_000L), any(UpdateStatusRequest.class)))
+          .thenThrow(new IllegalOperationException("Pet already adopted"));
+
+      String requestBody = """
+            {
+              "status" : "CONCLUDED"
+            }
+          """;
+
+      String actualContent = mockMvc.perform(put(ADOPTION_URI + "/1000000/status").contentType(CONTENT_TYPE).content(requestBody))
+          .andExpect(status().isBadRequest())
+          .andReturn().getResponse().getContentAsString();
+
+      ProblemDetail actualProblemDetail = mapper.readValue(actualContent, ProblemDetail.class);
+
+      Assertions.assertThat(actualProblemDetail).isNotNull();
+      Assertions.assertThat(actualProblemDetail.getTitle()).isNotNull().isEqualTo("Illegal operation");
+      Assertions.assertThat(actualProblemDetail.getDetail()).isNotNull()
+          .isEqualTo("Pet already adopted");
+      Assertions.assertThat(actualProblemDetail.getStatus()).isEqualTo(400);
     }
 
   }

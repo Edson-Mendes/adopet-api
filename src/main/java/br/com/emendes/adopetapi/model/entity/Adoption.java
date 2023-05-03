@@ -23,7 +23,7 @@ public class Adoption {
   @Column(nullable = false, length = 50)
   @Enumerated(EnumType.STRING)
   private AdoptionStatus status;
-  @OneToOne(optional = false, fetch = FetchType.LAZY)
+  @OneToOne(optional = false, fetch = FetchType.EAGER)
   private Pet pet;
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private Guardian guardian;

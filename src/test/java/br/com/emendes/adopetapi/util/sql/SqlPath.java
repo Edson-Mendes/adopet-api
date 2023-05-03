@@ -29,4 +29,5 @@ public class SqlPath {
   public static final String INSERT_ADOPTIONS_MANY_SHELTERS_SQL_PATH = "/sql/adoption/insert-adoptions-many-shelters.sql";
   public static final String INSERT_ADOPTIONS_MANY_GUARDIANS_SQL_PATH = "/sql/adoption/insert-adoptions-many-guardians.sql";
   public static final String INSERT_CONCLUDED_ADOPTION_SQL_PATH = "/sql/adoption/insert-concluded-adoption.sql";
+  public static final String INSERT_MANY_ADOPTIONS_SQL_PATH = "/sql/adoption/insert-many-adoptions.sql";
 }

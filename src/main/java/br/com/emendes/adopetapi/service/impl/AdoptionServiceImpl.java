@@ -4,6 +4,7 @@ import br.com.emendes.adopetapi.dto.request.AdoptionRequest;
 import br.com.emendes.adopetapi.dto.request.UpdateStatusRequest;
 import br.com.emendes.adopetapi.dto.response.AdoptionResponse;
 import br.com.emendes.adopetapi.exception.AdoptionNotFoundException;
+import br.com.emendes.adopetapi.exception.IllegalOperationException;
 import br.com.emendes.adopetapi.exception.InvalidArgumentException;
 import br.com.emendes.adopetapi.mapper.AdoptionMapper;
 import br.com.emendes.adopetapi.model.AdoptionStatus;
@@ -69,13 +70,16 @@ public class AdoptionServiceImpl implements AdoptionService {
   @Override
   public AdoptionResponse updateStatus(Long id, UpdateStatusRequest updateStatusRequest) {
     Adoption adoption = findAdoptionByIdAndShelter(id);
-    adoption.setStatus(AdoptionStatus.valueOf(updateStatusRequest.status()));
+    AdoptionStatus newStatus = AdoptionStatus.valueOf(updateStatusRequest.status());
+
+    switch (newStatus) {
+      case ANALYSING -> puttingAdoptionUnderAnalysing(adoption);
+      case CANCELED -> cancelingAdoption(adoption);
+      case CONCLUDED -> concludingAdoption(adoption);
+    }
 
     adoptionRepository.save(adoption);
-
-    Pet pet = adoption.getPet();
-    pet.setAdopted(adoption.getStatus().equals(AdoptionStatus.CONCLUDED));
-    petRepository.save(pet);
+    petRepository.save(adoption.getPet());
 
     log.info("Status update to {} for Adoption with id : {}", updateStatusRequest.status(), adoption.getId());
     return adoptionMapper.adoptionToAdoptionResponse(adoption);
@@ -153,6 +157,31 @@ public class AdoptionServiceImpl implements AdoptionService {
 
     return currentUser.getRoles().stream().findFirst()
         .orElseThrow(() -> new InvalidArgumentException("Not found authorities"));
+  }
+
+  private void puttingAdoptionUnderAnalysing(Adoption adoption) {
+    ifAdoptionIsConcludedSetAdoptedToFalse(adoption);
+    adoption.setStatus(AdoptionStatus.ANALYSING);
+  }
+
+  private void cancelingAdoption(Adoption adoption) {
+    ifAdoptionIsConcludedSetAdoptedToFalse(adoption);
+    adoption.setStatus(AdoptionStatus.CANCELED);
+  }
+
+  private void concludingAdoption(Adoption adoption) {
+    if (!adoption.getStatus().equals(AdoptionStatus.CONCLUDED) && adoption.getPet().isAdopted()) {
+      throw new IllegalOperationException("Pet already adopted");
+    }
+
+    adoption.setStatus(AdoptionStatus.CONCLUDED);
+    adoption.getPet().setAdopted(true);
+  }
+
+  private void ifAdoptionIsConcludedSetAdoptedToFalse(Adoption adoption) {
+    if (adoption.getStatus().equals(AdoptionStatus.CONCLUDED)) {
+      adoption.getPet().setAdopted(false);
+    }
   }
 
 }

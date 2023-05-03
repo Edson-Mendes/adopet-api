@@ -71,7 +71,7 @@ class UpdateStatusRequestTest {
         List<String> actualMessages = actualViolations.stream().map(ConstraintViolation::getMessage).toList();
 
         Assertions.assertThat(actualViolations).isNotEmpty();
-        Assertions.assertThat(actualMessages).contains("must be a valid status");
+        Assertions.assertThat(actualMessages).contains("must be a valid status (ANALYSING, CANCELED and CONCLUDED)");
       }
 
     }
