@@ -135,11 +135,9 @@ Caso encontre alguma falha/bug me avise, se possível :grin:.
 OBS: O plano que eu uso do Heroku **adormece** a aplicação depois de certo tempo inativo, 
 então pode ser que a primeira requisição demore um pouco (até uns 60 segundos), apenas seja paciente :wink:.
 
-## :gear: Atualizações semana 3 e 4
-- [x] Autenticação de Tutores.
-- [x] Autenticação de Abrigos.
-- [x] Paginação das buscas.
-- [x] Testes de Unidade.
-- [x] Testes de Integração.
-- [x] Deploy da Aplicação.
-- [ ] Integração com Front-End.
+## :gear: Atualizações futuras
+- [ ] Fornecer mais informações sobre Pet e Guardian no DTO AdoptionResponse.
+- [ ] Criar um endpoint para o usuário atualizar sua senha.
+- [ ] Escrever a documentação dos erros que o usuário pode enfrentar.
+- [x] Limitar a quantidade de dados que podem ser buscados na busca paginada.
+- [ ] Criar usuário admin.

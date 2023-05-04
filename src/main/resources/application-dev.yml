@@ -19,6 +19,12 @@ spring:
     hibernate:
       ddl-auto: validate
 
+  # Max page size
+  data:
+    web:
+      pageable:
+        max-page-size: 100
+
 # Application
 adopetapi:
   jwt:

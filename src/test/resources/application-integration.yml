@@ -23,6 +23,12 @@ spring:
   flyway:
     enabled: true
 
+  # Max page size
+  data:
+    web:
+      pageable:
+        max-page-size: 100
+
 # Application
 adopetapi:
   jwt:
