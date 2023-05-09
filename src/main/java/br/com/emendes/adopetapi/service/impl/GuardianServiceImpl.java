@@ -14,6 +14,7 @@ import br.com.emendes.adopetapi.service.GuardianService;
 import br.com.emendes.adopetapi.util.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 import static br.com.emendes.adopetapi.util.ConstantUtil.ROLE_GUARDIAN;
+import static br.com.emendes.adopetapi.util.ConstantUtil.USERS_CACHE_NAME;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -61,6 +63,7 @@ public class GuardianServiceImpl implements GuardianService {
   }
 
   @Override
+  @CacheEvict(value = USERS_CACHE_NAME, allEntries = true)
   public GuardianResponse update(Long id, UpdateGuardianRequest updateGuardianRequest) {
     Guardian guardian = findGuardianByIdAndUser(id);
 
@@ -94,6 +97,7 @@ public class GuardianServiceImpl implements GuardianService {
   }
 
   @Override
+  @CacheEvict(value = USERS_CACHE_NAME, allEntries = true)
   public void deleteById(Long id) {
     Guardian guardian = findGuardianByIdAndUser(id);
 

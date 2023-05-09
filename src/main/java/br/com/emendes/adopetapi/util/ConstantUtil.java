@@ -21,4 +21,6 @@ public class ConstantUtil {
       .name(ROLE_SHELTER_NAME)
       .build();
 
+  public static final String USERS_CACHE_NAME = "users";
+
 }

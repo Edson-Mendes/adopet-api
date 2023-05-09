@@ -14,6 +14,7 @@ import br.com.emendes.adopetapi.service.ShelterService;
 import br.com.emendes.adopetapi.util.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 import static br.com.emendes.adopetapi.util.ConstantUtil.ROLE_SHELTER;
+import static br.com.emendes.adopetapi.util.ConstantUtil.USERS_CACHE_NAME;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -73,6 +75,7 @@ public class ShelterServiceImpl implements ShelterService {
   }
 
   @Override
+  @CacheEvict(value = USERS_CACHE_NAME, allEntries = true)
   public ShelterResponse update(Long id, UpdateShelterRequest updateShelterRequest) {
     Shelter shelter = findShelterByIdAndUser(id);
 
@@ -90,6 +93,7 @@ public class ShelterServiceImpl implements ShelterService {
   }
 
   @Override
+  @CacheEvict(value = USERS_CACHE_NAME, allEntries = true)
   public void deleteById(Long id) {
     Shelter shelter = findShelterByIdAndUser(id);
 

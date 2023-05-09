@@ -29,6 +29,7 @@ public class Pet {
   private boolean adopted;
   @Column(nullable = false)
   private LocalDateTime createdAt;
+  // FIXME: Trazer as imagens dos pets quando for buscar os pets.
   @OneToMany(mappedBy = "pet", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
   private Collection<PetImage> images;
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
