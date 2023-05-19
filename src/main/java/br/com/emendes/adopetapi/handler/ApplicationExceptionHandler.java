@@ -162,6 +162,17 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     return ResponseEntity.badRequest().body(problemDetail);
   }
 
+  @ExceptionHandler(WrongPasswordException.class)
+  public ResponseEntity<ProblemDetail> handleWrongPassword(WrongPasswordException exception) {
+    ProblemDetail problemDetail = ProblemDetail
+        .forStatusAndDetail(HttpStatusCode.valueOf(400), exception.getMessage());
+
+    problemDetail.setType(URI.create("https://github.com/Edson-Mendes/adopet-api/problem-detail/wrong-password"));
+    problemDetail.setTitle("Wrong password");
+
+    return ResponseEntity.badRequest().body(problemDetail);
+  }
+
   @ExceptionHandler(AdoptionNotFoundException.class)
   public ResponseEntity<ProblemDetail> handleAdoptionNotFound(AdoptionNotFoundException exception) {
     ProblemDetail problemDetail = ProblemDetail

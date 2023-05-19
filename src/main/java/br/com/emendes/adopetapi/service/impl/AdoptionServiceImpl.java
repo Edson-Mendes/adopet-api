@@ -12,7 +12,7 @@ import br.com.emendes.adopetapi.model.entity.*;
 import br.com.emendes.adopetapi.repository.AdoptionRepository;
 import br.com.emendes.adopetapi.repository.PetRepository;
 import br.com.emendes.adopetapi.service.AdoptionService;
-import br.com.emendes.adopetapi.service.UserService;
+import br.com.emendes.adopetapi.service.CurrentUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -32,7 +32,7 @@ public class AdoptionServiceImpl implements AdoptionService {
   private final AdoptionMapper adoptionMapper;
   private final PetRepository petRepository;
   private final AdoptionRepository adoptionRepository;
-  private final UserService userService;
+  private final CurrentUserService currentUserService;
 
   @Override
   public AdoptionResponse adopt(AdoptionRequest adoptionRequest) {
@@ -143,17 +143,17 @@ public class AdoptionServiceImpl implements AdoptionService {
   }
 
   private Guardian getCurrentGuardian() {
-    return userService.getCurrentUserAsGuardian()
+    return currentUserService.getCurrentUserAsGuardian()
         .orElseThrow(() -> new InvalidArgumentException("Current guardian user not found"));
   }
 
   private Shelter getCurrentShelter() {
-    return userService.getCurrentUserAsShelter()
+    return currentUserService.getCurrentUserAsShelter()
         .orElseThrow(() -> new InvalidArgumentException("Current shelter user not found"));
   }
 
   private Role getRoleFromCurrentUser() {
-    User currentUser = userService.getCurrentUser();
+    User currentUser = currentUserService.getCurrentUser();
 
     return currentUser.getRoles().stream().findFirst()
         .orElseThrow(() -> new InvalidArgumentException("Not found authorities"));

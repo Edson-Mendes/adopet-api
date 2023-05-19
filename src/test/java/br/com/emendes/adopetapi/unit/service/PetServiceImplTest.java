@@ -9,7 +9,7 @@ import br.com.emendes.adopetapi.mapper.PetMapper;
 import br.com.emendes.adopetapi.model.entity.Pet;
 import br.com.emendes.adopetapi.model.entity.Shelter;
 import br.com.emendes.adopetapi.repository.PetRepository;
-import br.com.emendes.adopetapi.service.UserService;
+import br.com.emendes.adopetapi.service.CurrentUserService;
 import br.com.emendes.adopetapi.service.impl.PetServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +45,7 @@ class PetServiceImplTest {
   @Mock
   private PetRepository petRepositoryMock;
   @Mock
-  private UserService userServiceMock;
+  private CurrentUserService currentUserServiceMock;
 
   @Nested
   @DisplayName("Tests for create method")
@@ -56,7 +56,7 @@ class PetServiceImplTest {
     void create_MustReturnPetResponse_WhenCreateSuccessfully() {
       BDDMockito.when(petMapperMock.createPetRequestToPet(any(CreatePetRequest.class))).thenReturn(petWithoutId());
       BDDMockito.when(petRepositoryMock.save(any(Pet.class))).thenReturn(pet());
-      BDDMockito.when(userServiceMock.getCurrentUserAsShelter()).thenReturn(Optional.of(shelter()));
+      BDDMockito.when(currentUserServiceMock.getCurrentUserAsShelter()).thenReturn(Optional.of(shelter()));
       BDDMockito.when(petMapperMock.petToPetResponse(any(Pet.class))).thenReturn(petResponse());
 
       CreatePetRequest createPetRequest = CreatePetRequest.builder()
@@ -70,7 +70,7 @@ class PetServiceImplTest {
       BDDMockito.verify(petMapperMock).createPetRequestToPet(any(CreatePetRequest.class));
       BDDMockito.verify(petMapperMock).petToPetResponse(any(Pet.class));
       BDDMockito.verify(petRepositoryMock).save(any(Pet.class));
-      BDDMockito.verify(userServiceMock).getCurrentUserAsShelter();
+      BDDMockito.verify(currentUserServiceMock).getCurrentUserAsShelter();
 
       Assertions.assertThat(actualPetResponse).isNotNull();
       Assertions.assertThat(actualPetResponse.id()).isNotNull().isEqualTo(10_000L);
@@ -151,7 +151,7 @@ class PetServiceImplTest {
     @Test
     @DisplayName("Update must return PetResponse when update successfully")
     void update_MustReturnPetResponse_WhenUpdateSuccessfully() {
-      BDDMockito.when(userServiceMock.getCurrentUserAsShelter()).thenReturn(Optional.of(shelter()));
+      BDDMockito.when(currentUserServiceMock.getCurrentUserAsShelter()).thenReturn(Optional.of(shelter()));
       BDDMockito.when(petRepositoryMock.findByIdAndShelter(eq(10_000L), any(Shelter.class)))
           .thenReturn(Optional.of(pet()));
       BDDMockito.when(petRepositoryMock.save(any(Pet.class)))
@@ -170,7 +170,7 @@ class PetServiceImplTest {
       BDDMockito.verify(petMapperMock).petToPetResponse(any(Pet.class));
       BDDMockito.verify(petRepositoryMock).save(any(Pet.class));
       BDDMockito.verify(petRepositoryMock).findByIdAndShelter(eq(10_000L), any(Shelter.class));
-      BDDMockito.verify(userServiceMock).getCurrentUserAsShelter();
+      BDDMockito.verify(currentUserServiceMock).getCurrentUserAsShelter();
 
       Assertions.assertThat(actualPetResponse).isNotNull();
       Assertions.assertThat(actualPetResponse.id()).isNotNull().isEqualTo(10_000L);
@@ -182,7 +182,7 @@ class PetServiceImplTest {
     @Test
     @DisplayName("Update must throw PetNotFoundException when pet not found with given id")
     void update_MustThrowPetNotFoundException_WhenPetNotFoundWithGivenId() {
-      BDDMockito.when(userServiceMock.getCurrentUserAsShelter()).thenReturn(Optional.of(shelter()));
+      BDDMockito.when(currentUserServiceMock.getCurrentUserAsShelter()).thenReturn(Optional.of(shelter()));
       BDDMockito.when(petRepositoryMock.findByIdAndShelter(eq(10_000L), any(Shelter.class)))
           .thenReturn(Optional.empty());
 
@@ -196,7 +196,7 @@ class PetServiceImplTest {
           .isThrownBy(() -> petService.update(10_000L, petRequest))
           .withMessage("Pet not found");
 
-      BDDMockito.verify(userServiceMock).getCurrentUserAsShelter();
+      BDDMockito.verify(currentUserServiceMock).getCurrentUserAsShelter();
       BDDMockito.verify(petRepositoryMock).findByIdAndShelter(eq(10_000L), any(Shelter.class));
     }
 
@@ -209,7 +209,7 @@ class PetServiceImplTest {
     @Test
     @DisplayName("DeleteById must call PetRepository#delete when delete pet")
     void deleteById_MustCallPetRepositoryDelete_WhenDeletePet() {
-      BDDMockito.when(userServiceMock.getCurrentUserAsShelter()).thenReturn(Optional.of(shelter()));
+      BDDMockito.when(currentUserServiceMock.getCurrentUserAsShelter()).thenReturn(Optional.of(shelter()));
       BDDMockito.when(petRepositoryMock.findByIdAndShelter(eq(10_000L), any(Shelter.class)))
           .thenReturn(Optional.of(pet()));
       BDDMockito.doNothing().when(petRepositoryMock).delete(any(Pet.class));
@@ -218,13 +218,13 @@ class PetServiceImplTest {
 
       BDDMockito.verify(petRepositoryMock).findByIdAndShelter(eq(10_000L), any(Shelter.class));
       BDDMockito.verify(petRepositoryMock).delete(any(Pet.class));
-      BDDMockito.verify(userServiceMock).getCurrentUserAsShelter();
+      BDDMockito.verify(currentUserServiceMock).getCurrentUserAsShelter();
     }
 
     @Test
     @DisplayName("DeleteById must throw PetNotFoundException when pet do not exists with given id")
     void deleteById_MustThrowPetNotFoundException_WhenPetDoNotExistsWithGivenId() {
-      BDDMockito.when(userServiceMock.getCurrentUserAsShelter()).thenReturn(Optional.of(shelter()));
+      BDDMockito.when(currentUserServiceMock.getCurrentUserAsShelter()).thenReturn(Optional.of(shelter()));
       BDDMockito.when(petRepositoryMock.findByIdAndShelter(eq(10_000L), any(Shelter.class)))
           .thenReturn(Optional.empty());
 
@@ -232,14 +232,14 @@ class PetServiceImplTest {
           .isThrownBy(() -> petService.deleteById(10_000L))
           .withMessage("Pet not found");
 
-      BDDMockito.verify(userServiceMock).getCurrentUserAsShelter();
+      BDDMockito.verify(currentUserServiceMock).getCurrentUserAsShelter();
       BDDMockito.verify(petRepositoryMock).findByIdAndShelter(eq(10_000L), any(Shelter.class));
     }
 
     @Test
     @DisplayName("DeleteById must throw InvalidArgumentException when pet is related to adoption")
     void deleteById_MustThrowInvalidArgumentException_WhenPetIsRelatedToAdoption() {
-      BDDMockito.when(userServiceMock.getCurrentUserAsShelter()).thenReturn(Optional.of(shelter()));
+      BDDMockito.when(currentUserServiceMock.getCurrentUserAsShelter()).thenReturn(Optional.of(shelter()));
       BDDMockito.when(petRepositoryMock.findByIdAndShelter(eq(10_000L), any(Shelter.class)))
           .thenReturn(Optional.of(pet()));
       BDDMockito.willThrow(new DataIntegrityViolationException(""))
@@ -250,7 +250,7 @@ class PetServiceImplTest {
           .withMessage("This pet cannot be deleted because it is in process of being adopted.");
 
       BDDMockito.verify(petRepositoryMock).delete(any(Pet.class));
-      BDDMockito.verify(userServiceMock).getCurrentUserAsShelter();
+      BDDMockito.verify(currentUserServiceMock).getCurrentUserAsShelter();
       BDDMockito.verify(petRepositoryMock).findByIdAndShelter(eq(10_000L), any(Shelter.class));
     }
 

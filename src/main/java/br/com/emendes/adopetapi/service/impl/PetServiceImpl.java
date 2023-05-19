@@ -10,7 +10,7 @@ import br.com.emendes.adopetapi.model.entity.Pet;
 import br.com.emendes.adopetapi.model.entity.Shelter;
 import br.com.emendes.adopetapi.repository.PetRepository;
 import br.com.emendes.adopetapi.service.PetService;
-import br.com.emendes.adopetapi.service.UserService;
+import br.com.emendes.adopetapi.service.CurrentUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,7 +27,7 @@ public class PetServiceImpl implements PetService {
 
   private final PetRepository petRepository;
   private final PetMapper petMapper;
-  private final UserService userService;
+  private final CurrentUserService currentUserService;
 
   @Override
   public PetResponse create(CreatePetRequest createPetRequest) {
@@ -95,7 +95,7 @@ public class PetServiceImpl implements PetService {
   }
 
   private Shelter getCurrentShelter() {
-    return userService.getCurrentUserAsShelter()
+    return currentUserService.getCurrentUserAsShelter()
         .orElseThrow(() -> new InvalidArgumentException("Current user is not a Shelter"));
   }
 
