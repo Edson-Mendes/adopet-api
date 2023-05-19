@@ -1,5 +1,6 @@
 package br.com.emendes.adopetapi.service.impl;
 
+import br.com.emendes.adopetapi.dto.request.UpdatePasswordRequest;
 import br.com.emendes.adopetapi.exception.UserIsNotAuthenticateException;
 import br.com.emendes.adopetapi.model.entity.Guardian;
 import br.com.emendes.adopetapi.model.entity.Role;
@@ -57,6 +58,11 @@ public class UserServiceImpl implements UserService {
     }
 
     return Optional.empty();
+  }
+
+  @Override
+  public void updatePassword(UpdatePasswordRequest updatePasswordRequest) {
+
   }
 
   private boolean isGuardian(User currentUser) {
