@@ -7,7 +7,6 @@ import br.com.emendes.adopetapi.dto.request.UpdatePasswordRequest;
  */
 public interface UserService {
 
-
   /**
    * Atualiza o password de um User.
    * @param updatePasswordRequest contendo a senha antiga e a nova senha e confirmação da nova senha.
