@@ -24,6 +24,11 @@ public class UserServiceImpl implements UserService {
   private final PasswordEncoder passwordEncoder;
   private final UserRepository userRepository;
 
+  /**
+   * @throws PasswordsDoNotMatchException se UpdatePasswordRequest.newPassword e UpdatePasswordRequest.confirmPassword
+   * forem diferentes.
+   * @throws WrongPasswordException se UpdatePasswordRequest.oldPassword for diferente da senha atual do usuário.
+   */
   @Override
   public void updatePassword(UpdatePasswordRequest updatePasswordRequest) {
     if (!updatePasswordRequest.newPassword().equals(updatePasswordRequest.confirmPassword())) {
