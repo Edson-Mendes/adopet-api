@@ -24,6 +24,9 @@ import java.time.LocalDateTime;
 import static br.com.emendes.adopetapi.util.ConstantUtil.ROLE_GUARDIAN_NAME;
 import static br.com.emendes.adopetapi.util.ConstantUtil.ROLE_SHELTER_NAME;
 
+/**
+ * Implementação de {@link AdoptionService}
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -104,6 +107,14 @@ public class AdoptionServiceImpl implements AdoptionService {
     log.info("Deleting Adoption with id: {}", id);
   }
 
+  /**
+   * Busca Adoption por id e pelo Shelter logado. Caso o User logado não seja um Shelter
+   * InvalidArgumentException é lançado.
+   * @param id da Adoption a ser buscado.
+   * @return Adoption com o dado id.
+   * @throws AdoptionNotFoundException se o id informado não pertencer a uma Adoption relacionada
+   * com o User Shelter atual.
+   */
   private Adoption findAdoptionByIdAndShelter(Long id) {
     Shelter shelter = getCurrentShelter();
     log.info("Searching for Adoption with id: {} and Shelter.id : {}", id, shelter.getId());

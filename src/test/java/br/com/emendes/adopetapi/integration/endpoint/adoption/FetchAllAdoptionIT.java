@@ -69,7 +69,8 @@ class FetchAllAdoptionIT {
     AdoptionResponse actualAdoptionResponse = actualResponseBody.stream().toList().get(0);
 
     Assertions.assertThat(actualAdoptionResponse.id()).isNotNull();
-    Assertions.assertThat(actualAdoptionResponse.petId()).isNotNull().isEqualTo(1L);
+    Assertions.assertThat(actualAdoptionResponse.pet()).isNotNull();
+    Assertions.assertThat(actualAdoptionResponse.pet().id()).isNotNull().isEqualTo(1L);
     Assertions.assertThat(actualAdoptionResponse.guardianId()).isNotNull().isEqualTo(1L);
   }
 
@@ -98,7 +99,8 @@ class FetchAllAdoptionIT {
     AdoptionResponse actualAdoptionResponse = actualResponseBody.stream().toList().get(0);
 
     Assertions.assertThat(actualAdoptionResponse.id()).isNotNull();
-    Assertions.assertThat(actualAdoptionResponse.petId()).isNotNull().isEqualTo(1L);
+    Assertions.assertThat(actualAdoptionResponse.pet()).isNotNull();
+    Assertions.assertThat(actualAdoptionResponse.pet().id()).isNotNull().isEqualTo(1L);
     Assertions.assertThat(actualAdoptionResponse.guardianId()).isNotNull().isEqualTo(1L);
   }
 

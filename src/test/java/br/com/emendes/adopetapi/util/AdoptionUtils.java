@@ -8,8 +8,7 @@ import br.com.emendes.adopetapi.model.entity.Pet;
 import java.time.LocalDateTime;
 
 import static br.com.emendes.adopetapi.util.GuardianUtils.guardian;
-import static br.com.emendes.adopetapi.util.PetUtils.adoptedPet;
-import static br.com.emendes.adopetapi.util.PetUtils.pet;
+import static br.com.emendes.adopetapi.util.PetUtils.*;
 
 public class AdoptionUtils {
 
@@ -59,7 +58,7 @@ public class AdoptionUtils {
   public static AdoptionResponse adoptionResponse() {
     return AdoptionResponse.builder()
         .id(1_000_000L)
-        .petId(10_000L)
+        .pet(petResponse())
         .guardianId(100L)
         .status(AdoptionStatus.ANALYSING)
         .date(LocalDateTime.parse("2023-04-17T10:00:00"))
@@ -69,7 +68,7 @@ public class AdoptionUtils {
   public static AdoptionResponse canceledAdoptionResponse() {
     return AdoptionResponse.builder()
         .id(1_000_000L)
-        .petId(10_000L)
+        .pet(petResponse())
         .guardianId(100L)
         .status(AdoptionStatus.CANCELED)
         .date(LocalDateTime.parse("2023-04-17T10:00:00"))
@@ -79,7 +78,7 @@ public class AdoptionUtils {
   public static AdoptionResponse concludedAdoptionResponse() {
     return AdoptionResponse.builder()
         .id(1_000_000L)
-        .petId(10_000L)
+        .pet(petResponse())
         .guardianId(100L)
         .status(AdoptionStatus.CONCLUDED)
         .date(LocalDateTime.parse("2023-04-17T10:00:00"))

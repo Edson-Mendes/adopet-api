@@ -136,8 +136,8 @@ OBS: O plano que eu uso do Heroku **adormece** a aplicação depois de certo tem
 então pode ser que a primeira requisição demore um pouco (até uns 60 segundos), apenas seja paciente :wink:.
 
 ## :gear: Atualizações futuras
-- [ ] Fornecer mais informações sobre Pet e Guardian no DTO AdoptionResponse.
-- [ ] Criar um endpoint para o usuário atualizar sua senha.
+- [x] Fornecer mais informações sobre Pet no DTO AdoptionResponse.
+- [x] Criar um endpoint para o usuário atualizar sua senha.
 - [ ] Escrever a documentação dos erros que o usuário pode enfrentar.
 - [x] Limitar a quantidade de dados que podem ser buscados na busca paginada.
 - [ ] Criar usuário admin.

@@ -84,7 +84,8 @@ class AdoptionServiceImplTest {
 
       Assertions.assertThat(actualAdoptionResponse).isNotNull();
       Assertions.assertThat(actualAdoptionResponse.id()).isNotNull().isEqualTo(1_000_000L);
-      Assertions.assertThat(actualAdoptionResponse.petId()).isNotNull().isEqualTo(10_000L);
+      Assertions.assertThat(actualAdoptionResponse.pet()).isNotNull();
+      Assertions.assertThat(actualAdoptionResponse.pet().id()).isNotNull().isEqualTo(10_000L);
       Assertions.assertThat(actualAdoptionResponse.guardianId()).isNotNull().isEqualTo(100L);
       Assertions.assertThat(actualAdoptionResponse.status()).isNotNull().isEqualTo(AdoptionStatus.ANALYSING);
     }
@@ -237,7 +238,8 @@ class AdoptionServiceImplTest {
 
       Assertions.assertThat(actualAdoptionResponse).isNotNull();
       Assertions.assertThat(actualAdoptionResponse.id()).isNotNull().isEqualTo(1_000_000L);
-      Assertions.assertThat(actualAdoptionResponse.petId()).isNotNull().isEqualTo(10_000L);
+      Assertions.assertThat(actualAdoptionResponse.pet()).isNotNull();
+      Assertions.assertThat(actualAdoptionResponse.pet().id()).isNotNull().isEqualTo(10_000L);
       Assertions.assertThat(actualAdoptionResponse.guardianId()).isNotNull().isEqualTo(100L);
       Assertions.assertThat(actualAdoptionResponse.status()).isNotNull().isEqualTo(AdoptionStatus.ANALYSING);
     }
@@ -261,7 +263,8 @@ class AdoptionServiceImplTest {
 
       Assertions.assertThat(actualAdoptionResponse).isNotNull();
       Assertions.assertThat(actualAdoptionResponse.id()).isNotNull().isEqualTo(1_000_000L);
-      Assertions.assertThat(actualAdoptionResponse.petId()).isNotNull().isEqualTo(10_000L);
+      Assertions.assertThat(actualAdoptionResponse.pet()).isNotNull();
+      Assertions.assertThat(actualAdoptionResponse.pet().id()).isNotNull().isEqualTo(10_000L);
       Assertions.assertThat(actualAdoptionResponse.guardianId()).isNotNull().isEqualTo(100L);
       Assertions.assertThat(actualAdoptionResponse.status()).isNotNull().isEqualTo(AdoptionStatus.ANALYSING);
     }

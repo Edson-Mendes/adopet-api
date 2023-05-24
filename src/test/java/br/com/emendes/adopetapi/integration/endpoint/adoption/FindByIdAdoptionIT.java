@@ -53,7 +53,8 @@ class FindByIdAdoptionIT {
     Assertions.assertThat(actualResponseBody).isNotNull();
     Assertions.assertThat(actualResponseBody.id()).isNotNull();
     Assertions.assertThat(actualResponseBody.status()).isNotNull().isEqualByComparingTo(AdoptionStatus.ANALYSING);
-    Assertions.assertThat(actualResponseBody.petId()).isNotNull().isEqualTo(1L);
+    Assertions.assertThat(actualResponseBody.pet()).isNotNull();
+    Assertions.assertThat(actualResponseBody.pet().id()).isNotNull().isEqualTo(1L);
     Assertions.assertThat(actualResponseBody.guardianId()).isNotNull().isEqualTo(1L);
     Assertions.assertThat(actualResponseBody.date()).isNotNull();
   }
@@ -74,7 +75,8 @@ class FindByIdAdoptionIT {
     Assertions.assertThat(actualResponseBody).isNotNull();
     Assertions.assertThat(actualResponseBody.id()).isNotNull();
     Assertions.assertThat(actualResponseBody.status()).isNotNull().isEqualByComparingTo(AdoptionStatus.ANALYSING);
-    Assertions.assertThat(actualResponseBody.petId()).isNotNull().isEqualTo(1L);
+    Assertions.assertThat(actualResponseBody.pet()).isNotNull();
+    Assertions.assertThat(actualResponseBody.pet().id()).isNotNull().isEqualTo(1L);
     Assertions.assertThat(actualResponseBody.guardianId()).isNotNull().isEqualTo(1L);
     Assertions.assertThat(actualResponseBody.date()).isNotNull();
   }
