@@ -9,6 +9,8 @@
 ## :book: Resumo do projeto
 Adopet API é uma REST API de uma plataforma para conectar pessoas que desejam adotar animais de estimação e abrigos.
 
+A aplicação possui endpoints para gerenciar e manipular os recursos Guardião (Guardian), Abrigo (Shelter), Animal de estimação (Pet) e Adoção (Adoption), que são protegidos e requerem autenticaçao por JWT (Json Web Token) para serem manipulados.
+
 Projeto proposto pela Alura no Challenge Backend 6ª Edição.
 
 ## :toolbox: Tecnologias e ferramentas
@@ -19,10 +21,12 @@ Projeto proposto pela Alura no Challenge Backend 6ª Edição.
 - `Spring Boot`
 - `Spring Data JPA`
 - `Spring Security`
+- `Tomcat`
 - `Docker`
 - `PostgreSQL`
 - `Flyway`
 - `Lombok`
+- `JJWT`
 - `Mockito`
 - `JUnit5`
 - `WebTestClient`
@@ -33,7 +37,11 @@ Projeto proposto pela Alura no Challenge Backend 6ª Edição.
 
 ## :bulb: Funcionalidades
 
-#### :bust_in_silhouette: Guardian
+### :lock: API de gerenciamento de Autenticação
+- `Login de usuário`: O login deve ser realizado através de um **POST /api/auth** com as credenciais do usuário (email e password) 
+em um JSON no corpo da requisição.
+
+### :bust_in_silhouette: API de gerenciamento de Guardian
 - `Cadastrar`: Salvar Guardian através de um **POST /api/guardians** com as informações de *name*, *email*, *password* e *confirmPassword*
 em um JSON no corpo da requisição.</br>
 
@@ -52,7 +60,7 @@ os novos dados do guardian devem ser enviados no corpo da requisição.
   - Apenas o próprio usuário Guardian pode se deletar.
   - É necessário estar autenticado.<br>
 
-#### :european_castle: Shelter
+### :european_castle: API de gerenciamento de Shelter
 - `Cadastrar`: Salvar Shelter através de um **POST /api/shelters** com as informações de *name*
   em um JSON no corpo da requisição.</br>
 
@@ -71,7 +79,7 @@ os novos dados do guardian devem ser enviados no corpo da requisição.
   - Apenas o próprio usuário Shelter pode se deletar.
   - É necessário estar autenticado.<br>
 
-#### :cat: Pet
+### :cat: API de gerenciamento de Pet
 - `Cadastrar`: Salvar Pet através de um **POST /api/pets** com as informações *name*, *description*, *age*, *image* e *shelterId*
   em um JSON no corpo da requisição.</br>
   - Apenas Shelters podem cadastrar Pets.
@@ -90,7 +98,7 @@ os novos dados do guardian devem ser enviados no corpo da requisição.
   - Apenas o Shelter que cadastrou o Pet pode deleta-lo.
   - Pet relacionado a uma Adoption não pode ser deletado.
 
-#### :heart_eyes_cat: Adoption
+### :heart_eyes_cat: API de gerenciamento de Adoption
 - `Adotar`: Solicitar uma adoção de um Pet através de um **POST /api/adoptions** com as informações *petId* 
   em um JSON no corpo da requisição. É necessário estar autenticado. Apenas *Guardians* podem solicitar uma adoção.
   - Apenas usuários do tipo guardian podem solicitar uma adoção.
